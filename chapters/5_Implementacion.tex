@@ -1,0 +1,176 @@
+\chapter{Implementación del prototipo}
+En este capítulo vamos a compartir varios de los aspectos más importantes que debimos considerar con respecto a las diversas tecnologías y herramientas que utilizamos durante el proceso de desarrollo del prototipo de la herramienta \enquote*{Android Inspector}.
+
+\section{Lenguaje de desarrollo}
+La elección de Python como lenguaje para el desarrollo del prototipo fue una de las primeras y más trascendentes decisiones que debimos tomar de cara a la implementación. Además, impactó en varios aspectos importantes de la herramienta. En particular, nos permitió brindar un lenguaje para desarrollar extensiones el cual fuera accesible.
+
+Como veremos, si bien desde temprano el lenguaje se mostraba como candidato ideal para este desarrollo, la no experiencia de uso del mismo por parte de los autores era un factor a considerar dado el contexto del proyecto. Para mitigar el riesgo y asesorar los beneficios del lenguaje, nos familiarizamos en etapas previas con el mismo y realizamos pruebas de concepto en paralelo durante la etapa de diseño.
+
+El amplio uso del cual goza Python por parte de la comunidad forense es un hecho conocido. Chet Hosmer, en su libro \emph{Python Forensics} \cite{Hosmer20141} dedica un excelente primer capítulo a describir cómo Python ayuda a cumplir con los desafíos que presenta el área forense y las características que presenta el lenguaje que lo hacen idóneo para este trabajo.
+
+Como desafíos podemos encontrar:
+
+\begin{itemize}
+\item \textbf{La naturaleza cambiante de las investigaciones}: En la última década el foco del trabajo ha cambiado de simplemente extraer datos, recuperar archivos, etc a proveer análisis en tiempo real de redes, aplicaciones de cloud y dispositivos móviles así como la propia automatización de diversos análisis.
+\item \textbf{La creciente brecha entre desarrolladores e investigadores}: Los investigadores, examinadores, personal de respuesta de accidentes y auditores tienden a venir del campo de las ciencias sociales. En cambio, los desarrolladores de herramientas forenses suelen contar con una formación en el campo de la ciencia de la computación e ingeniería. La forma de proceder para la resolución de los problemas por parte cada uno de estos grupos suele ser bastante diferente.
+\item \textbf{El costo y disponibilidad de las herramientas}: El costo de las herramientas forenses puede llegar a ser abrumador, en especial cuando se tiene en cuenta el entrenamiento que las mismas requieren.
+\end{itemize}
+
+En cuanto a las características que nos ofrece Python, podemos destacar:
+
+\begin{itemize}
+\item \textbf{Soporte global}: Creado hace 35 años con la premisa fundamental de \enquote*{programación para todos}, Python es un lenguaje de propósito general en el cual es posible escribir código que sea entendible por no programadores.
+\item \textbf{Open source y plataforma independiente}: Dado que Python es open source, existen sólidas implementaciones de intérpretes Python para todas las plataformas incluidas Windows, Linux y Mac OS X.
+\item \textbf{Madurez del lenguaje}: Al día de hoy es uno de los lenguajes que goza de mayor adopción global. El lenguaje además cuenta con una amplia disponibilidad de bibliotecas, documentación y comunidad a la cual recurrir por más conocimiento.
+\item \textbf{Barrera de entrada}: Una de los factores de su éxito es la carencia de barreras de entrada que posee. Cuenta con entornos de desarrollo gratuitos, el lenguaje es independiente de la plataforma, el código es fácil de leer y escribir, y el soporte es vasto a nivel mundial.
+\end{itemize}
+
+Por otro lado, Brian Carrier, en su paper Open source Digital Forensics Tools \cite{opendftool}, realiza un planteo interesante al examinar las reglas establecidas por los estándares de evidencia y comparar herramientas forenses de código abierto con aquellas de código cerrado. Una de sus conclusiones claves a las que llega es que el software open source cumple de forma más clara y comprensiva los requerimientos establecidos por los lineamientos de pruebas de Daubert. Como referencia, el estándar de Daubert provee reglas de evidencias al nivel federal en los Estados Unidos.
+
+Finalmente, si vamos al nivel más práctico también podemos observar la influencia en la comunidad forense que mencionamos. Las herramientas ofrecidas por MITRE en torno al proyecto CybOX se encuentran escritas en Python. En particular, la biblioteca que describiremos más adelante (python-cybox) únicamente está disponible en Python.
+
+\section{Entorno de desarrollo}
+A continuación se enumeran los detalles relevantes de los ambientes en los cuales se realizaron las pruebas del prototipo:
+
+\footnotesize
+    \renewcommand*{\arraystretch}{1.4}
+    \begin{longtable}{ | >{\bfseries}m{4.0cm} | m{6.0cm} |}
+    \hline
+    Sistemas operativos & Ubuntu 14.04 y Mac OS X 10.10 \\ \hline
+    Intérprete Python & CPython 2.7.6 \\ \hline
+    Dependencias Python adicionales & python-cybox (2.1.0.12)\newline python-magic (0.4.6) \\ \hline
+    Dependencias de herramientas externas & adb (incluído en las platform-tools del Android SDK)\newline aapt (incluído en las build-tools del Android SDK) \\ \hline
+    Variables de entorno & Se deben agregar a la variable PATH las rutas a los directorios platform-tools y build-tools correspondientes al Android SDK. \\ \hline
+    \caption {Entorno de desarrollo del prototipo}
+    \end{longtable}
+    \normalsize
+    
+Esta información debe ser tomada en cuenta como requisitos de referencia para correr el prototipo.
+
+Cabe mencionar que si bien la implementación fue probada tanto en Linux como Mac OS X, la aplicación no presenta ningún impedimento para correr en Windows, dado que tanto Python como las herramientas del SDK de Android mencionadas se encuentran disponibles para los tres sistemas operativos.
+
+Por otro lado, durante el desarrollo se hizo uso de una variedad de herramientas con el fin de asistir el desarrollo. Mencionamos las más significativas a continuación:
+\newline
+
+\footnotesize
+    \renewcommand*{\arraystretch}{1.4}
+    \begin{longtable}{|>{\raggedright}m{3.2cm}|>{\raggedright}m{2.8cm}|>{\raggedright\arraybackslash}m{6cm}|}
+    \hline
+    \BlackCell{Herramienta} & \BlackCell{Nombre} & \BlackCell{Descripción} \\
+    IDE & PyCharm Community Edition 4.5 & Entorno que brinda muchas facilidades para el desarrollo de aplicaciones Python. \\\hline
+    Emulador Android & Genymotion 2.3.1 & Permite emular un dispositivo Android virtual. Brinda la posibilidad de instalar Google Play Services (necesario para acceder a la tienda de apps, Google Play). \\\hline
+    Manejador de paquetes de Python & pip 1.5.6 & Permite obtener e instalar de forma sencilla módulos adicionales de Python. \\\hline
+    Visualizador de observables CybOX & STIX-to-HTML 1.0.2 & Herramienta que facilita la visualización de documentos CybOX y STIX. \\\hline
+    Navegador de bases de datos SQLite & SQLiteBrowser 3.7.0 & Interfaz gráfica que facilita examinar el esquema y el contenido de bases de datos SQLite. \\\hline
+    \caption {Herramientas utilizadas en el desarrollo del prototipo}
+    \end{longtable}
+    \normalsize
+    
+\section{Biblioteca python-cybox}
+\subsection{Visión general}
+MITRE provee esta biblioteca \cite{python-cybox-github} para Python con el fin de facilitar las tareas de parsing, manipulación y generación de contenido CybOX. La misma se plantea tanto permanecer fiel al estándar CybOX como al uso de buenas prácticas que son habituales en Python.
+
+La biblioteca cuenta con activo desarrollo el cual sigue de cerca los últimos cambios del lenguaje. La forma en que está versionada la misma refleja la versión de CybOX que soporta. De esta forma, su esquema de versión es el siguiente: \texttt{major.minor.update.revision}, en dónde los primeros tres números corresponden a la versión de CybOX y el último es utilizado para indicar nuevas liberaciones de la propia biblioteca.
+
+En cuanto a la arquitectura del código, podemos ver que cuenta con dos niveles de APIs:
+
+\begin{itemize}
+\item Por un lado, provee \emph{bindings} a las construcciones CybOX definidas en el estándar. Las mismas son generadas en su mayoría de forma automática (utilizando la biblioteca de Python \emph{generate\_ds} \cite{generateDS}) a partir de los schemas definitions que definen formalmente al lenguaje CybOX. Esto representa un proceso equivalente al que podemos realizar utilizando JAXB \cite{JAXB} en el lenguaje Java.
+\item Por otro lado, también provee APIs de más alto nivel que permiten trabajar con las diversas construcciones disponibles en CybOX (como observables, objetos, etc) de forma natural en Python.
+\end{itemize}
+
+De esta forma, podemos trabajar con objetos de alto nivel como pueden ser \emph{SMSMessageObject} ó \emph{FileObject}, establecer relaciones entre ellos, introducirlos en un conjunto de observables y luego serializarlos a XML (gracias a las bindings) en tan sólo unas pocas líneas de código Python.
+
+\subsection{Extendiendo CybOX}
+\label{extendiendoCybOX}
+CybOX define en su schema un tipo de objeto al cual denomina \emph{CustomObject}. El mismo permite que podamos representar objetos que no se encuentran definidos en el estándar. Este mecanismo fue el que utilizamos para extender los tipos de objetos CybOX, lo cual resulta esencial para que la herramienta tenga la capacidad de soportar nuevos tipos de datos. 
+
+Veamos cómo debemos proceder para implementar un nuevo tipo de objeto CybOX, de forma que el mismo luego pueda ser utilizado por un inspector:
+
+En primer lugar, debemos crear la nueva clase que represente al nuevo tipo de dato. De esta forma, la misma debe heredar de la clase \emph{Custom} provista por python-cybox y exponer los campos del nuevo objeto. La forma de exponer estos campos deseamos que sea mediante atributos públicos para ser coherentes a cómo son expuestos los campos por parte de los objetos CybOX que provee por defecto la biblioteca.
+
+Para realizar lo último, tenemos que tener en cuenta que la clase Custom utiliza una colección de \emph{CustomProperty} mediante la cual se definen los campos del objeto en tiempo de ejecución. Para lograr contar con una interfaz igual a la provista por los demás objetos CybOX, esto es, poder acceder a los atributos de la clase directamente, podemos utilizar la construcción de Property que brinda Python \cite{python-property-class}, para interceptar los momentos en que se asigna y acceder al atributo y de esta forma actuar como proxy para utilizar la \emph{CustomProperty} correspondiente.
+
+\section{Interfaces de las extensiones}
+Veamos las interfaces que brindamos a los desarrolladores de extensiones:
+\newline
+
+\begin{python}[title=Interfaces brindadas a los desarrolladores, captionpos=b]
+class Extractor(object):
+    __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def execute(self, extracted_data_dir_path, param_values):
+        """
+        :type extracted_data_dir_path: string
+        :type param_values: dict<string, string>
+        :rtype : None
+        """
+        pass
+
+class Inspector(object):
+    __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def execute(self, device_info, extracted_data_dir_path):
+        """
+        :type device_info: DeviceInfo
+        :type extracted_data_dir_path: string
+        :rtype : (list(Object), list(FileObject))
+        """
+        pass
+
+\end{python}
+
+Como Python no cuenta con un mecanismo para definir formalmente interfaces en el lenguaje (como lo brindan otros lenguajes como Java), decidimos implementar ciertos controles para tener certeza de que las implementaciones de extensiones respetan los contratos de interfaces establecidos.
+
+Para esto, comenzamos por utilizar el módulo ABC (Abstract Base Class) que brinda la biblioteca estándar de Python. El mismo nos permite declarar clases abstractas, utilizando el atributo \emph{\_\_metaclass\_\_} para indicar esto y declarando los métodos abstractos utilizando la anotación \emph{\@abstractmethod}, como se puede observar en el cuadro anterior.
+
+El mecanismo mencionado permite asegurarnos de dos aspectos sobre las clases que deseamos exponer como interfaces. En primer lugar, que las mismas no puedan ser instanciadas directamente, y en segundo lugar, que las clases que implementen la interfaz (esto es, hereden de esta clase) implementan efectivamente todos los métodos anotados. Estos controles son realizados por parte del módulo ABC en tiempo de ejecución. En caso de que una clase viole alguno de estos aspectos, se produce una excepción al intentar crear una instancia de la misma.
+
+Además, dado que en Python un módulo (esto es, un archivo con extensión .py) puede contener múltiples clases de diversos nombres, y cada nueva extensión de la herramienta debe ser implementada en un nuevo módulo, deseamos realizar dos controles más:
+
+\begin{itemize}
+\item Por un lado, que el nombre de la clase que implementa la interfaz coincida con el nombre del módulo convertido a \emph{Camel Case} (notar que los nombres de los módulos en Python deben estar en \emph{Snake Case}). Esto se realiza simplemente como convención para facilitar la carga dinámica de las extensiones.
+\item Por otro lado, verificamos que la clase mencionada en el punto anterior implemente la interfaz correspondiente (esto es, herede ya sea de Extractor ó Inspector).
+\end{itemize}
+
+\section{Carga dinámica de las extensiones}
+Antes de instanciar una operación, la herramienta primero obtiene las instancias del extractor e inspector correspondientes a la misma, utilizando el \emph{RepositoriesManager}. Para esto, el \emph{RepositoriesManager} cuenta con una función para uso interno denominada \texttt{get\_class\_from\_file} que carga en tiempo de ejecución la clase a partir del archivo que le es indicado. Veamos los pasos que realiza esta función para cargar en memoria la clase:
+
+\begin{itemize}
+\item \begin{sloppypar} El primer paso es utilizar el método \texttt{import\_module} del módulo \texttt{importlib} \cite{python-importlib} para importar el módulo correspondiente al nombre del extractor o inspector. Dicho módulo es buscado en el repositorio correspondiente. \end{sloppypar}
+\item El segundo paso es utilizar la función built-in de Python \texttt{getattr} que nos permite obtener la definición de un objeto dentro de un módulo. En este caso, lo utilizamos para obtener la clase del nombre que nos especificaron en el módulo que importamos en el paso anterior.
+\item Finalmente, el último paso es asegurarnos que dicha clase implementa la interfaz correspondiente (Extractor o Inspector) como vimos en la sección anterior y devolver la misma.
+\end{itemize}
+
+De esta forma, vemos como Python nos permite fácilmente realizar la carga a demanda de módulos. Esto permite que la herramienta sea capaz de manejar repositorios muy grandes a la vez que utiliza un consumo de memoria bajo ya que únicamente debe mantener en memoria el extractor e inspector de la operación que se encuentra ejecutando.
+
+\section{Manejo de errores}
+Para el manejo de errores decidimos hacer uso de excepciones, tanto para el código interno de la herramienta como para la forma que establecimos que las extensiones deben reportar sus errores de ejecución.
+
+Para el primer caso, utilizamos excepciones estándar brindadas por el lenguaje, mientras que para el segundo caso definimos una excepción propia, la cual llamamos \emph{OperationError}. Como se describe en el anexo \ref{anexoGuia}, es de esta forma que tanto un extractor como un inspector debe reportar sus errores.
+
+\section{Proceso de desarrollo y verificación}
+Con el fin de verificar el correcto funcionamiento del prototipo, a medida que implementamos los componentes fuimos desarrollando también test unitarios para cada uno.
+
+Para el desarrollo del prototipo, seguimos un enfoque bottom up, esto es, comenzamos implementando los componentes \emph{DefinitionsDatabaseManager} y \emph{RepositoriesManager} que se observan en la figura \ref{DiagramaComponentes} y verificando su funcionamiento mediante tests unitarios. Luego, implementamos \emph{OperationsManager}, verificamos su funcionamiento utilizando tests unitarios que utilizaban mocks de sus dependencias (esto es, de \emph{DefinitionsDatabaseManager} y \emph{RepositoriesManager}) y luego además test de integración utilizando los componentes dependientes verdaderos. Para los restantes componentes procedimos de forma similar.
+
+Finalmente, una vez que la capa de presentación, esto es el parser de comandos, se encontraba finalizada, realizamos test funcional exploratorio del prototipo.
+
+\section{Descripción de los paquetes}
+A continuación vemos una descripción de los distintos paquetes con los que cuenta la herramienta.
+
+\footnotesize
+    \renewcommand*{\arraystretch}{1.4}
+    \begin{longtable}{|>{\raggedright}m{2cm}|>{\raggedright\arraybackslash}m{9cm}|}
+    \hline
+    \BlackCell{Nombre} & \BlackCell{Descripción} \\\hline
+    components & Contiene los módulos que conforman a los componentes principales de la herramienta como son mostrados en la figura \ref{DiagramaComponentes} \\\hline
+    model & Contiene las clases referentes al modelo de datos. \\\hline
+    repositories & Contiene los tres repositorios antes descritos en el capítulo de Diseño en donde van las extensiones a la herramienta. \\\hline
+    tests & Contiene test unitarios de los diversos componentes desarrollados así como recursos utilizados para los mismos. \\\hline
+    util & Contiene módulos auxiliares con métodos para facilitar el desarrollo de extractors e inspectors. \\\hline
+    \caption {Paquetes del prototipo}
+    \end{longtable}
+    \normalsize

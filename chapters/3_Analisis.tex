@@ -1,0 +1,383 @@
+\chapter{Análisis del problema}
+
+\section{Motivación}
+Como vimos en el capítulo anterior, el área de \emph{mobile forensics} no cuenta con procedimientos tan bien definidos a la hora de realizar una extracción de datos como se cuenta en el caso de los PC.
+
+Por la naturaleza del ecosistema Android, los dispositivos móviles son diseñados por una gran diversidad de fabricantes. Los mismos poseen cierto grado de libertad a la hora de implementar las funcionalidades que ofrecen a través del sistema operativo Android. Esto lleva a menudo a que nos encontremos con componentes que son implementados de diferente forma por distintos fabricantes. Por ejemplo, no es inusual que un fabricante opte por utilizar un filesystem distinto al de referencia (EXT4) utilizado por el proyecto open source Android para la partición que almacena los datos del usuario \cite{adrdstrg}. Estos cambios, que para el usuario final del dispositivo son transparentes, tienen un impacto considerable en la forma de extraer los datos.
+
+Vemos entonces que a pesar de que los tipos de datos que podemos extraer de los dispositivos Android son en esencia los mismos, la forma en la cual debemos realizar su extracción muy a menudo varía dependiendo de variables como son el fabricante del dispositivo y la versión del sistema operativo Android.
+
+La dependencia en la implementación por parte del fabricante se hace mayor si consideramos realizar extracciones físicas. En el caso de extracciones lógicas, tenemos una menor dependencia con la implementación del fabricante por el simple hecho de contar con las abstracciones y convenciones que establece la plataforma Android, pero aún así existen muchos aspectos en los cuales seguimos dependiendo de la implementación del fabricante también a este nivel. A modo de ejemplo, un caso habitual es el esquema de la base de datos utilizada para almacenar los mensajes de texto. Dicho esquema suele variar dependiendo el fabricante e incluso entre carriers \cite{delsms}.
+
+Por otro lado, también dependemos de la versión de Android que posee el dispositivo. A menudo se producen cambios en la plataforma que provocan que debamos modificar la forma en la que extraemos los datos ya sea porque cambia la forma en que se acceden o presentan los datos. Por ejemplo, en la versión 4.1 de Android se restingió el acceso a logs de aplicaciones. Previo a esto, aplicaciones de terceros tenían la capacidad de solicitar el permiso \emph{READ\_LOGS} con el cual podían acceder a los logs generados por las demás aplicaciones \cite{logaccss}.
+
+Por lo tanto, vemos que contar con un nivel de abstracción que permita concentrarnos en qué datos deseamos extraer, sin tener que estar considerando cómo extraerlos de cada dispositivo en particular, sería de gran utilidad para poder desarrollar herramientas y procesos forenses que escalen ante la gran variedad del ecosistema Android.
+
+Asimismo, tener este nivel de abstracción no sólo resultaría útil para uniformizar la forma de extraer datos a través de diversos dispositivos y versiones de Android, sino que también podría facilitar la forma en que especificamos los datos que deseamos extraer. A modo de ejemplo, sería interesante poder realizar extracciones especificando únicamente el tipo y la fuente de los datos a obtener.
+
+Por último, vemos que este nivel de abstracción también nos brinda la oportunidad de poder \enquote*{empaquetar} las técnicas de extracción de datos de una forma uniforme. Esto permite que luego de desarrolladas puedan ser compartidas y reutilizadas por otros. Este aspecto resulta vital para crear un ambiente de desarrollo colaborativo el cual permita soportar una porción considerable del ecosistema Android.
+
+\section{Objetivos}
+Por lo expresado en la sección anterior, estamos convencidos que la construcción de una herramienta que asista en la extracción de datos en dispositivos móviles Android podría favorecer sustancialmente el trabajo del analista forense. A continuación entonces describiremos los problemas a los que apuntamos resolver mediante la creación de la misma.
+
+El objetivo principal de la herramienta propuesta es \textbf{facilitar la extracción de datos} de dispositivos móviles Android. Para esto, la herramienta realiza una fuerte separación entre cómo el usuario expresa lo que desea extraer y cómo se lleva a cabo la extracción. Esta separación permite a los usuarios concentrarse en qué datos extraer y no en cómo debe implementar el procedimiento de extracción. De esta forma, evitamos que los usuarios requieran contar con amplio conocimiento técnico para utilizar la herramienta, lo cual permite que la misma sea utilizada por un espectro más amplio de investigadores forenses.
+
+Como vimos, una de las características fundamentales del ecosistema Android es su diversidad. Esto hace que sea importante abordar el desafío de extraer datos de forma escalable desde la concepción de la herramienta. Para esto, la misma deberá contar con una arquitectura que \textbf{facilite su extensibilidad} con el fin de poder soportar rápidamente nuevas formas de extraer datos. Esta es una necesidad clave ante la permanente evolución de Android y su ecosistema de dispositivos.
+
+Finalmente, otro aspecto clave a resolver es el hecho de que hoy en día las herramientas forenses cuentan con escasa interoperabilidad entre ellas. Independientemente de los motivos comerciales o políticos que hayan detrás de este hecho, consideramos que uno de los aspectos más importante para que la herramienta resulte útil radica en \textbf{facilitar la manipulación de los datos extraídos}. Por lo tanto, la herramienta debe brindar sus salidas en un formato que facilite la consumición de las mismas por parte de herramientas de análisis forense. Por esta razón, creemos razonable buscar la adopción de lenguajes o formatos estándares en el área para expresar las salidas de la herramienta.
+
+\section{Enfoque inicial}
+Para cumplir con los objetivos recién propuestos nos planteamos cómo debería ser la interacción que proporciona la herramienta y las operaciones que la misma brinda. A continuación analizaremos cómo llegamos a decidir varios de los aspectos claves que luego veremos reflejados en el funcionamiento de la herramienta.
+
+Si consideramos el comportamiento más simple que uno esperaría de una herramienta de este tipo, seguramente sería el de contar con un conjunto de operaciones de extracción definidas y ser capaz de extraer exactamente los datos que deseamos con una única operación. Esto nos lleva a considerar cómo dividiríamos el dominio de operaciones de extracción con el que debemos contar. Al considerar las variables descritas anteriormente, surgen naturalmente dos enfoques que coinciden con casos de uso habituales para un investigador:
+
+\begin{itemize}
+\item Por un lado, nos puede interesar realizar extracciones según la \textbf{fuente de datos}. Por ejemplo, un investigador podría desear obtener todos los datos relevantes de la aplicación Facebook.
+\item Por otro lado, también puede ser interesante poder realizar extracciones según su \textbf{tipo de datos}. Por ejemplo, un investigador podría desear obtener todas las imágenes del dispositivo (ya sean estas de Facebook, WhatsApp, la cámara, etc).
+\end{itemize}
+
+En vez de tener que decidir por uno de los dos enfoques, vimos que sería muy interesante intentar satisfacer ambas necesidades. Para esto, nos dimos cuenta que esto es posible si consideramos operaciones de extracción concisas que luego puedan ser combinadas para obtener los datos deseados. En vez de intentar dividir el conjunto de operaciones utilizando únicamente una de estas variables (esto es, en operaciones dedicadas a extraer datos o bien según su tipo de dato, o bien según su fuente de datos), lo dividiríamos según ambas.
+
+Finalmente, vemos que de esta forma la herramienta contaría con operaciones más granulares, pero al combinarlas nos permitirían extraer con precisión los datos deseados. Por lo tanto, logramos así que la herramienta tenga una mayor flexibilidad al abarcar ambos casos de uso. De hecho, este enfoque permite que la misma tenga una mayor capacidad de expresión, pudiendo llegar a ser bien específicos en los datos que deseamos extraer al fijar tanto tipo de dato como fuente de datos. Por ejemplo, nos permitiría expresar tanto el deseo de extraer únicamente las imágenes de Facebook, como el de obtener todos los mensajes de texto del dispositivo (sin importar si estos provienen de Hangouts ó WhatsApp).
+
+En resumen, el enfoque que tomamos para concebir una operación nos ofrece lo siguiente:
+
+\begin{itemize}
+\item \textbf{Expresividad}: Permite tener un nivel de precisión muy interesante en los datos que deseamos extraer.
+\item \textbf{Flexibilidad}: Permite cubrir distintos casos de uso de forma simple.
+\item \textbf{Extensibilidad}: Posibilita un diseño que permite ser extendido para soportar nuevas propiedades de operaciones.
+\end{itemize}
+
+\section{Conceptos fundamentales}
+Empecemos por detallar mejor dos de los conceptos claves que mencionamos. Estos son: fuente de dato y tipo de dato. En base a los mismos es que determinamos la granularidad que tendrán las operaciones, como vimos en el enfoque recién planteado.
+
+La información que solemos encontrar en los dispositivos móviles puede provenir de diversas \textbf{fuentes de datos}. A su vez, resulta interesante observar que hay conjuntos de fuentes de datos para los cuales el mecanismo para obtener datos de las mismas es el mismo. En estos casos, decimos que dichas fuentes son del mismo \textbf{tipo de fuente de dato}.
+
+Por otro lado, las diversas piezas de información que podemos encontrar en los dispositivos poseen una semántica diferente para el usuario dependiendo del concepto que representan. Las piezas de información que representan un mismo concepto las asociamos a un \textbf{tipo de dato}.
+
+En el enfoque planteado, vimos que cada operación realiza un trabajo conciso. De esta forma, una \textbf{operación de extracción} extrae un único tipo de dato, de una única fuente de datos y para determinado rango de versiones y modelos de dispositivos Android.
+
+Ahora que hemos visto lo que hace una operación de extracción, resulta importante que precisemos el término utilizado para referirnos a ella. Si bien la herramienta fue enfocada desde su concepción a la extracción de datos, esta no es exclusivamente la única tarea que realiza una operación.
+
+Además de extraer los datos originales, deseamos encontrar únicamente los de cierto tipo de dato y luego representar la información encontrada sobre los mismos en cierto lenguaje. Estas tareas no caen exclusivamente en la etapa que se conoce como extracción en la mayoría de los modelos de proceso forense. Tomemos para esto como referencia el modelo propuesto y utilizado por el Departamento de Justicia de EEUU \cite{eleccrime} y veamos las tres etapas del proceso forense en que participa una operación:
+
+\begin{itemize}
+\item \textbf{Extracción}, dado que se encarga de obtener datos de una fuente de datos del dispositivo.
+\item \textbf{Examinación}, dado que identifica y presenta datos hallados (correspondientes con el tipo de dato de la operación), en un nivel de abstracción mayor al de los datos obtenidos originalmente.
+\item \textbf{Presentación}, dado que los datos hallados serán expresados en cierto lenguaje estándar.
+\end{itemize}
+
+\section{Requerimientos}
+A continuación describiremos los requerimientos con los cuales consideramos que debe cumplir la herramienta para lograr los objetivos planteados.
+
+\subsection*{A. Funcionalidades claves}
+La herramienta debe proveer al usuario un conjunto de operaciones que faciliten la extracción de datos de dispositivos móviles Android. Para esto, la misma debe brindar las siguientes funcionalidades claves:
+
+\subsubsection*{A1. Operaciones atómicas}
+Las operaciones deben contar con un alto nivel de granularidad. De esta forma, una operación debe extraer un único tipo de dato, de una fuente de datos determinada, soportando un determinado conjunto de dispositivos y versiones de Android.
+
+\subsubsection*{A2. Consulta de operaciones}
+La herramienta debe contar con la posibilidad de consultar (y filtrar) por las operaciones disponibles. De esta forma, el usuario puede descubrir las mismas y sus características.
+
+\subsubsection*{A3. Ejecución de operaciones}
+La herramienta debe permitir ejecutar una serie de operaciones en un único paso. Esto permite al usuario combinar operaciones y, debido al alto nivel de granularidad que poseen las mismas, tener la capacidad de extraer con gran precisión los datos deseados.
+
+\subsubsection*{A4. Modos de ejecución de la herramienta}
+La herramienta debe contar con dos modos de ejecución:
+\begin{itemize}
+\item Un \textbf{modo interactivo}, en el cual el usuario pueda realizar consultas sobre las operaciones disponibles filtrando por los parámetros de las mismas y luego ejecutar las operaciones deseadas.
+\item Un \textbf{modo batch}, en el cual el usuario ya conoce las operaciones que desea utilizar y únicamente especifica cuáles ejecutar.
+\end{itemize}
+
+\subsection*{B. Extensibilidad}
+La herramienta debe proveer mecanismos que permitan extender fácilmente los siguientes tres puntos:
+\begin{enumerate}
+\item Tipos de datos
+\item Tipos de fuente de datos
+\item Operaciones
+\end{enumerate}
+
+\subsection*{C. Acceso de datos}
+La herramienta debe ser capaz de abstraer la forma en que accede a los datos. De esta forma, posibilita su interoperación tanto con la diversidad de dispositivos reales que hay como con emuladores, y además permite la extensibilidad de la herramienta para soportar otros dominios de datos.
+
+\subsection*{D. Salida de datos}
+\subsubsection*{D1. Lenguaje estándar}
+La herramienta debe hacer uso de un lenguaje estándar para expresar sus salidas de datos, con el fin de que para otras herramientas sea sencillo consumir los datos producidos.
+
+\subsubsection*{D2. Lenguaje extensible}
+Además, el lenguaje utilizado para representar los datos de salida debe ser extensible, dado que es necesario que el mismo sea capaz de representar información de nuevos tipos de datos.
+
+\section{Casos de uso}
+Vistos los requerimientos, ahora vamos a considerar los casos de uso necesarios para satisfacer a los mismos.
+
+Comencemos por describir al usuario el cual apuntamos que haga uso de nuestra herramienta. El mismo lo concebimos como un investigador forense, el cual no necesariamente cuenta con conocimiento técnico de cómo se implementa cada operación.
+
+Deseamos que este usuario pueda hacer uso de la herramienta principalmente de dos posibles formas:
+
+\begin{enumerate}
+\item Manual, esto es, interactuando directamente con la herramienta con el fin de obtener los datos que desea de un cierto dispositivo.
+\item Automática, con el fin de permitirle automatizar tareas de obtención de datos o facilitar la integración de la herramienta con otras herramientas utilizadas por el usuario.
+\end{enumerate}
+
+Para estos dos casos de uso es que la herramienta posee dos modos distintos de ejecución, interactivo y batch respectivamente, que son establecidos en [Req. A4].
+
+En tanto, en [Req. B] se expresa la capacidad de extensibilidad que debe tener la herramienta. Veremos cómo el sistema tiene dicha capacidad mediante dos casos de uso que permiten agregar y eliminar operaciones del sistema. Estos se centran en el punto de extensión que es de mayor interés para la herramienta. También consideraremos los otros dos puntos de extensión, que auspician de soporte al anterior, en el caso de agregar una operación y que la misma haga uso de un tipo de dato o tipo de fuente de dato nueva al sistema.
+
+Finalmente, el usuario tiene a su disposición el siguiente conjunto de comandos para interactuar con el sistema:
+
+\footnotesize
+    \renewcommand*{\arraystretch}{1.4}
+    \begin{longtable}{ | >{\bfseries}m{4.8cm} | >{\itshape}m{8.2cm} | >{\itshape}c |}
+    \hline
+    \BlackCell{Comando} & \BlackCell{Descripción} \\ \hline \hline
+    set\_device\_info & Permite especificar la información del dispositivo en el modo de ejecución interactivo. Esto hace posible que podemos omitir dicha información de los comandos \texttt{list\_operations} y \texttt{execute\_operations} posteriores. \\ \hline
+    
+    list\_operations & Lista las operaciones disponibles del sistema. Es de especial valor su uso en el modo interactivo, ya que permite al usuario descubrir las operaciones y sus características. \\ \hline
+    
+    execute\_operations & Permite ejecutar un conjunto de operaciones tanto en modo interactivo como en modo batch. \\ \hline
+    
+    add\_operation & Agrega una nueva operación al sistema. \\ \hline
+    
+    remove\_operation & Elimina una operación del sistema. \\ \hline
+    
+    add\_data\_type & Agrega un nuevo tipo de datos al sistema. \\ \hline
+    
+    remove\_data\_type & Elimina un tipo de datos del sistema, en caso que este no existan operaciones que lo utilizan. \\ \hline
+    
+    add\_data\_source\_type & Agrega un nuevo tipo fuente de datos al sistema. \\ \hline
+    
+    remove\_data\_source\_type & Elimina un tipo de fuente de datos del sistema, en caso que no existan operaciones que lo utilizan. \\ \hline
+    \caption {Comandos disponibles de la herramienta}
+    \label{tab:objetos}
+    \end{longtable}
+    \normalsize
+
+\subsection{Ejecución de operaciones en modo interactivo}
+
+\subsubsection*{Flujo principal}
+\begin{enumerate}
+\item El usuario ejecuta la herramienta sin ningún parámetro adicional.
+\item El sistema inicia una sesión de ejecución interactiva.
+\item El usuario ejecuta el comando \texttt{list\_operations} indicando el tipo de datos, la fuente de datos (y la información del dispositivo en caso de no haber utilizado el comando \texttt{set\_device\_info}).
+\item El sistema retorna la información de todas las operaciones que cumplen con los valores indicados. Para cada operación se muestra:
+    \begin{itemize}
+    \item Identificador de la operación.
+    \item Tipo de datos que examina.
+    \item Fuente de datos utilizada para extraer los datos.
+    \item Información de versiones de Android y modelos de dispositivos soportados.
+    \end{itemize}
+\item El usuario ejecuta el comando \texttt{execute\_operations} indicando los identificadores de las operaciones que desea ejecutar (y la información del dispositivo en caso de no haber utilizado el comando \texttt{set\_device\_info}).
+\item Para cada operación ejecutada:
+    \begin{itemize}
+    \item Si completó exitosamente, el sistema indica la ruta al directorio en donde fue almacenada la información obtenida.
+    \item Sí falló, el sistema indica la causa.
+    \end{itemize}
+\item El usuario no desea realizar más extracciones.
+\item Fin del caso de uso.
+\end{enumerate}
+
+\subsubsection*{Flujos alternativos}
+
+\begin{itemize}
+\item 3A.
+    \begin{enumerate}
+    \item El usuario ejecuta el comando \texttt{set\_device\_info} indicando la información del dispositivo.
+    \item El sistema guarda la información del dispositivo. Esta información será tenida en cuenta por los comandos \texttt{list\_operations} y \texttt{execute\_operations}.
+    \item Retorna al paso 3 del flujo principal.
+    \end{enumerate}
+\end{itemize}
+
+\begin{itemize}
+\item 5A.
+    \begin{enumerate}
+    \item El usuario ejecuta el comando \texttt{execute\_operations} indicando los identificadores de las operaciones que desea ejecutar, pero no indica la información sobre el dispositivo.
+    \item El sistema retorna un mensaje de error indicando que es necesario conocer la información del dispositivo.
+    \item Se retorna al paso 5 del flujo principal.
+    \end{enumerate}
+\end{itemize}
+
+\begin{itemize}
+\item 7A. El usuario desea realizar otra extracción.
+    \begin{enumerate}
+    \item Se retorna al paso 3 del flujo principal.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Ejecución de operaciones en modo batch}
+La diferencia más importante entre este modo de ejecución de operaciones y el modo previamente explicado consiste en que en este modo el usuario ya sabe cuales son las operaciones que desea ejecutar. Por lo tanto, no necesita de un modo interactivo en donde realizar consultas previo a ejecutar las operaciones.
+
+\subsubsection*{Flujo principal}
+\begin{enumerate}
+\item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{execute\_operations}, los identificadores de las operaciones que desea ejecutar y la información sobre el dispositivo.\end{sloppypar}
+\item Para cada operación ejecutada:
+    \begin{itemize}
+    \item Si completó exitosamente, el sistema indica la ruta al directorio en donde fue almacenada la información obtenida.
+    \item Sí falló, el sistema indica la causa.
+    \end{itemize}
+\item Fin del caso de uso.
+\end{enumerate}
+
+\subsubsection*{Flujos alternativos}
+\begin{itemize}
+\item 1A.
+    \begin{enumerate}
+    \item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{execute\_operations}, pero no indica los identificadores de las operaciones a ejecutar y/o la información sobre el dispositivo.\end{sloppypar}
+    \item El sistema retorna un mensaje de error indicando los datos omitidos.
+    \item Fin del caso de uso.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Adición de una operación}
+
+\subsubsection*{Flujo principal}
+\begin{enumerate}
+\item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{add\_operation} y la ruta a la definición de la nueva operación.\end{sloppypar}
+\item El sistema valida la definición de la nueva operación, la agrega y le indica al usuario que la operación fue agregada exitosamente.
+\item Fin del caso de uso.
+\end{enumerate}
+
+\subsubsection*{Flujos alternativos}
+\begin{itemize}
+\item 1A.
+    \begin{enumerate}
+    \item \begin{sloppypar} El usuario desea agregar una operación que cuenta con un tipo de dato o un tipo de fuente de datos no existente en el sistema. Para esto, primero ejecuta la herramienta pasándole como parámetro el comando correspondiente (\texttt{add\_data\_type} o \texttt{add\_data\_source\_type}) con la ruta a su definición. \end{sloppypar}
+    \item El sistema valida la definición del mismo, lo agrega y le indica al usuario que fue agregado exitosamente.
+    \item Se retorna al paso 1 del flujo principal.
+    \end{enumerate}
+    
+\item 2A. / 1A.2A
+    \begin{enumerate}
+    \item El sistema intenta validar la definición recibida, pero determina que no es válida.
+    \item El sistema retorna un mensaje de error indicando los datos inválidos de la misma.
+    \item Fin del caso de uso.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Eliminación de una operación}
+
+\subsubsection*{Flujo principal}
+\begin{enumerate}
+\item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{remove\_operation} y el identificador de la operación que desea eliminar.\end{sloppypar}
+\item El sistema elimina la operación y retorna al usuario un mensaje indicando que la misma fue eliminada.
+\item Fin del caso de uso.
+\end{enumerate}
+
+\subsubsection*{Flujo alternativo}
+\begin{itemize}
+\item 1A.
+    \begin{enumerate}
+    \item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{remove\_operation}, pero no indica el identificador de la operación que desea eliminar. \end{sloppypar}
+    \item El sistema retorna un mensaje de error haciendo referencia al parámetro faltante.
+    \item Fin del caso de uso.
+    \end{enumerate}
+\end{itemize}
+
+\section{Definición del alcance}
+En base a los requerimientos establecidos, veremos a continuación varios aspectos que merecen la pena ser mencionados con el fin de ayudar a delimitar con claridad el alcance del proyecto.
+
+\subsection*{A. Funcionalidades claves}
+\textbf{A1.} Como vimos, la herramienta contará con un conjunto de operaciones, las cuales realizan la extracción, examinación y presentación de los datos encontrados. Estas operaciones buscan representar:
+
+\begin{itemize}
+\item \textbf{Datos extraídos de dispositivos móviles} de carácter lógico y orientados a datos producidos por los usuarios de los dispositivos (esto es, no nos enfocaremos a examinar datos producidos, por ejemplo, por malware). De todas formas, la arquitectura será diseñada con el fin de facilitar la incorporación de otros dominios de datos.
+\item \textbf{Datos sobre el proceso de extracción}. Esto es, nos interesa conocer los siguientes datos: la relación entre los datos extraídos originales y los datos examinados, la información sobre los colaboradores y el ambiente en el cual éstos utilizaron la herramienta.
+\end{itemize}
+
+\textbf{A2.} El mecanismo de consulta de operaciones será bastante simple. Esto es, para los parámetros de tipo de dato y fuente de datos, se podrá ingresar un valor (o ninguno) para cada uno de ellos. Puede llegar a resultar práctico agregar más opciones a esta funcionalidad con el fin de facilitar su uso, pero consideramos que sería más adecuado hacerlo en una segunda iteración de la herramienta, por lo que lo dejamos fuera del alcance para el desarrollo del prototipo.
+
+\subsection*{B. Extensibilidad}
+\subsubsection*{1. Tipos de datos}
+El prototipo de la herramienta por defecto contará con un conjunto básico de tipos de datos correspondientes a los diversos objetos predefinidos por el lenguaje que veremos en la siguiente sección.
+
+\subsubsection*{2. Tipos de fuentes de datos}
+El prototipo de la herramienta se encuentra enfocado en la extracción de datos de aplicaciones. Para esto, contaremos con un tipo de fuente de datos llamado Application, que permitirá tomar como fuente de datos aquellos datos pertenecientes a una aplicación instalada en el dispositivo.
+
+De todas formas, el hecho de contar con la posibilidad de tener diversos tipos de fuentes de datos permite a la herramienta extender su soporte para extraer datos de otros tipos de fuentes. Por esto, vemos que como contrapartida a datos de aplicaciones, sería interesante desarrollar en una futura iteración de la herramienta la extracción de datos del sistema. Para esto, planteamos dos posibilidades que se podrían tomar:
+
+\begin{itemize}
+\item \textbf{Logs del sistema}: Esto es, permitir la extracción de datos de cierto log del sistema. Se podrían extraer datos del sysdump ó logcat, especificando sección o nivel respectivamente. De este tipo de fuentes podríamos obtener datos como datos de geolocalización, direcciones IP, URLs, etc.
+\item \textbf{Datos del sistema}: Esta permitiría un acceso a datos del sistema de forma más general incluso, permitiendo extraer datos más cercanos al sistema operativo. De este tipo de fuentes entonces podríamos extraer datos de procesos, conexiones de red, particiones de disco, usuarios, información de hardware, etc.
+\end{itemize}
+
+\subsubsection*{3. Operaciones}
+El prototipo contará con una serie de operaciones por defecto, seguramente sean desarrolladas como parte del caso de estudio a realizarse.
+
+\subsection*{C. Acceso de datos}
+Vimos que la idea es poder abstraer la forma utilizada para acceder a los datos, con el fin de poder interoperar con múltiples tipos de dispositivos e incluso con emuladores.
+
+En este sentido, el protocolo ADB (Android Debug Bridge) y sus herramientas nos proveen la abstracción necesaria que precisamos para cumplir con el requerimiento [Req. C]. El mismo nos posibilita el intercambio de datos y ejecución de comandos de forma transparente tanto en dispositivos físicos como en emuladores.
+
+A su vez, vemos que utilizando esta interfaz es posible luego extender la herramienta para soportar extracciones físicas, ya que a través de adb es posible ejecutar comandos para crear y transferir una imagen de la partición de datos del usuario. Este punto quedará por fuera del alcance.
+
+Para el ambiente de desarrollo del prototipo, utilizaremos el emulador por la flexibilidad, facilidad y control que nos brinda. En particular:
+
+\begin{itemize}
+\item Nos da la posibilidad de crear imágenes específicas del estado de un dispositivo.
+\item Evitamos preocuparnos fallas o pérdida de datos de un dispositivo real.
+\item Al estar rooteado el emulador, tenemos acceso a todos los datos. El aspecto de cómo rootear un dispositivo, no es un punto en el cual deseamos concentrarnos.
+\end{itemize}
+
+De todas formas, la herramienta será diseñada para soportar tanto dispositivos reales como virtuales (emuladores). El hecho de contar con una interfaz de acceso a los dispositivos como es adb y un emulador que emula el hardware de un dispositivo real (y no simulador) hace que esta transición, en teoría, no deba requerir esfuerzo adicional.
+
+\subsection*{D. Salida de datos}
+Debido al funcionamiento que comprende una operación, vemos que la herramienta contará con los siguientes tipos de salida de datos:
+
+\begin{itemize}
+\item \textbf{Datos extraídos}, para expresar los datos que fueron obtenidos del dispositivo en su forma original.
+\item \textbf{Datos examinados}, para expresar los datos encontrados a partir de los anteriores.
+\item \textbf{Datos del proceso de extracción}, para expresar información acerca de los colaboradores que obtuvieron los datos examinados, el ambiente que utilizaron y los archivos de los cuales fue obtenida la información de los mismos.
+\end{itemize}
+
+Dado que debemos expresar las salidas de la herramienta en un lenguaje estándar para que puedan ser consumidas fácilmente por terceros, debemos escoger un lenguaje para representar a los datos examinados y del proceso de extracción. En la siguiente sección veremos cómo escogimos un lenguaje de forma de cumplir con los requerimientos [Req. D1] y [Req. D2].
+
+\section{Representación de los datos de salida}
+Acabamos de ver la necesidad que tenemos de contar con un lenguaje que nos permita representar los datos examinados y del proceso producidos por la herramienta.
+
+Para esto, entonces veamos los puntos que debe cumplir el lenguaje de representación que utilicemos:
+
+\begin{enumerate}
+\item Debe ser estándar, de forma de que resulte fácil consumir los datos producidos [Req. D1].
+\item Debe ser extensible, de forma que podamos representar con el mismo nuevos tipos de datos [Req. D2].
+\item Debe ser capaz de representar datos sobre el proceso de extracción (en particular, aquellos vistos en la sección de alcance del [Req. A1]).
+\end{enumerate}
+
+Ahora veamos el estilo de tipos de datos que pretendemos que el lenguaje nos permita representar:
+
+\textbf{Datos de aplicaciones}
+\begin{itemize}
+\item Mensajes de texto (SMS, MMS)
+\item Mensajes de chat (Hangouts, WhatsApp, Facebook)
+\item Mensajes de correo (Default email app, GMail)
+\item Contactos (Agenda, Facebook, GMail)
+\item Registro de llamadas
+\item Eventos de calendario (Google Calendar)
+\item Archivos (Locales, GDrive, Dropbox)
+\item Información de ubicación (GPS, geo-fencing)
+\item Historial de navegación
+\end{itemize}
+
+\textbf{Datos del sistema}
+\begin{itemize}
+\item Datos de telefonía (ICCID, IMEI, MEID)
+\item Información de red (Dirección MAC de Wi Fi, Bluetooth)
+\item Información del dispositivo (Modelo, marca)
+\item Procesos corriendo
+\item Conexiones activas
+\end{itemize}
+
+En el primer grupo vemos ejemplos de tipos de datos que podemos obtener de fuentes de datos del tipo de Application como con los que nos enfocaremos. En el segundo, vemos ejemplos de datos relevantes al sistema, que si bien no los consideraremos directamente, es deseable que el lenguaje pueda representarlos para que luego sea posible extender la herramienta y soportar el uso de los mismos.
+
+\subsection{CybOX como lenguaje escogido}
+Para representar los datos examinados y del proceso elegimos un lenguaje desarrollado originalmente por MITRE llamado CybOX. El mismo tiene la capacidad de representar eventos o propiedades con estado que puedan ser observadas en el dominio cibernético. Además, el mismo pretende ser utilizado por un amplio espectro de casos de uso a lo largo de diversas áreas de seguridad informática, entre ellas digital forensics.
+
+En el anexo \ref{anexoGuia} describimos los aspectos interesantes del lenguaje en detalle y vemos como el mismo se alinea a nuestros objetivos.
+
+Ahora veamos cómo CybOX cumple con los tres puntos que vimos anteriormente:
+
+\begin{enumerate}
+\item CybOX es un lenguaje basado en XML y que goza de una amplia adopción por parte de la comunidad informática forense. Al momento de escribir este documento, el lenguaje se encuentra en transición para ser adoptado formalmente por la organización de estándares OASIS \cite{stixtrans}.
+\item CybOX permite representar información sobre diversos tipos de datos mediante lo que denomina como objetos. El mismo cuenta con un conjunto de objetos pre-definidos que abarca buena parte de los mencionados anteriormente en esta sección. Además, cuenta con dos mecanismos para definir otros objetos nuevos (custom objects). En la sección de Extensibilidad en Diseño profundizaremos sobre cómo es posible hacer esto.
+\item CybOX permite representar una diversidad de información sobre datos del proceso. En particular, es posible representar de dónde fue extraída la información de un objeto utilizando propiedades de relación. También soporta especificar información sobre los colaboradores que realizaron la obtención de los datos e información acerca del ambiente que utilizaron.
+\end{enumerate}
+
+De esta forma, vemos que el lenguaje resulta apropiado a las necesidades de representación que presenta la herramienta. Además, como veremos en la sección de implementación el mismo cuenta con una serie de herramientas \cite{cyboxpry} que facilitan tanto su producción como consumición, lo cual nos beneficia a nosotros y a quienes deseen utilizar los datos producidos por la herramienta.

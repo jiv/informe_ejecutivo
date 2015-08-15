@@ -1,0 +1,129 @@
+% Packages
+\RequirePackage[spanish]{babel}
+\RequirePackage{csquotes}
+\RequirePackage{float}
+\RequirePackage{listings}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{lastpage}
+\RequirePackage{fancyhdr}
+\RequirePackage{graphicx}
+\RequirePackage[table]{xcolor}      % Pintar celdas de tablas.
+\RequirePackage{longtable}          % Tablas en varias hojas.
+\RequirePackage{emptypage}
+\RequirePackage[scaled=0.85]{beramono}      % Bold de texttt
+\RequirePackage[T1]{fontenc}
+\PassOptionsToPackage{hyphens}{url}
+\RequirePackage[bookmarksnumbered]{hyperref}
+\RequirePackage{hyperref}  
+\RequirePackage{fancyhdr}
+
+% Set image directory
+\graphicspath{ {figures/} }
+
+% Eliminar sangrías
+\setlength{\parindent}{0in}
+
+% Separar párrafos
+\setlength{\parskip}{1em}
+
+\setcounter{secnumdepth}{3}
+
+% Celdas negras en tablas.
+\newcommand\BlackCell[1]{%
+  \multicolumn{1}{c|}{\cellcolor{black}\textcolor{white}{\textbf{#1}}}
+}
+
+\setlength{\headsep}{0.25in} 
+\setlength{\parindent}{0in}
+\setlength{\headheight}{25.3368pt}
+\pagestyle{fancy}
+
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}{}}
+
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+\lhead{\small{\parbox[t]{0.49\textwidth}\leftmark}}
+\rhead{\small{\parbox[t]{0.49\textwidth}\hfill\rightmark}}
+\lfoot{Informe ejecutivo}
+\rfoot{Página \thepage\ de \pageref{LastPage}}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+\definecolor{forestgreen}{RGB}{34,139,34}
+\definecolor{orangered}{RGB}{239,134,64}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\newcommand\xmlstyle{\lstset{
+    language=XML,
+    extendedchars=true, 
+    breaklines=true,
+    breakatwhitespace=true,
+    commentstyle=\color{gray}\upshape,
+    morestring=[b]",
+    morecomment=[s]{<?}{?>},
+    morecomment=[s][\color{forestgreen}]{<!--}{-->},
+    keywordstyle=\color{orangered},
+    stringstyle=\color{black}\normalfont,
+    tagstyle=\color{darkblue},
+    morekeywords={attribute,xmlns,version,type,release},
+    frame=tb,
+    showstringspaces=false,
+    basicstyle=\scriptsize
+}}
+
+% Xml environment
+\lstnewenvironment{xml}[1][]
+{
+\xmlstyle
+\lstset{#1}
+}
+{}
+
+\newcommand\pythonstyle{\lstset{
+language=Python,
+otherkeywords={set_device_info, list_operations, execute_operations, add_data_type, remove_data_type, add_data_source_type, remove_data_source_type, add_operation, remove_operation, query_operations_info, get_operation_info, get_operation, get_operation_info_by_id, get_operation_exec_info, exists_operation, exists_data_type, exists_data_source_type, has_all_required_param_values, add_file, remove_file, get_extractor, get_inspector, get_custom_cybox_object, add_related, inline},
+keywordstyle=\color{deepblue},
+emph={DeviceInfo, string, DataSource, integer, list, bool, Extractor, Inspector, ObjectProperties, False},
+emphstyle=\color{deepred},
+stringstyle=\color{deepgreen},
+frame=tbrl,
+showstringspaces=false,
+basicstyle=\scriptsize
+}}
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+\newcommand\bashstyle{\lstset{
+language=bash,
+basicstyle=\scriptsize,
+frame=tbrl,
+breaklines=true,
+breakatwhitespace=true,
+showstringspaces=false
+}}
+
+% Recuadro
+\lstnewenvironment{bash}[1][]
+{
+\bashstyle
+\lstset{#1}
+}
+{}
+
+% Reducir el tamaño del indice
+\usepackage{tocloft}
+\setlength\cftparskip{-2pt}
+\setlength\cftbeforechapskip{10pt}
