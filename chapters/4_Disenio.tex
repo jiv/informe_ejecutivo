@@ -89,7 +89,7 @@ Interfaz que debe ser implementada por los extractors de las operaciones. Cada e
     \end{longtable}
     \normalsize
     
-El método execute es utilizado por la clase Operation para extraer los datos del dispositivo. Cuando la clase Operation llama a este método, le indica por parámetro la ruta en donde se deben almacenar los datos extraídos y un diccionario conteniendo los valores de cada uno de los parámetros requeridos por el tipo de fuente correspondiente del extractor.
+El método \texttt{execute} es utilizado por la clase \emph{Operation} para extraer los datos del dispositivo. Cuando la clase \emph{Operation} llama a este método, le indica por parámetro la ruta en donde se deben almacenar los datos extraídos y un diccionario conteniendo los valores de cada uno de los parámetros requeridos por el tipo de fuente correspondiente del extractor.
 
 \subsection{Inspector}
 Interfaz que debe ser implementada por el inspector de una operación. Cada inspector implementa el mecanismo a través del cual una operación examina datos provenientes de una determinada fuente de datos y en busca de un determinado tipo de dato. \newline
@@ -103,12 +103,12 @@ Interfaz que debe ser implementada por el inspector de una operación. Cada insp
     \caption {Interfaz Inspector}
     \end{longtable}
     \normalsize
-    
-El método execute es utilizado por la clase Operation para realizar la examinación de los datos extraídos indicándole por parámetro la información del dispositivo y la ruta al directorio donde fueron almacenados los datos extraídos. Como salida el método devuelve:
+
+El método \texttt{execute} de la interfaz es utilizado por la clase \emph{Operation} para realizar la examinación de los datos extraídos. De esta forma, dicha clase llama al método execute indicando por parámetro la información del dispositivo y la ruta al directorio donde fueron almacenados los datos extraídos. Como salida el método devuelve:
 
 \begin{itemize}
 \item Una lista de objetos CybOX del tipo correspondiente al tipo de dato de la operación con la información encontrada.
-\item Una lista de FileObject que especifica los archivos de los cuales fue obtenida la información presente en los objetos de la lista anterior.
+\item Una lista de \emph{FileObject} que especifica los archivos de los cuales fue obtenida la información presente en los objetos de la lista anterior.
 \end{itemize}
 
 \subsection{Operation}
