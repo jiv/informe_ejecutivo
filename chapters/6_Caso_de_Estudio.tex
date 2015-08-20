@@ -374,7 +374,7 @@ La implementación de este nuevo extractor, al cual llamamos \emph{AdbBackupExtr
 \end{enumerate}
 
 \section{Datos de prueba}
-Con el fin de obtener resultados significativos en las pruebas de las operaciones implementadas, buscamos utilizar como datos de entrada que sean representativos del uso de dispositivos móviles reales. Para esto, utilizamos dos disk images que brinda Oxygen Forensics (a través de su página web \cite{oxigforn}) con el objetivo de simular casos reales mediante los cuales demostrar el funcionamiento de su suite de software forense.
+Con el fin de obtener resultados significativos en las pruebas de las operaciones implementadas, buscamos utilizar datos de entrada que fueran representativos de un uso real de los dispositivos móviles. Para esto, utilizamos dos \emph{disk images} de muestra que brinda Oxygen Forensics (en su sitio web \cite{oxigforn}) con el objetivo de simular casos reales para evaluar el funcionamiento de su suite de software forense.
 
 Las especificaciones de los dispositivos correspondientes a las imágenes obtenidas son las siguientes:
 
@@ -390,3 +390,31 @@ Las especificaciones de los dispositivos correspondientes a las imágenes obteni
     \normalsize
     
 Las particiones obtenidas de cada dispositivo fueron \emph{userdata} y \emph{sdcard}.
+
+Como observamos, ambas imágenes datan de ya hace un par de años si juzgamos por la versión de Android que disponían los dispositivos. Lo mismo sucede con las versiones de las aplicaciones móviles utilizadas. Es importante además tener en cuenta que únicamente contamos con los datos de las aplicaciones y no con los del sistema.
+
+Dado que los extractors utilizados en el caso de estudio realizar la extracción de los datos directamente del dispositivo, debemos tener una forma de implantar los datos obtenidos en un dispositivo para luego realizar las pruebas con la herramienta.
+
+La opción ideal sería poder recrear los sistemas originales de los dispositivos de los cuales obtuvimos los datos en una máquina virtual de forma que las aplicaciones funcionen tal cual lo hacían en sus dispositivos original. Esta resulta ser una tarea muy difícil, en particular por los hechos antes mencionados de que no contamos con los datos del sistema y tampoco con los APKs de las aplicaciones.
+
+Optamos por utilizar un emulador con una imagen estándar de Android en la cual implantamos los datos en sus correspondientes directorios del filesystem. En particular, el emulador utilizado fue Genymotion \cite{genymotion} con la imagen de la versión de Android 4.3 provista por ellos. Cabe destacar que la imagen provista ya se encontraba con acceso root, por lo cual no debimos realizar ningún otro paso antes de implantar los datos.
+
+Con el fin de automatizar este proceso, creamos un script Python que se encarga de implantar un \emph{dataset}. Específicamente, le llamamos \emph{dataset} a un archivo \emph{tar} que contiene tanto APKs de aplicaciones como directorios correspondientes a los que se encuentran en la ruta \emph{/data/data} de un dispositivo. De esta forma, al especificar el nombre de uno de estos archivos el script toma los directorios contenidos en el archivo tar y los copia a la ruta \emph{/data/data} del dispositivo e instala los apks de aplicaciones. Para ello simplemente utiliza los comandos \texttt{adb install} y \texttt{adb push}.
+
+Los datasets con los que contamos corresponden a los antes descritos sólo que únicamente contienen los datos de las aplicaciones utilizadas en el caso de estudio, estas son Facebook, WhatsApp y las aplicaciones por defecto de Email, SMS y Contactos de Android. Además en el caso de las aplicaciones de terceros (Facebook y WhatsApp) contienen los APKs de sus últimas versiones.
+
+A continuación se muestra cómo podemos utilizar el script para realizar la implantación del \emph{dataset} correspondiente al dispositivo HTC Evo 3D adquirido.
+\newline
+
+\begin{bash}
+$ python load_datasets.py htc_evo_3d
+Installing 'com.facebook.katana-1.apk' into the device...
+Installing 'com.whatsapp-1.apk' into the device...
+Pushing 'com.whatsapp' data into the device...
+Pushing 'com.android.providers.telephony' data into the device...
+Pushing 'com.facebook.katana' data into the device...
+Pushing 'com.android.providers.contacts' data into the device...
+Pushing 'com.android.email' data into the device...
+The dataset was pushed successfully.
+\end{bash}
+
