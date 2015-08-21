@@ -312,10 +312,10 @@ A continuación describimos cada una de las tablas que vemos en el modelo.
     \begin{longtable}{ | >{\bfseries}m{4cm} | >{\itshape}m{1.0cm} | >{\itshape}m{6.0cm} | >{\itshape}c |}
     \hline
     \BlackCell{Columna} & \BlackCell{Tipo de dato} & \BlackCell{Descripción} \\ \hline \hline
-    id & Int & Identificador de la operación. \\ \hline
+    id & Integer & Identificador de la operación. \\ \hline
     name & Text & Nombre de la operación. \\ \hline
-    data\_type\_id & Int & Identificador del tipo de dato de la operación. \\ \hline
-    data\_source\_type\_id & Int & Identificador del tipo de la fuente de datos de la cual la operación extrae los datos. \\ \hline
+    data\_type\_id & Integer & Identificador del tipo de dato de la operación. \\ \hline
+    data\_source\_type\_id & Integer & Identificador del tipo de la fuente de datos de la cual la operación extrae los datos. \\ \hline
     inspector\_name & Text & Nombre del inspector utilizado por la operación para examinar los datos extraídos. \\ \hline
     \caption {Tabla Operations}
     \end{longtable}
@@ -329,7 +329,7 @@ Esta tabla almacena el conjunto de operaciones del sistema. Es utilizada al mome
     \begin{longtable}{ | >{\bfseries}m{3.7cm} | >{\itshape}m{1.0cm} | >{\itshape}m{6.0cm} | >{\itshape}c |}
     \hline
     \BlackCell{Columna} & \BlackCell{Tipo de dato} & \BlackCell{Descripción} \\ \hline \hline
-    id & Int & Identificador del tipo de datos. \\ \hline
+    id & Integer & Identificador del tipo de datos. \\ \hline
     name & Text & Nombre del tipo de datos. \\ \hline
     cybox\_object\_name & Text & Nombre del objeto CybOX que representa el tipo de datos. \\ \hline
     \caption {Tabla DataTypes}
@@ -344,7 +344,7 @@ Esta tabla almacena los tipos de datos soportados por el sistema.
     \begin{longtable}{ | >{\bfseries}m{3cm} | >{\itshape}m{1.0cm} | >{\itshape}m{6.0cm} | >{\itshape}c |}
     \hline
     \BlackCell{Columna} & \BlackCell{Tipo de dato} & \BlackCell{Descripción} \\ \hline \hline
-    id & Int & Identificador del tipo de fuente de datos. \\ \hline
+    id & Integer & Identificador del tipo de fuente de datos. \\ \hline
     name & Text & Nombre del tipo de fuente de datos. \\ \hline
     extractor\_name & Text & Nombre del extractor que implementa el mecanismo de extracción de datos para este tipo de fuente de datos. \\ \hline
     \caption {Tabla DataSourceTypes}
@@ -359,7 +359,7 @@ Esta tabla almacena los tipos de fuentes soportados por el sistema. Junto al nom
     \begin{longtable}{ | >{\bfseries}m{4cm} | >{\itshape}m{1.0cm} | >{\itshape}m{6.0cm} | >{\itshape}c |}
     \hline
     \BlackCell{Columna} & \BlackCell{Tipo de dato} & \BlackCell{Descripción} \\ \hline \hline
-    data\_source\_type\_id & Int & Identificador del tipo de fuente de datos. \\ \hline
+    data\_source\_type\_id & Integer & Identificador del tipo de fuente de datos. \\ \hline
     param\_name & Text & Nombre del parámetro requerido por este tipo de fuente de datos. \\ \hline
     \caption {Tabla RequiredParams}
     \end{longtable}
@@ -373,7 +373,7 @@ Esta tabla almacena los parámetros requeridos de las fuentes de datos del siste
     \begin{longtable}{ | >{\bfseries}m{2.3cm} | >{\itshape}m{1.0cm} | >{\itshape}m{6.0cm} | >{\itshape}c |}
     \hline
     \BlackCell{Columna} & \BlackCell{Tipo de dato} & \BlackCell{Descripción} \\ \hline \hline
-    operation\_id & Int & Identificador de la operación a la cual están asociados estos valores de parámetros. \\ \hline
+    operation\_id & Integer & Identificador de la operación a la cual están asociados estos valores de parámetros. \\ \hline
     param\_name & Text & Nombre del parámetro. \\ \hline
     param\_value & Text & Valor del parámetro. \\ \hline
     \caption {Tabla DataSourceParamValues}
@@ -388,7 +388,7 @@ Esta tabla almacena los valores de parámetros requeridos por el tipo de fuente 
     \begin{longtable}{ | >{\bfseries}m{2.3cm} | >{\itshape}m{1.0cm} | >{\itshape}m{6.0cm} | >{\itshape}c |}
     \hline
     \BlackCell{Columna} & \BlackCell{Tipo de dato} & \BlackCell{Descripción} \\ \hline \hline
-    operation\_id & Int & Identificador de la operación a la cual está asociado este rango de versiones de Android soportadas. \\ \hline
+    operation\_id & Integer & Identificador de la operación a la cual está asociado este rango de versiones de Android soportadas. \\ \hline
     from\_version & Text & Versión inicial del rango. \\ \hline
     to\_version & Text & Versión final del rango. \\ \hline
     \caption {Tabla AndroidVersions}
@@ -403,7 +403,7 @@ Esta tabla se utiliza para almacenar las versiones de Android soportadas por las
     \begin{longtable}{ | >{\bfseries}m{2.8cm} | >{\itshape}m{1.0cm} | >{\itshape}m{6.0cm} | >{\itshape}c |}
     \hline
     \BlackCell{Columna} & \BlackCell{Tipo de dato} & \BlackCell{Descripción} \\ \hline \hline
-    operation\_id & Int & Identificador de la operación a la cual está asociado este modelo de dispositivo soportado. \\ \hline
+    operation\_id & Integer & Identificador de la operación a la cual está asociado este modelo de dispositivo soportado. \\ \hline
     model\_number & Text & Número del modelo del dispositivo soportado. \\ \hline
     \caption {Tabla DeviceModels}
     \end{longtable}
@@ -426,7 +426,7 @@ El comando es utilizado con el objetivo de ejecutar un conjunto de operaciones [
 Para cada operación se indica si la misma tuvo éxito o no. En caso de éxito, se indica el directorio en que fueron almacenados los datos resultantes de la operación, mientras que en caso de falla se indica el motivo de la misma.
 
 \subsection*{Comandos de extensibilidad}
-\begin{sloppypar}Con este nombre nos referimos a los siguientes comandos: \texttt{add\_operation}, \texttt{add\_data\_type}, \texttt{add\_data\_source\_type}, \texttt{remove\_operation}, \texttt{remove\_data\_type}, \texttt{remove\_data\_source\_type}.\end{sloppypar}
+Con este nombre nos referimos a los siguientes comandos: \texttt{add\_operation}, \texttt{add\_data\_type}, \texttt{add\_data\_source\_type}, \texttt{remove\_operation}, \texttt{remove\_data\-\_type} y \texttt{remove\_data\_source\_type}.
 
 Estos comandos nos permiten agregar o remover operaciones, tipos de datos ó tipos de fuentes de datos al sistema. En el caso de adición, el comando recibe una ruta al archivo de definición, mientras que en el caso de supresión, el comando recibe el identificador del componente que deseamos remover.
 \newline

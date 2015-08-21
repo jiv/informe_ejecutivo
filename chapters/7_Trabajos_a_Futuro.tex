@@ -1,1 +1,58 @@
 \chapter{Trabajos a futuro}
+Hubo una serie de ideas/diseños que no resultaron esenciales y otras que fueron surgiendo en la medida que se desarrolló el prototipo, los cuales creemos que presentan buenas oportunidades para seguir desarrollando y mejorando la herramienta.
+
+\section{Generalización de las condiciones de las operaciones}
+Como vimos, el conjunto de operaciones del prototipo de la herramienta cuenta información acerca de los dispositivos soportados por las mismas. Esta información corresponde a \emph{modelos de dispositivos} y \emph{versiones de Android} únicamente. Sería interesante desarrollar un mecanismo extensible que permita generalizar esta información en condiciones impuestas por las operaciones. 
+
+De esta forma, los modelos y versiones de Android pasarían a ser condiciones de las operaciones en lugar de ser atributos fijos de las mismas. En caso que una operación soporte exclusivamente un cierto modelo de dispositivo o versión de Android, lo único que hará será imponer una condición que represente a esta restricción. Por otro lado, si una operación no discrimina entre modelos o versiones de Android, ésta no impondrá ninguna condición.
+
+Las posibles nuevas condiciones que se nos ocurren son que una operación imponga que precisa acceso a root o que el dispositivo tiene que tener activado el modo Debug. Actualmente, el usuario es el responsable de verificar estos dos aspectos. Con el agregado de condiciones, las operaciones mantendrían esta información y será la herramienta la encargada de realizar esta verificación. 
+
+Utilizando el comando ya existente \emph{set\_device\_info}, el usuario especificará todas las características del dispositivo. Estas características serán utilizadas para filtrar las operaciones usando las condiciones de las mismas cuando se utilice el comando \emph{list\_operations}, por lo que este comando deberá ser extensible. Por la forma en cómo está implementado actualmente, el mismo ya permite el agregado de nuevos filtros fácilmente. 
+
+Al no limitar las condiciones de las operaciones, es necesario que la información acerca del dispositivo ingresada por el usuario sea también conocida por los extractors. De este modo, cuando se ejecuta el comando \emph{execute\_operations}, se le pasa a las operaciones toda la información acerca del dispositivo. Por ejemplo, cuando el dispositivo no cuente con acceso a root, se verificará que las operaciones no utilicen un extractor que requiera esta condición.
+
+\section{Automatizar la obtención de la información del dispositivo}
+El prototipo desarrollado cuenta con el comando \emph{set\_device\_info} el cual es utilizado para ingresar manualmente la información del dispositivo, esto es, el modelo del mismo y la versión de Android que corre.
+
+Dado que por aspectos de diseño estas son piezas de información importantes, la herramienta requiere que se especifiquen las mismas antes de poder realizar operaciones. Por lo tanto, la obtención de esta información es una tarea que se debe realizar siempre. Automatizar esta tarea otorga facilidad y rapidez para el uso de la herramienta.
+
+Para realizar esto, una posibilidad es agregar un nuevo comando que desempeñe la tarea y establezca de forma automática la información del dispositivo.
+
+Cabe destacar que este comando no tiene intención alguna de sustituir al comando \emph{set\_device\_info}, sino que su objetivo es automatizar la obtención de dicha información. Consideramos que es esencial que siempre podamos contar con la posibilidad de establecer esta información de forma manual dado que el mecanismo que implemente la obtención de los datos de forma automática no es infalible.
+
+\section{Caching de datos extraídos de una fuente de datos}
+Como vimos, el hecho de que las operaciones cuenten con dos componentes, Extractor e Inspector, hace que el proceso de extracción sea independiente del proceso de examinación. Esta separación nos permitiría mantener un caché de datos extraidos, el cual podrá ser reutilizable por los diversos inspectors. 
+
+De este modo, si se ejecutan dos operaciones que extraen tipos de datos distintos pero de la misma fuente de datos, la operación que ejecute en segundo lugar no deberá realizar la extracción de los datos nuevamente. Es importante poder asegurar que estos datos cacheados no son modificados al ser inspeccionado por una operación (por ejemplo, comparando el hash de los mismos), para que el resto de las operaciones que los utilicen cuenten con los datos tal cual fueron extraídos del dispositivo.
+
+Este punto evita que se acceda innecesariamente al dispositivo, previniendo posibles modificaciones en los datos del mismo. Por otro lado, brinda una mejora en la performance de la ejecución de las operaciones, ya que la extracción de los datos suele ser la etapa más lenta de la ejecución de una operación, debido a que el protocolo adb cuenta con una velocidad máxima de transferencia de aproximadamente 4Mb/s.
+
+\section{Mejorar aspectos de solidez forense}
+Para que la herramienta sea más \emph{forensically sound} hay ciertos procedimientos que podríamos llevar a cabo.
+
+En primer lugar, podríamos llevar a cabo dos etapas de verificación:
+\begin{itemize}
+\item Verificar que la integridad de los datos extraídos fue conservada al realizar la extracción de los mismos del dispositivo. Esto lo realizaríamos verificando que el hash de los archivos obtenidos del dispositivo coinciden con los extraídos.
+\item Verificar que los datos extraídos no son modificados al realizar posteriores examinaciones. Para esto, podríamos utilizar los hashes previamente obtenidos al realizar la extracción, computar el hash de los archivos nuevamente tras ejecutar una operación y verificar que los mismos no cambiaron.
+\end{itemize}
+
+En segundo lugar, podríamos tomar otras medidas preventivas y de mitigación como:
+\begin{itemize}
+\item Asegurarse de que los inspectors abren todos los archivos en modo sólo lectura, por ejemplo abrir las bases de datos en modo sólo lectura
+\item Hacer logging de todas las operaciones ejecutadas durante una sesión de trabajo.
+\end{itemize}
+
+\section{Desarrollo de otros tipos de extractors}
+En este trabajo nosotros desarrollamos extractors que utilizan el protocolo adb para realizar la obtención de los datos de un dispositivo. Esto nos resultó conveniente dado que nos permite interactuar de forma indiferente tanto con dispositivos virtuales (esto es, emuladores) como con dispositivos reales (a través de USB).
+
+Ahora bien, la única restricción con la cual diseñamos los extractors fue la de que los mismos realicen una extracción lógica de la fuente de datos indicada y retornen los archivos extraídos en el directorio especificado. Por lo tanto, la elección de cómo extraer los datos, como puede ser el protocolo a utilizar, queda en manos del desarrollador del extractor.
+
+Un primer aspecto interesante a investigar sería la realización de extractors que obtengan datos del sistema operativo, en contraposición a los extractors que desarrollamos que obtienen datos de aplicaciones.
+
+Otra posibilidad que creemos que puede ser de sumo interés es el desarrollo de extractors que en vez de tomar datos a partir de un dispositivo conectado lo hagan a partir de una disk image. Esto perfectamente se puede implementar sin necesidad de modificar la herramienta. Esto resultaría importante dado que se acompasa con el flujo usual que se busca tener en el proceso forense, esto es, el contar con una disk image a partir de la cual luego podamos realizar posteriores examinaciones evitando tener que trabajar sobre el dispositivo original.
+
+\section{Añadir más datos del proceso al contenido CybOX generado}
+Actualmente la herramienta añade algunos datos como son el nombre y versión de la misma (esto es, Android Inspector v1.0), un listado de archivos extraídos (con sus respectiva información y hashes) y en cada objeto CybOX de los datos examinados referenciamos a los archivos de los cuales se obtuvo su información.
+
+Dado que CybOX permite representar otros datos de interés como pueden ser información sobre los colaboradores que llevaron a cabo el proceso e información sobre el dispositivo del cual se realizó la extracción, puede ser interesante contemplar la posibilidad de agregar este tipo de información.
