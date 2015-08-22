@@ -94,7 +94,7 @@ class Extractor(object):
     def execute(self, extracted_data_dir_path, param_values):
         """
         :type extracted_data_dir_path: string
-        :type param_values: dict<string, string>
+        :type param_values: dict(string, string)
         :rtype : None
         """
         pass
@@ -115,7 +115,7 @@ class Inspector(object):
 
 Como Python no cuenta con un mecanismo para definir formalmente interfaces en el lenguaje (como lo brindan otros lenguajes como Java), decidimos implementar ciertos controles para tener certeza de que las implementaciones de extensiones respetan los contratos de interfaces establecidos.
 
-Para esto, comenzamos por utilizar el módulo ABC (Abstract Base Class) que brinda la biblioteca estándar de Python. El mismo nos permite declarar clases abstractas, utilizando el atributo \emph{\_\_metaclass\_\_} para indicar esto y declarando los métodos abstractos utilizando la anotación \emph{\@abstractmethod}, como se puede observar en el cuadro anterior.
+Para esto, comenzamos por utilizar el módulo \emph{ABC (Abstract Base Class)} que brinda la biblioteca estándar de Python. El mismo nos permite declarar clases abstractas, utilizando el atributo \emph{\_\_metaclass\_\_} para indicar esto y declarando los métodos abstractos utilizando la anotación \emph{\@abstractmethod}, como se puede observar en el cuadro anterior.
 
 El mecanismo mencionado permite asegurarnos de dos aspectos sobre las clases que deseamos exponer como interfaces. En primer lugar, que las mismas no puedan ser instanciadas directamente, y en segundo lugar, que las clases que implementen la interfaz (esto es, hereden de esta clase) implementan efectivamente todos los métodos anotados. Estos controles son realizados por parte del módulo ABC en tiempo de ejecución. En caso de que una clase viole alguno de estos aspectos, se produce una excepción al intentar crear una instancia de la misma.
 
@@ -142,7 +142,7 @@ Para el manejo de errores decidimos hacer uso de excepciones, tanto para el cód
 
 Para el primer caso, utilizamos excepciones estándar brindadas por el lenguaje, mientras que para el segundo caso definimos una excepción propia, la cual llamamos \emph{OperationError}. Como se describe en el anexo \ref{anexoGuia}, es de esta forma que tanto un extractor como un inspector debe reportar sus errores.
 
-\section{Proceso de desarrollo y verificación}
+\section{Proceso de desarrollo y verificación} \label{procesoDesarrollo}
 Con el fin de verificar el correcto funcionamiento del prototipo, a medida que implementamos los componentes fuimos desarrollando también test unitarios para cada uno.
 
 Para el desarrollo del prototipo, seguimos un enfoque bottom up, esto es, comenzamos implementando los componentes \emph{DefinitionsDatabaseManager} y \emph{RepositoriesManager} que se observan en la figura \ref{DiagramaComponentes} y verificando su funcionamiento mediante tests unitarios. Luego, implementamos \emph{OperationsManager}, verificamos su funcionamiento utilizando tests unitarios que utilizaban mocks de sus dependencias (esto es, de \emph{DefinitionsDatabaseManager} y \emph{RepositoriesManager}) y luego además test de integración utilizando los componentes dependientes verdaderos. Para los restantes componentes procedimos de forma similar.
@@ -157,11 +157,11 @@ A continuación vemos una descripción de los distintos paquetes con los que cue
     \begin{longtable}{|>{\raggedright}m{2cm}|>{\raggedright\arraybackslash}m{9cm}|}
     \hline
     \BlackCell{Nombre} & \BlackCell{Descripción} \\\hline
-    components & Contiene los módulos que conforman a los componentes principales de la herramienta como son mostrados en la figura \ref{DiagramaComponentes} \\\hline
-    model & Contiene las clases referentes al modelo de datos. \\\hline
-    repositories & Contiene los tres repositorios antes descritos en el capítulo de Diseño en donde van las extensiones a la herramienta. \\\hline
-    tests & Contiene test unitarios de los diversos componentes desarrollados así como recursos utilizados para los mismos. \\\hline
-    util & Contiene módulos auxiliares con métodos para facilitar el desarrollo de extractors e inspectors. \\\hline
+    components & Contiene los módulos que conforman a los componentes principales de la herramienta descritos en la sección \ref{arquitectura}. \\\hline
+    model & Contiene las clases referentes al modelo de datos descritas en la sección \ref{modeloDeDatos}. \\\hline
+    repositories & Contiene los tres repositorios de extensiones de la herramienta descritos en la sección \ref{repositorios}. \\\hline
+    test & Contiene las pruebas unitarias y de integración de los componentes descritas en la sección \ref{procesoDesarrollo}, así también como recursos utilizados para las mismas. \\\hline
+    util & Contiene módulos utilitarios para facilitar el desarrollo de extractors e inspectors descritos en \ref{modulosUtilitarios}. \\\hline
     \caption {Paquetes del prototipo}
     \end{longtable}
     \normalsize

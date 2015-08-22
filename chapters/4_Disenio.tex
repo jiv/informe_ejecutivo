@@ -1,6 +1,6 @@
 \chapter{Diseño de la herramienta}
 
-\section{Modelo de datos}
+\section{Modelo de datos} \label{modeloDeDatos}
 Comenzaremos por describir las estructuras de datos utilizadas por los componentes del sistema.
 
 \subsection{DataSource}
@@ -12,7 +12,7 @@ Estructura utilizada para facilitar la representación de una fuente de dato, es
     \hline
     \BlackCell{Campo} & \BlackCell{Tipo de dato} & \BlackCell{Descripción} \\ \hline \hline
     type & string & Especifica el tipo de la fuente de la cual se extraen los datos. \\ \hline
-    info & dict<string, string> & Especifica los valores de los parámetros de la fuente de datos. \\ \hline
+    info & dict(string, string) & Especifica los valores de los parámetros de la fuente de datos. \\ \hline
     
     \caption {Estructura DataSource}
     \end{longtable}
@@ -84,7 +84,7 @@ Interfaz que debe ser implementada por los extractors de las operaciones. Cada e
     \begin{longtable}{ | >{\bfseries}m{2cm} | >{\itshape}m{5.0cm} | >{\itshape}m{1.0cm} | >{\itshape}c |}
     \hline
     \BlackCell{Método} & \BlackCell{Entrada} & \BlackCell{Salida} \\ \hline \hline
-    execute & string, dict<string, string> & None \\ \hline
+    execute & string, dict(string, string) & None \\ \hline
     \caption {Interfaz Extractor}
     \end{longtable}
     \normalsize
@@ -121,7 +121,7 @@ Esta clase es utilizada para representar una operación a ejecutar. La misma con
     \BlackCell{Campo} & \BlackCell{Tipo de dato} & \BlackCell{Descripción} \\ \hline \hline
     extractor & Extractor & Extractor concreto a ser utilizado por la operación. \\ \hline
     inspector & Inspector & Inspector concreto a ser utilizado por la operación. \\ \hline
-    param\_values & dict<string, string> & Diccionario que contiene los valores de esta operación para los parámetros del tipo de fuente de dato. Los mismos son utilizados por el extractor. \\ \hline
+    param\_values & dict(string, string) & Diccionario que contiene los valores de esta operación para los parámetros del tipo de fuente de dato. Los mismos son utilizados por el extractor. \\ \hline
     \caption {Clase Operation}
     \end{longtable}
     \normalsize
@@ -154,7 +154,7 @@ Por lo tanto, el directorio del resultado de la operación contendrá:
 \item Los archivos \emph{inspected\_data.xml} y \emph{source\_data.xml}.
 \end{itemize}
 
-\section{Arquitectura}
+\section{Arquitectura} \label{arquitectura}
 El sistema cuenta con un único punto de entrada y salida de datos a través del componente que denominamos \textbf{Coordinator}. De esta forma, el mismo ofrece todos los comandos con los que cuenta el usuario.
 
 Para llevar a cabo los diversos comandos, el Coordinator se comunica con, o bien el \textbf{Operations Manager}, para ejecutar operaciones o consultar información sobre las mismas; o bien el \textbf{Extension Manager}, para extender alguno de los puntos de extensibilidad con los que vimos que cuenta el sistema.
@@ -200,7 +200,7 @@ Se encarga de responder a consultas realizadas por el usuario sobre operaciones 
 
 \begin{python}[title=Interfaz OperationsManager, captionpos=b]
 get_operations_info(data_type: string, data_source: DataSource, 
-                    device_info: DeviceInfo): set(OperationInfo)
+                    device_info: DeviceInfo): list(OperationInfo)
 get_operation(name: string): Operation
 \end{python}
 
@@ -215,7 +215,7 @@ Se encarga de facilitar la interacción con la base de datos de definiciones, de
 
 \begin{python}[title=Interfaz DefinitionsDatabaseManager, captionpos=b]
 query_operations_info(data_type: string, data_source: DataSource, 
-                      device_info: DeviceInfo): set(OperationInfo)
+                      device_info: DeviceInfo): list(OperationInfo)
 get_operation_info_by_id(id: integer): OperationInfo
 get_operation_exec_info(name: string): String,String, dict(String)
 exists_operation(name: string): bool
@@ -241,7 +241,7 @@ Los métodos \texttt{query\_operations\_info} y \texttt{get\_operation\_info\_by
 
 El método \texttt{get\_operation\_exec\_info} se encarga de obtener los datos necesarios para ejecutar la operación cuyo nombre coincida con el recibido por parámetro.
 
-\begin{sloppypar} Los métodos \texttt{exists\_operation}, \texttt{exists\_data\_type} y \texttt{exists\_data\_source\_type} se encargan de consultar por la existencia de operaciones, tipos de datos y tipos de fuentes de datos respectivamente. \end{sloppypar}
+\begin{sloppypar} Los métodos \texttt{exists\_operation}, \texttt{exists\_data\_type} y \texttt{exists\-\_data\-\_source\-\_type} se encargan de consultar por la existencia de operaciones, tipos de datos y tipos de fuentes de datos respectivamente. \end{sloppypar}
 
 Los métodos con prefijo add se encargan de agregar operaciones, tipos de datos y tipos de fuentes de datos al sistema, mientras que los métodos con prefijo remove se encargan de eliminarlos.
 \newline
@@ -281,7 +281,7 @@ El método \texttt{remove\_file} recibe el nombre de un repositorio y el nombre 
 Los métodos \texttt{get\_extractor\_instance} y \texttt{get\_inspector\_instance} devuelven una instancia de la clase correspondiente.
 
 \section{Almacenamiento de datos}
-\subsection{Repositorios}
+\subsection{Repositorios} \label{repositorios}
 La herramienta cuenta con varios repositorios, o en otras palabras directorios, en donde se almacenan artefactos de las extensiones del sistema (aquellas definidas en Req. B). Concretamente se cuenta con tres repositorios:
 
 \begin{enumerate}
