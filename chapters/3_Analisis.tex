@@ -49,6 +49,7 @@ En resumen, el enfoque que tomamos para concebir una operación nos ofrece lo si
 \end{itemize}
 
 \section{Conceptos fundamentales}
+\label{conceptos_fundamentales}
 Empecemos por detallar mejor dos de los conceptos claves que mencionamos. Estos son: fuente de dato y tipo de dato. En base a los mismos es que determinamos la granularidad que tendrán las operaciones, como vimos en el enfoque recién planteado.
 
 La información que solemos encontrar en los dispositivos móviles puede provenir de diversas \textbf{fuentes de datos}. A su vez, resulta interesante observar que hay conjuntos de fuentes de datos para los cuales el mecanismo para obtener datos de las mismas es el mismo. En estos casos, decimos que dichas fuentes son del mismo \textbf{tipo de fuente de dato}.
@@ -74,15 +75,19 @@ A continuación describiremos los requerimientos con los cuales consideramos que
 La herramienta debe proveer al usuario un conjunto de operaciones que faciliten la extracción de datos de dispositivos móviles Android. Para esto, la misma debe brindar las siguientes funcionalidades claves:
 
 \subsubsection*{A1. Operaciones atómicas}
+\label{reqA1}
 Las operaciones deben contar con un alto nivel de granularidad. De esta forma, una operación debe extraer un único tipo de dato, de una fuente de datos determinada, soportando un determinado conjunto de dispositivos y versiones de Android.
 
 \subsubsection*{A2. Consulta de operaciones}
+\label{reqA2}
 La herramienta debe contar con la posibilidad de consultar (y filtrar) por las operaciones disponibles. De esta forma, el usuario puede descubrir las mismas y sus características.
 
 \subsubsection*{A3. Ejecución de operaciones}
+\label{reqA3}
 La herramienta debe permitir ejecutar una serie de operaciones en un único paso. Esto permite al usuario combinar operaciones y, debido al alto nivel de granularidad que poseen las mismas, tener la capacidad de extraer con gran precisión los datos deseados.
 
 \subsubsection*{A4. Modos de ejecución de la herramienta}
+\label{reqA4}
 La herramienta debe contar con dos modos de ejecución:
 \begin{itemize}
 \item Un \textbf{modo interactivo}, en el cual el usuario pueda realizar consultas sobre las operaciones disponibles filtrando por los parámetros de las mismas y luego ejecutar las operaciones deseadas.
@@ -90,6 +95,7 @@ La herramienta debe contar con dos modos de ejecución:
 \end{itemize}
 
 \subsection*{B. Extensibilidad}
+\label{reqB}
 La herramienta debe proveer mecanismos que permitan extender fácilmente los siguientes tres puntos:
 \begin{enumerate}
 \item Tipos de datos
@@ -98,13 +104,16 @@ La herramienta debe proveer mecanismos que permitan extender fácilmente los sig
 \end{enumerate}
 
 \subsection*{C. Acceso de datos}
+\label{reqC}
 La herramienta debe ser capaz de abstraer la forma en que accede a los datos. De esta forma, posibilita su interoperación tanto con la diversidad de dispositivos reales que hay como con emuladores, y además permite la extensibilidad de la herramienta para soportar otros dominios de datos.
 
 \subsection*{D. Salida de datos}
 \subsubsection*{D1. Lenguaje estándar}
+\label{reqD1}
 La herramienta debe hacer uso de un lenguaje estándar para expresar sus salidas de datos, con el fin de que para otras herramientas sea sencillo consumir los datos producidos.
 
 \subsubsection*{D2. Lenguaje extensible}
+\label{reqD2}
 Además, el lenguaje utilizado para representar los datos de salida debe ser extensible, dado que es necesario que el mismo sea capaz de representar información de nuevos tipos de datos.
 
 \section{Casos de uso}
@@ -119,11 +128,12 @@ Deseamos que este usuario pueda hacer uso de la herramienta principalmente de do
 \item Automática, con el fin de permitirle automatizar tareas de obtención de datos o facilitar la integración de la herramienta con otras herramientas utilizadas por el usuario.
 \end{enumerate}
 
-Para estos dos casos de uso es que la herramienta posee dos modos distintos de ejecución, interactivo y batch respectivamente, que son establecidos en [Req. A4].
+Para estos dos casos de uso es que la herramienta posee dos modos distintos de ejecución, interactivo y batch respectivamente, que son establecidos en \hyperref[reqA4]{(Req. A4)}.
 
-En tanto, en [Req. B] se expresa la capacidad de extensibilidad que debe tener la herramienta. Veremos cómo el sistema tiene dicha capacidad mediante dos casos de uso que permiten agregar y eliminar operaciones del sistema. Estos se centran en el punto de extensión que es de mayor interés para la herramienta. También consideraremos los otros dos puntos de extensión, que auspician de soporte al anterior, en el caso de agregar una operación y que la misma haga uso de un tipo de dato o tipo de fuente de dato nueva al sistema.
+En tanto, en \hyperref[reqB]{(Req. B)} se expresa la capacidad de extensibilidad que debe tener la herramienta. Veremos cómo el sistema tiene dicha capacidad mediante dos casos de uso que permiten agregar y eliminar operaciones del sistema. Estos se centran en el punto de extensión que es de mayor interés para la herramienta. También consideraremos los otros dos puntos de extensión, que auspician de soporte al anterior, en el caso de agregar una operación y que la misma haga uso de un tipo de dato o tipo de fuente de dato nueva al sistema.
 
 Finalmente, el usuario tiene a su disposición el siguiente conjunto de comandos para interactuar con el sistema:
+\newline
 
 \footnotesize
     \renewcommand*{\arraystretch}{1.4}
@@ -305,7 +315,7 @@ El prototipo contará con una serie de operaciones por defecto, seguramente sean
 \subsection*{C. Acceso de datos}
 Vimos que la idea es poder abstraer la forma utilizada para acceder a los datos, con el fin de poder interoperar con múltiples tipos de dispositivos e incluso con emuladores.
 
-En este sentido, el protocolo ADB (Android Debug Bridge) y sus herramientas nos proveen la abstracción necesaria que precisamos para cumplir con el requerimiento [Req. C]. El mismo nos posibilita el intercambio de datos y ejecución de comandos de forma transparente tanto en dispositivos físicos como en emuladores.
+En este sentido, el protocolo ADB (Android Debug Bridge) y sus herramientas nos proveen la abstracción necesaria que precisamos para cumplir con el requerimiento \hyperref[reqC]{(Req. C)}. El mismo nos posibilita el intercambio de datos y ejecución de comandos de forma transparente tanto en dispositivos físicos como en emuladores.
 
 A su vez, vemos que utilizando esta interfaz es posible luego extender la herramienta para soportar extracciones físicas, ya que a través de adb es posible ejecutar comandos para crear y transferir una imagen de la partición de datos del usuario. Este punto quedará por fuera del alcance.
 
@@ -328,7 +338,7 @@ Debido al funcionamiento que comprende una operación, vemos que la herramienta 
 \item \textbf{Datos del proceso de extracción}, para expresar información acerca de los colaboradores que obtuvieron los datos examinados, el ambiente que utilizaron y los archivos de los cuales fue obtenida la información de los mismos.
 \end{itemize}
 
-Dado que debemos expresar las salidas de la herramienta en un lenguaje estándar para que puedan ser consumidas fácilmente por terceros, debemos escoger un lenguaje para representar a los datos examinados y del proceso de extracción. En la siguiente sección veremos cómo escogimos un lenguaje de forma de cumplir con los requerimientos [Req. D1] y [Req. D2].
+Dado que debemos expresar las salidas de la herramienta en un lenguaje estándar para que puedan ser consumidas fácilmente por terceros, debemos escoger un lenguaje para representar a los datos examinados y del proceso de extracción. En la siguiente sección veremos cómo escogimos un lenguaje de forma de cumplir con los requerimientos \hyperref[reqD1]{(Req. D1)} y \hyperref[reqD2]{(Req. D2)}.
 
 \section{Representación de los datos de salida}
 Acabamos de ver la necesidad que tenemos de contar con un lenguaje que nos permita representar los datos examinados y del proceso producidos por la herramienta.
@@ -336,9 +346,9 @@ Acabamos de ver la necesidad que tenemos de contar con un lenguaje que nos permi
 Para esto, entonces veamos los puntos que debe cumplir el lenguaje de representación que utilicemos:
 
 \begin{enumerate}
-\item Debe ser estándar, de forma de que resulte fácil consumir los datos producidos [Req. D1].
-\item Debe ser extensible, de forma que podamos representar con el mismo nuevos tipos de datos [Req. D2].
-\item Debe ser capaz de representar datos sobre el proceso de extracción (en particular, aquellos vistos en la sección de alcance del [Req. A1]).
+\item Debe ser estándar, de forma de que resulte fácil consumir los datos producidos \hyperref[reqD1]{(Req. D1)}.
+\item Debe ser extensible, de forma que podamos representar con el mismo nuevos tipos de datos \hyperref[reqD2]{(Req. D2)}.
+\item Debe ser capaz de representar datos sobre el proceso de extracción (en particular, aquellos vistos en la sección de alcance del \hyperref[reqA1]{Req. A1}).
 \end{enumerate}
 
 Ahora veamos el estilo de tipos de datos que pretendemos que el lenguaje nos permita representar:

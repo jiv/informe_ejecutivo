@@ -1,4 +1,5 @@
 \chapter{Caso de Estudio}
+\label{capCasoDeEstudio}
 En este capítulo vamos a analizar una serie de operaciones que desarrollamos con el fin de mostrar varios de los aspectos claves que brinda la herramienta. Para ello, planteamos el estudio de diversos tipos y fuentes de datos de aplicaciones de Mensajería y Redes Sociales dado que estas dos categorías representan hoy en día una proporción muy importante de la actividad promedio de los usuarios de dispositivos móviles.
 
 Para la categoría de Mensajería, estudiaremos los tipos de datos Email y SMS utilizando como fuentes de datos las aplicaciones de Email y SMS que brinda Android por defecto.
@@ -8,7 +9,7 @@ Para la categoría de Redes Sociales, estudiaremos el tipo de dato \emph{Contact
 De esta forma, en la primera mitad del capítulo veremos diversos aspectos importantes que se deben tener en cuenta al implementar operaciones y varias formas en que la herramienta facilita el desarrollo de las mismas. Luego, en la segunda mitad describiremos los conjuntos de datos utilizados para probar las operaciones y veremos un ejemplo de ejecución de las mismas.
 
 \section{Mensajería}
-Consideremos las operaciones antes descritas para datos de tipo SMS e Email. En el caso de ambas, hay un par de observaciones importantes que debemos comenzar haciendo:
+Consideremos las operaciones antes descritas para datos de tipo SMS e Email. En el caso de ambas, hay un par de observaciones importantes a hacer:
 \begin{itemize}
 \item CybOX provee objetos predefinidos que permiten representar a sus tipos de datos (\emph{SMSMessage} e \emph{EmailMessage} respectivamente).
 \item Podemos utilizar el \emph{ApplicationExtractor} que es provisto por la herramienta por defecto (como se menciona en el anexo \ref{anexoGuia}) dado que nuestro interés se encuentra en datos de aplicación.
@@ -24,6 +25,7 @@ Este inspector extrae el tipo de dato \emph{SMSMessage} definido en CybOX. La fu
 Para obtener la información sobre los SMS, debemos acceder a una base de datos SQLite (en este caso la misma se llama \emph{mmssms.db}). Para esto, podemos hacer uso del módulo \texttt{sqlite3} disponible en las bibliotecas estándar de Python.
 
 Los campos del objeto \emph{SMSMessage} que utilizamos para representar los datos disponibles en la aplicación de SMS de Android fueron los siguientes:
+\clearpage
 
 \footnotesize
     \renewcommand*{\arraystretch}{1.4}
@@ -250,11 +252,12 @@ c6d6285d9fdc4074c366ef0544f1b6b23d7604183f74c8b9cc6d0cc56b1db4c0
 \section{Redes sociales}
 Las aplicaciones de redes sociales suelen manejar un gran volumen de datos personales, lo cual las hace una fuente de datos muy interesante. Desafortunadamente, CybOX no cuenta con objetos predefinidos que puedan representar adecuadamente a muchos de los tipos de datos que solemos encontrar en las mismas. Frente a esta situación, recordemos que contamos con la alternativa de extender las capacidades de CybOX diseñando un nuevo objeto CybOX para representar un nuevo tipo de dato.
 
-De esta forma, analizamos varias aplicaciones de redes sociales con el objetivo de encontrar un tipo de datos lo suficientemente interesante que fuera utilizado por todas ellas. Fue así que decidimos por trabajar con el tipo de dato \emph{Contact} ya que representa un concepto imprescindible en toda red social. El concepto a menudo es presentado con diversos nombres en las distintas redes sociales (como puede ser amigos, vínculos, seguidores, etc) dependiendo del contexto al que apunta la misma.
+De esta forma, analizamos varias aplicaciones de redes sociales con el objetivo de encontrar un tipo de datos lo suficientemente interesante que fuera utilizado por las mismas. Observamos que uno de los conceptos en común que manejan es el de contacto. Si bien el nombre utilizado para el mismo varía dependiendo del contexto de cada una (amigo, vínculo, seguidor, etc), éste forma parte imprescindible en todas ellas. Por lo tanto, decidimos diseñar un nuevo objeto CybOX llamado \emph{Contact} para representarlo.
 
-Los datos asociados a un contacto en cada red social particular varía pero un cierto conjunto de datos básicos es compartido a través de todas ellas (incluso en aplicaciones fuera de esta categoría como es la agenda del teléfono). Este conjunto fue al que apuntamos representar al diseñar el nuevo objeto CybOX que lo representara.
+Los datos asociados a un contacto en cada red social particular varían pero un cierto conjunto de datos básicos es compartido a través de todas ellas (incluso en aplicaciones fuera de esta categoría como es la agenda del teléfono).
 
-En la siguiente tabla podemos observar los campos del objeto Contact:
+En la siguiente tabla podemos observar los campos del objeto \emph{Contact}:
+\newline
 
 \footnotesize
     \renewcommand*{\arraystretch}{1.4}
@@ -268,11 +271,11 @@ En la siguiente tabla podemos observar los campos del objeto Contact:
     Email & Email del contacto. \\ \hline
     Profile picture & URI a la imagen de perfil. \\ \hline
     Birthday & Fecha del cumpleaños con formato yyyy-mm-dd. \\ \hline
-    \caption {Campos utilizados del objeto Contact}
+    \caption {Campos del objeto Contact}
     \end{longtable}
     \normalsize
     
-La forma en que debemos implementar un nuevo objeto CybOX se puede ver en detalle en la sección \ref{Paso 1: Diseñar e implementar el nuevo objeto CybOX} del anexo \ref{anexoGuia}.
+La forma en que debemos implementar un nuevo objeto CybOX se puede ver en detalle en la sección \ref{nuevoTipoDeDatos} del anexo \ref{anexoGuia}.
 
 A continuación veremos cómo el tipo de dato Contact se ajusta a diferentes aplicaciones. También veremos qué otros detalles, además de contar con un nuevo objeto CybOX, debimos tener en cuenta al implementar cada uno de los inspectors.
 
@@ -370,8 +373,8 @@ En \cite{unpkbckp} se describe en detalle el formato utilizado para crear los ar
 La implementación de este nuevo extractor, al cual llamamos \emph{AdbBackupExtractor}, consta de tres etapas:
 
 \begin{enumerate}
-\item Mediante el comando adb backup se obtiene el archivo backup.ab.
-\item A este archivo, primero le quitamos el header (que corresponde a los primeros 24 bytes). Luego, descomprimimos su contenido utilizando la biblioteca estándar zlib de Python, obteniendo un archivo tar. Finalmente, desempaquetamos el contenido del archivo tar utilizando la biblioteca estándar tarfile de Python.
+\item Mediante el comando \texttt{adb backup} se obtiene el archivo \emph{backup.ab}.
+\item A este archivo, primero le quitamos el cabezal (que corresponde a los primeros 24 bytes). Luego, descomprimimos su contenido utilizando la biblioteca estándar \emph{zlib} de Python, obteniendo un archivo tar. Finalmente, desempaquetamos el contenido del archivo tar utilizando la biblioteca estándar \emph{tarfile} de Python.
 \item De forma de preservar los nombres de directorios que son utilizados por las aplicaciones debemos renombrarlos a sus nombre originales, como ya vimos.
 \end{enumerate}
 
@@ -379,6 +382,7 @@ La implementación de este nuevo extractor, al cual llamamos \emph{AdbBackupExtr
 Con el fin de obtener resultados significativos en las pruebas de las operaciones implementadas, buscamos utilizar datos de entrada que fueran representativos de un uso real de los dispositivos móviles. Para esto, utilizamos dos \emph{disk images} de muestra que brinda Oxygen Forensics (en su sitio web \cite{oxigforn}) con el objetivo de simular casos reales para evaluar el funcionamiento de su suite de software forense.
 
 Las especificaciones de los dispositivos correspondientes a las imágenes obtenidas son las siguientes:
+\newline
 
 \footnotesize
     \renewcommand*{\arraystretch}{1.4}

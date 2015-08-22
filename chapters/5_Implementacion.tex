@@ -1,7 +1,8 @@
 \chapter{Implementación del prototipo}
-En este capítulo vamos a compartir varios de los aspectos más importantes que debimos considerar con respecto a las diversas tecnologías y herramientas que utilizamos durante el proceso de desarrollo del prototipo de la herramienta \enquote*{Android Inspector}.
+En este capítulo vamos a presentar varios de los aspectos más importantes que debimos considerar con respecto a las diversas tecnologías y herramientas que se han utilizado durante el proceso de desarrollo del prototipo de la herramienta \enquote*{Android Inspector}.
 
 \section{Lenguaje de desarrollo}
+\label{lenguajeDeDesarrollo}
 La elección de Python como lenguaje para el desarrollo del prototipo fue una de las primeras y más trascendentes decisiones que debimos tomar de cara a la implementación. Además, impactó en varios aspectos importantes de la herramienta. En particular, nos permitió brindar un lenguaje para desarrollar extensiones el cual fuera accesible.
 
 Como veremos, si bien desde temprano el lenguaje se mostraba como candidato ideal para este desarrollo, la no experiencia de uso del mismo por parte de los autores era un factor a considerar dado el contexto del proyecto. Para mitigar el riesgo y asesorar los beneficios del lenguaje, nos familiarizamos en etapas previas con el mismo y realizamos pruebas de concepto en paralelo durante la etapa de diseño.
@@ -31,6 +32,7 @@ Finalmente, si vamos al nivel más práctico también podemos observar la influe
 
 \section{Entorno de desarrollo}
 A continuación se enumeran los detalles relevantes de los ambientes en los cuales se realizaron las pruebas del prototipo:
+\newline
 
 \footnotesize
     \renewcommand*{\arraystretch}{1.4}
@@ -67,6 +69,7 @@ Por otro lado, durante el desarrollo se hizo uso de una variedad de herramientas
     \normalsize
     
 \section{Biblioteca python-cybox}
+\label{bibliotecaPythonCybOX}
 MITRE provee esta biblioteca \cite{python-cybox-github} para Python con el fin de facilitar las tareas de parsing, manipulación y generación de contenido CybOX. La misma se plantea tanto permanecer fiel al estándar CybOX como al uso de buenas prácticas que son habituales en Python.
 
 La biblioteca cuenta con activo desarrollo el cual sigue de cerca los últimos cambios del lenguaje. La forma en que está versionada la misma refleja la versión de CybOX que soporta. De esta forma, su esquema de versión es el siguiente: \texttt{major.minor.update.revision}, en dónde los primeros tres números corresponden a la versión de CybOX y el último es utilizado para indicar nuevas liberaciones de la propia biblioteca.
@@ -83,6 +86,7 @@ De esta forma, podemos trabajar con objetos de alto nivel como pueden ser \emph{
 En cuanto a la posibilidad de extender los objetos que brinda el lenguaje, CybOX define un tipo de objeto al cual denomina \emph{CustomObject} y es soportado por esta biblioteca. El mismo brinda la posibilidad de que podamos representar objetos que no se encuentran definidos en el estándar. De esta forma, este mecanismo nos permite extender la capacidad de representación de datos que brinda CybOX más allá de los objetos predefinidos con los que cuenta. Este aspecto resulta fundamental dado que permite a la herramienta soportar nuevos tipos de datos.
 
 \section{Interfaces de las extensiones}
+\label{interfacesDeExtension}
 Veamos las interfaces que brindamos a los desarrolladores de extensiones:
 \newline
 
@@ -151,6 +155,7 @@ Finalmente, una vez que la capa de presentación, esto es el parser de comandos,
 
 \section{Descripción de los paquetes}
 A continuación vemos una descripción de los distintos paquetes con los que cuenta la herramienta.
+\newline
 
 \footnotesize
     \renewcommand*{\arraystretch}{1.4}

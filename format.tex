@@ -88,7 +88,7 @@
 
 \newcommand\pythonstyle{\lstset{
 language=Python,
-otherkeywords={set_device_info, list_operations, execute_operations, add_data_type, remove_data_type, add_data_source_type, remove_data_source_type, add_operation, remove_operation, query_operations_info, get_operation_info, get_operation, get_operation_info_by_id, get_operation_exec_info, exists_operation, exists_data_type, exists_data_source_type, has_all_required_param_values, add_file, remove_file, get_extractor, get_inspector, get_custom_cybox_object, add_related, inline},
+otherkeywords={set_device_info, list_operations, execute_operations, add_data_type, remove_data_type, add_data_source_type, remove_data_source_type, add_operation, remove_operation, query_operations_info, get_operation_info, get_operation, get_operation_info_by_id, get_operation_exec_info, exists_operation, exists_data_type, exists_data_source_type, has_all_required_param_values, add_file, remove_file, get_extractor, get_inspector, get_custom_cybox_object, add_related, inline, create_file_object},
 keywordstyle=\color{deepblue},
 emph={DeviceInfo, string, DataSource, integer, list, bool, Extractor, Inspector, ObjectProperties, False},
 emphstyle=\color{deepred},
@@ -123,7 +123,39 @@ showstringspaces=false
 }
 {}
 
+\colorlet{punct}{red!60!black}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily,
+    showstringspaces=false,
+    breaklines=true,
+    frame=tbrl,
+    literate=
+     *{0}{{{\color{numb}0}}}{1}
+      {1}{{{\color{numb}1}}}{1}
+      {2}{{{\color{numb}2}}}{1}
+      {3}{{{\color{numb}3}}}{1}
+      {4}{{{\color{numb}4}}}{1}
+      {5}{{{\color{numb}5}}}{1}
+      {6}{{{\color{numb}6}}}{1}
+      {7}{{{\color{numb}7}}}{1}
+      {8}{{{\color{numb}8}}}{1}
+      {9}{{{\color{numb}9}}}{1}
+      {:}{{{\color{punct}{:}}}}{1}
+      {,}{{{\color{punct}{,}}}}{1}
+      {\{}{{{\color{delim}{\{}}}}{1}
+      {\}}{{{\color{delim}{\}}}}}{1}
+      {<}{{{\color{delim}{<}}}}{1}
+      {>}{{{\color{delim}{>}}}}{1},
+}
+
 % Reducir el tamaño del indice
 \usepackage{tocloft}
 \setlength\cftparskip{-2pt}
 \setlength\cftbeforechapskip{10pt}
+
+
+
+

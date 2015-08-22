@@ -1,2 +1,276 @@
-\chapter{Guía para el desarrollo de una operación}
+\chapter{Guía de extensión de la herramienta}
 \label{anexoGuia}
+
+Una vez determinada la necesidad de contar ya sea con una nueva operación, tipo de dato o tipo de fuente de datos, es importante que tengamos en cuenta los requerimientos que impone la herramienta Android Inspector sobre cada uno de ellos, así como también una serie de buenas prácticas que nos pueden ayudar a desarrollar las mismas con mayor facilidad.
+
+Mediante esta guía pretendemos ilustrar de principio a fin el proceso de desarrollo de cada una de las extensiones que permite realizar la herramienta. Para ello, dividiremos estos procesos en una serie de pasos.
+
+\section{Desarrollo de una nueva operación}
+\subsection*{Paso 1: Determinar las propiedades de la operación}
+Como vimos en la sección \ref{conceptos_fundamentales}, una operación consiste de un mecanismo que nos permite extraer información de un cierto tipo de dato desde una fuente de datos, soportando un cierto conjunto de modelos de dispositivos y versiones de Android. Esta es la información más básica con la que podemos contar de una operación.
+
+Usualmente cuando ya hemos decidido que precisamos desarrollar una nueva operación, tenemos una idea de esta información básica. Veamos cómo cada uno de estos datos determinan diversos aspectos de la operación.
+\newline
+
+\footnotesize
+    \renewcommand*{\arraystretch}{1.4}
+    \begin{longtable}{ | >{\bfseries\centering\arraybackslash}m{3cm} | >{\itshape}m{7.0cm} | >{\itshape}c |}
+    \hline
+    \BlackCell{Propiedad} & \BlackCell{Descripción} \\ \hline \hline
+    Tipo de dato & Determina el tipo de objeto CybOX utilizado para representar los datos. \\ \hline
+    Fuente de datos & Determina el extractor y los parámetros utilizados por la operación. \\ \hline
+    Versiones de Android & Determina las versiones del sistema operativo Android soportadas por la operación. \\ \hline
+    Modelos de dispositivos & Determina los modelos de dispositivos Android soportados por la operación. \\ \hline
+    \caption {Propiedades de una operación}
+    \end{longtable}
+    \normalsize
+    
+Para estas dos últimas propiedades, si bien uno generalmente parte con el objetivo de soportar un determinado conjunto de dispositivos y versiones de Android, luego de desarrollada la operación podemos descubrir que la misma funciona correctamente en un rango más amplio de dispositivos y versiones de Android del que fue inicialmente verificada. Por lo tanto, podemos reflejar esta información utilizando estas propiedades.
+
+\subsection*{Paso 2: Evaluar componentes a reutilizar}
+Uno de los aspectos más interesantes que propone el diseño de la herramienta es facilitar la reutilización de componentes. En particular, estamos hablamos de \emph{extractors} y \emph{cybox objects}. De esta forma, debemos evaluar si no contamos ya con componentes que nos permitan extraer información de la fuente de datos deseada ó que nos permitan representar el tipo de dato que buscamos.
+
+En el caso de \emph{extractors}, recordemos que los mismos nos permiten obtener datos de cierto tipo de fuente de datos. Por lo tanto, debemos evaluar si la \emph{fuente de datos} de la cual pretendemos extraer datos se encuentra comprendida por alguno de los \emph{tipos de fuente de datos} con los que contamos.
+
+A modo de ejemplo, supongamos que deseamos extraer datos de la aplicación para Android de Twitter. En este caso, podríamos utilizar el extractor que brinda por defecto \emph{Android Inspector} para obtener datos de aplicaciones, esto es, el \emph{ApplicationExtractor}. Para indicarle la aplicación de la cual deseamos extraer los datos, le pasamos como valor del parámetro \emph{package\_name} el nombre correspondiente al paquete de la aplicación, que en este caso es \emph{com.twitter.android}.
+
+Si tras evaluar los extractors con los que contamos vemos que ninguno satisface nuestros requerimientos, tendremos que considerar desarrollar un nuevo extractor, y en consecuencia definir un nuevo tipo de fuente de datos. La sección \ref{nuevoTipoDeFuente} describe los pasos a tomar para esto.
+
+En el caso de \emph{cybox objects}, el propio lenguaje CybOX nos ofrece un conjunto de objetos ya definidos para representar diversos tipos de datos. El listado de objetos definidos por CybOX se encuentra en \cite{objectosCybOX}.
+
+Si tras revisar los objetos definidos por el lenguaje CybOX vemos que el tipo de dato que buscamos representar no se encuentra definido o deseamos agregar campos a un objeto existente, tenemos la posibilidad de diseñar lo que CybOX denomina un \emph{custom cybox object} para representar un nuevo tipo de dato. Para ello, la sección \ref{nuevoTipoDeDatos} describe los pasos a tomar y aspectos que deberíamos tener en cuenta.
+
+\subsection*{Paso 3: Implementar el inspector}
+Llegados a este punto, tenemos claro lo que debe realizar la operación y contamos tanto con el extractor adecuado para obtener los datos como con el objeto CybOX adecuado para representar la información que buscamos. Nos resta implementar el procedimiento mediante el cual se realizará la examinación de los datos extraídos, esto es, el \emph{inspector}.
+
+Antes de entrar en los detalles de implementación de un inspector, es oportuno que mencionemos un detalle importante. Tanto los \emph{inspectors} como los \emph{extractors} y los \emph{cybox objects} (que veremos cómo implementarlos en las próximas secciones) que maneja la herramienta son implementados como módulos de extensión en el lenguaje Python. Ya vimos en la sección \ref{lenguajeDeDesarrollo}, cómo Python es un lenguaje ideal en el cual realizar este tipo de extensiones.
+
+Tengamos en cuenta que para el desarrollo de estos módulos podemos utilizar cualquiera de las bibliotecas estándar que brinda Python, además de la biblioteca python-cybox vista en la sección \ref{bibliotecaPythonCybOX} para facilitar el manejo y producción de contenido CybOX. Por ejemplo, para examinar bases de datos SQLite contamos con la biblioteca estándar sqlite3. Además de estos módulos, en la sección \ref{modulosUtilitarios} veremos un par de módulos utilitarios que incluímos en la herramienta para facilitar el desarrollo en base a la experiencia adquirida desarrollando los diversos módulos del caso de estudio visto en el capítulo \ref{capCasoDeEstudio}.
+
+Vista la plataforma que contamos para desarrollar, ahora veremos cómo implementar el inspector de la operación.
+
+Lo primero que debemos realizar es crear un nuevo módulo Python. El mismo deberá contener una clase que implemente la interfaz \emph{Inspector} (introducida en la sección \ref{interfacesDeExtension}):
+\newline
+
+\begin{python}
+class Inspector(object):
+   __metaclass__ = ABCMeta
+
+   @abstractmethod
+   def execute(self, device_info, extracted_data_dir_path):
+       """
+       :type device_info: DeviceInfo
+       :type extracted_data_dir_path: string
+       :rtype : (list(Object), list(FileObject))
+       """
+       pass
+\end{python}
+
+\begin{sloppypar} \textbf{Nota}: El nombre del módulo del inspector debe ser expresado en \emph{Snake Case} mientras que el nombre de la clase que implementa la interfaz debe ser expresado en \emph{Camel Case}. Ambos nombres deben coincidir tras realizar la conversión de notación. Esto es, si por ejemplo el módulo utiliza el nombre \emph{contact\_facebook\_inspector}, la clase que implementa la interfaz Inspector deberá llamarse \emph{ContactFacebookInspector}.
+\end{sloppypar}
+
+A continuación veremos varios aspectos que debemos tener en cuenta al implementar un inspector.
+
+Empecemos por observar los parámetros del método \texttt{execute} que ofrece la interfaz \emph{Inspector}
+
+\begin{itemize}
+\item \emph{device\_info}: Nos brinda información sobre el dispositivo (modelo y versión de Android) del cual se realizó la extracción. Muy a menudo resulta útil conocer estos datos debido a que ciertos aspectos son implementados de diferente forma dependiendo del fabricante o versión de Android siendo utilizada. De esta forma, tenemos la posibilidad de decidir cómo realizar la examinación de los datos en función de esta información.
+\item \emph{extracted\_data\_dir\_path}: Nos indica la ruta al directorio en donde se encuentran los archivos obtenidos de la fuente de datos designada.
+\end{itemize}
+
+En cuanto a las salidas, la interfaz Inspector establece que el método execute debe retornar:
+
+\begin{itemize}
+\item \emph{Una lista de Object}, representando la información encontrada correspondiente al tipo de dato que maneja la operación.
+\item \emph{Una lista de FileObject}, representando la información sobre los archivos originales de los cuales se obtuvo la información.
+\end{itemize}
+
+La primera lista debe contener objetos CybOX de un único tipo (SMSMessageObject, por ejemplo). Además, cada uno de dichos objetos debe referenciar a los objetos (que se encuentran en la segunda lista) que representan a los archivos de los cuales se obtuvo la información expresada. Para ello, indicamos dicha relación de la siguiente forma:
+\newline
+
+\begin{python}
+inspected_object.add_related(source_object,
+                             ObjectRelationship.TERM_EXTRACTED_FROM,
+                             inline=False)
+\end{python}
+
+En la segunda lista vimos que debemos representar la información de cada uno de los archivos originales de los cuales obtuvimos información. Para esto, podemos utilizar el método \texttt{create\_file\_object} del módulo utilitario \emph{inspectors\_helper.py} indicándole la ruta en donde se encuentra el archivo extraído y la ruta original en donde se encontraba en el dispositivo:
+\newline
+
+\begin{python}
+file_object = inspectors_helper.create_file_object(file_path,
+                                                   original_file_path)
+\end{python}
+
+En cuanto al manejo de errores, la clase que implemente el inspector debe lanzar la excepción \emph{OperationError} indicando un mensaje apropiado a fin de informar al usuario en los debidos casos que pueda ocurrir una falla en el proceso de examinación.
+
+Por otro lado, cabe mencionar que no es necesario implementar toda la lógica del inspector en una única clase sino que podemos dividirla en varias clases dentro del módulo que estamos desarrollando.
+
+Finalmente, con el fin de facilitar el debugging de inspectors, incluímos una bandera denominada \texttt{SIMPLE\_OUTPUT} que elimina los namespaces y utiliza enteros simples en vez de UUIDs en todos los identificadores de contenido CybOX que maneja el inspector. Mediante este mecanismo podemos obtener salidas de contenido CybOX mucho más legibles en XML a los fines de verificar el correcto funcionamiento del inspector siendo desarrollado. Para encender esta modalidad simplemente debemos inicializar Android Inspector con la bandera \texttt{--simple-output} de la siguiente forma:
+\newline
+
+\begin{bash}
+python andi.py --simple-output
+\end{bash}
+
+\subsection*{Paso 4: Definir la operación}
+Finalmente, ahora que tenemos todos los componentes de la operación implementados, estamos en condiciones de escribir su archivo de definición. El mismo permitirá a un usuario de la herramienta importar de forma sencilla la operación en su ambiente utilizando el comando \texttt{add\_operation}. Para esto, debemos escribir su definición en formato JSON y empaquetarla junto al módulo del inspector implementado en la sección anterior en un archivo tar.
+
+El \textbf{archivo de definición} de una operación debe tener el siguiente formato:
+\newline
+
+\begin{lstlisting}[language=json]
+{
+   "name": <string>,
+   "data_type": <string>,
+   "data_source_type": <string>,
+   "data_source_param_values": <dict(string, string)>,
+   "inspector_name": <string>,
+   "android_versions": <array(string)>,
+   "device_models": <array(string)>
+}
+\end{lstlisting}
+
+A continuación veremos los detalles de cada uno de los campos de la definición:
+\newline
+
+\footnotesize
+    \renewcommand*{\arraystretch}{1.4}
+    \begin{longtable}{ | m{4.5cm} | m{7.0cm} |}
+    \hline
+    \BlackCell{Nombre} & \BlackCell{Descripción} \\ \hline \hline
+    name & Nombre de la operación. Tiene el formato \emph{namespace:name}, de forma de ser un nombre único. \\ \hline
+    data\_type & Nombre del tipo de dato utilizado. \\ \hline
+    data\_source\_type & Nombre del tipo de fuente de dato utilizada. \\ \hline
+    data\_source\_param\_values & Contiene los valores correspondientes a los parámetros requeridos por el tipo de fuente de datos utilizada. \\ \hline
+    inspector\_name & Nombre de la clase que implementa el inspector de la operación. \\ \hline
+    android\_versions & Versiones de Android que soporta la operación. Los identificadores de versiones de Android pueden ser consultados en \cite{androidVersions}. \\ \hline
+    device\_models & Modelos de dispositivos que soporta la operación. Los identificadores de modelos de dispositivos 
+pueden ser consultados en \cite{supportedDevices}. \\ \hline
+    \caption {Campos de una definición de una operación}
+    \end{longtable}
+    \normalsize
+    
+\section{Desarrollo de un nuevo tipo de datos}
+\label{nuevoTipoDeDatos}
+\subsection*{Paso 1: Diseñar e implementar el nuevo objeto CybOX}
+Al pensar en crear un nuevo tipo de datos, primero debemos diseñar un nuevo objeto CybOX para representarlo y luego implementar un módulo Python para permitir al desarrollador de un inspector trabajar con el mismo de igual forma que con los objetos CybOX provistos por la biblioteca \emph{python-cybox}.
+
+La sección \ref{extensionDelLenguaje} detalla cómo proceder para diseñar un nuevo objeto CybOX. Ahora veamos cómo debemos proceder para implementar un nuevo objeto CybOX.
+
+En primer lugar, debemos crear una nueva clase que represente al tipo de dato que estamos desarrollando. De esta forma, la misma debe heredar de la clase \emph{Custom} provista por \emph{python-cybox} y exponer los campos del nuevo objeto. La forma de exponer estos campos debe ser mediante atributos públicos (para ser coherentes a cómo son expuestos los campos por parte de los objetos CybOX que provee la biblioteca).
+
+Para exponer los campos del objeto como mencionamos, debemos de tener en cuenta que la clase Custom utiliza una colección de \emph{CustomProperty} mediante la cual se definen los campos del objeto en runtime. Para lograr contar con una interfaz igual a la provista por los demás objetos CybOX, esto es, poder acceder a los atributos de la clase directamente, podemos utilizar la construcción de \emph{Property} que brinda Python \cite{python-property-class}. De esta forma, podemos interceptar el momento en que se asigna y accede al atributo, y actuar como proxy para utilizar la \emph{CustomProperty} correspondiente.
+
+\textbf{Nota}: La nueva clase debe ser escrita en un nuevo módulo Python de forma que siga la misma convención de nombres descrita anteriormente para un inspector.
+
+\subsection*{Paso 2: Definir el tipo de dato}
+Para que el usuario pueda importar fácilmente el nuevo tipo de dato utilizando el comando \texttt{add\_data\_type}, debemos crear su definición en formato JSON y empaquetarla en un archivo tar junto al módulo Python implementado en la sección anterior.
+
+El \textbf{archivo de definición} de un tipo de dato debe tener el siguiente formato:
+\newline
+
+\begin{lstlisting}[language=json]
+{
+   "name": <string>,
+   "cybox_object_name": <string>
+}
+\end{lstlisting}
+
+A continuación veremos los detalles de los campos de la definición:
+\newline
+
+\footnotesize
+    \renewcommand*{\arraystretch}{1.4}
+    \begin{longtable}{ | m{4.5cm} | m{7.0cm} |}
+    \hline
+    \BlackCell{Nombre} & \BlackCell{Descripción} \\ \hline \hline
+    name & Nombre del tipo de dato. Al igual que operation, tiene el formato \emph{namespace:name}. \\ \hline
+    cybox\_object\_name & Nombre de la clase del objeto CybOX que representa al tipo de dato. \\ \hline
+    \caption {Campos de una definición de un tipo de dato}
+    \end{longtable}
+    \normalsize
+    
+\section{Desarrollo de un nuevo tipo de fuente de datos}
+\label{nuevoTipoDeFuente}
+\subsection*{Paso 1: Implementar el extractor}
+Como vimos en la sección \ref{extensibilidadDeLaHerramienta}, el extractor implementa el mecanismo que se encarga de obtener los datos de un cierto tipo de fuente de datos. Por lo tanto, es lo primero que debemos considerar.
+
+Veremos que varios de los aspectos a tener en cuenta son similares a los vistos con el inspector. De igual forma que en el otro caso, comenzamos creando un nuevo módulo Python que contenga una clase que implemente la interfaz \emph{Extractor} (introducida en la sección \ref{interfacesDeExtension}):
+\newline
+
+\begin{python}
+class Extractor(object):
+    __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def execute(self, extracted_data_dir_path, param_values):
+        """
+        :type extracted_data_dir_path: string
+        :type param_values: dict(string, string)
+        :rtype : None
+        """
+        pass
+\end{python}
+
+\textbf{Nota}: Los nombres del módulo extractor y la clase que implementa su respectiva interfaz deben cumplir con las mismas reglas descritas anteriormente para el inspector.
+
+A continuación, consideraremos los aspectos que debemos tener en cuenta al implementar un extractor.
+
+Observando la interfaz \emph{Extractor}, vemos que el método \texttt{execute} nos proporciona los siguientes parámetros:
+
+\begin{itemize}
+\item \emph{extracted\_data\_dir\_path}: Indica la ruta al directorio en el cual el extractor debe almacenar todos los datos extraídos en esta etapa.
+\item \emph{param\_values}: Indica los valores de los parámetros requeridos por el extractor. Cada fuente de datos de un mismo tipo establece diferentes valores para estos parámetros. Por ejemplo, en el caso del \emph{ApplicationExtractor}, el parámetro \emph{package\_name} tendrá diferentes valores dependiendo de la aplicación que tomemos como fuente de datos.
+\end{itemize}
+
+Como salida, si bien el método \texttt{execute} no retorna un resultado, ya mencionamos que se espera que el extractor almacene los datos extraídos en la ruta que se le especificó del filesystem de la maquina \emph{host}. Por otro lado, la forma en que el extractor almacena los datos en dicha ruta es un aspecto importante que se debe tener en cuenta. El desarrollador del extractor debe establecer una clara especificación de cómo el extractor almacena los datos extraídos de forma que luego todos los inspectors de las operaciones que utilizan el extractor sepan acceder a los datos extraídos.
+
+En el caso de los extractors que desarrollamos nosotros en este trabajo (\emph{ApplicationExtractor} y \emph{AdbBackupExtractor}), ambos se dedican a extraer los datos de una aplicación y ambos los almacenan utilizando la misma especificación. Este último detalle no es un requisito que debamos cumplir al implementar un extractor, pero se realizó a propósito de forma que las operaciones que examinan datos de aplicaciones pudieran intercambiar fácilmente el extractor utilizado. De esta forma, vemos la importancia que puede tener especificar cómo se almacenan los datos extraídos.
+
+En cuanto al manejo de errores, debemos utilizar la excepción \emph{OperationError}, de forma similar a como lo realizamos en un inspector, acompañando la misma de un mensaje que describa el error ocurrido.
+
+Por último, cabe mencionar que la herramienta no impone ningún tipo de restricción en cuanto a la forma utilizada para realizar la extracción de los datos ni el medio a través del cual se debe realizar la extracción. El único requisito que impone es que la misma debe almacenar los datos extraídos en el directorio que se le especifica. Dicho esto, el desarrollador puede optar por utilizar el protocolo adb, que brinda la ventaja de tener un acceso universal a todos los dispositivos ya sean reales o virtuales, ó bien puede optar por utilizar otro medio.
+
+\subsection*{Paso 2: Definir el tipo de fuente de datos}
+De forma similar que para las extensiones anteriores, debemos crear una definición para el tipo de fuente de dato en formato JSON y empaquetarla junto al módulo del extractor implementado en un archivo tar. De esta forma, el usuario podrá importar el nuevo tipo de fuente de datos utilizando el comando \texttt{add\_data\_source\_type}.
+
+El \textbf{archivo de definición} de un tipo de fuente de datos utiliza JSON y tiene el siguiente formato:
+\newline
+
+\begin{lstlisting}[language=json]
+{
+	"name": <string>,
+	"extractor_name": <string>,
+	"required_params": <array(string)>
+}
+\end{lstlisting}
+
+A continuación veremos los detalles de cada uno de los campos de la definición:
+\newline
+
+\footnotesize
+    \renewcommand*{\arraystretch}{1.4}
+    \begin{longtable}{ | m{4.5cm} | m{7.0cm} |}
+    \hline
+    \BlackCell{Nombre} & \BlackCell{Descripción} \\ \hline \hline
+    name & Nombre del tipo de fuente de dato. Al igual que operation, tiene el formato \emph{namespace:name}. \\ \hline
+    extractor\_name & Nombre del extractor responsable de obtener los datos de este tipo de fuente de datos. \\ \hline
+    required\_params & Listado de parámetros requeridos por este el extractor. \\ \hline
+    \caption {Campos de una definición de un tipo de fuente de datos}
+    \end{longtable}
+    \normalsize
+    
+\section{Módulos utilitarios}
+\label{modulosUtilitarios}
+La herramienta cuenta con un paquete que provee módulos que brindan soluciones a tareas que son frecuentemente requeridas al desarrollar extensiones, tanto para extractors como inspectors. De esta forma, buscamos facilitar el desarrollo de las mismas poniendo a disposición código que pueda ser reutilizado. Concretamente contamos con los siguientes dos módulos:
+
+\begin{enumerate}
+\item \emph{inspectors\_helper.py}: Este módulo brinda varias facilidades para el desarrollo de un inspector:
+    \begin{itemize}
+    \item \texttt{create\_file\_object}: Crea el File Object con todos los datos relevantes (nombre, extensión, ruta, formato, tamaño y hash) a partir de la ruta al archivo y la ruta en donde se encontraba almacenado originalmente.
+    \item \texttt{execute\_query}: Ejecuta una consulta en la base de datos indicada por parámetro, devolviendo el resultado en un cursor conteniendo las filas resultantes y el nombre de sus columnas correspondientes.
+    \item \texttt{get\_app\_version\_name}: A partir de un ruta a un APK, devuelve el nombre de versión de la aplicación. Para esto utiliza el comando \texttt{aapt} para extraer el archivo AndroidManifest compilado y luego parsearlo en búsqueda del dato.
+    \end{itemize}
+\item \emph{adb.py}: Este módulo es un wrapper de la herramienta adb. El mismo fue desarrollado por Google para testear esta herramienta en AOSP \cite{aosp}. Usando este wrapper se facilita la interacción con la herramienta de línea de comando ADB.
+\end{enumerate}
