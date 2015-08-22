@@ -67,7 +67,6 @@ Por otro lado, durante el desarrollo se hizo uso de una variedad de herramientas
     \normalsize
     
 \section{Biblioteca python-cybox}
-\subsection{Visión general}
 MITRE provee esta biblioteca \cite{python-cybox-github} para Python con el fin de facilitar las tareas de parsing, manipulación y generación de contenido CybOX. La misma se plantea tanto permanecer fiel al estándar CybOX como al uso de buenas prácticas que son habituales en Python.
 
 La biblioteca cuenta con activo desarrollo el cual sigue de cerca los últimos cambios del lenguaje. La forma en que está versionada la misma refleja la versión de CybOX que soporta. De esta forma, su esquema de versión es el siguiente: \texttt{major.minor.update.revision}, en dónde los primeros tres números corresponden a la versión de CybOX y el último es utilizado para indicar nuevas liberaciones de la propia biblioteca.
@@ -75,21 +74,13 @@ La biblioteca cuenta con activo desarrollo el cual sigue de cerca los últimos c
 En cuanto a la arquitectura del código, podemos ver que cuenta con dos niveles de APIs:
 
 \begin{itemize}
-\item Por un lado, provee \emph{bindings} a las construcciones CybOX definidas en el estándar. Las mismas son generadas en su mayoría de forma automática (utilizando la biblioteca de Python \emph{generate\_ds} \cite{generateDS}) a partir de los schemas definitions que definen formalmente al lenguaje CybOX. Esto representa un proceso equivalente al que podemos realizar utilizando JAXB \cite{JAXB} en el lenguaje Java.
+\item Por un lado, provee \emph{bindings} a las construcciones CybOX definidas en el estándar. Las mismas son generadas en su mayoría de forma automática (utilizando la biblioteca de Python \emph{generate\_ds} \cite{generateDS}) a partir de los \emph{XML schemas definitions} que definen formalmente al lenguaje CybOX. Esto representa un proceso equivalente al que podemos realizar utilizando JAXB \cite{JAXB} en el lenguaje Java.
 \item Por otro lado, también provee APIs de más alto nivel que permiten trabajar con las diversas construcciones disponibles en CybOX (como observables, objetos, etc) de forma natural en Python.
 \end{itemize}
 
 De esta forma, podemos trabajar con objetos de alto nivel como pueden ser \emph{SMSMessageObject} ó \emph{FileObject}, establecer relaciones entre ellos, introducirlos en un conjunto de observables y luego serializarlos a XML (gracias a las bindings) en tan sólo unas pocas líneas de código Python.
 
-\subsection{Extendiendo CybOX}
-\label{extendiendoCybOX}
-CybOX define en su schema un tipo de objeto al cual denomina \emph{CustomObject}. El mismo brinda la posibilidad de que podamos representar objetos que no se encuentran definidos en el estándar. De esta forma, este mecanismo nos permite extender la capacidad de representación de datos que brinda CybOX más allá de los objetos predefinidos con los que cuenta. Este aspecto resulta fundamental dado que permite a la herramienta soportar nuevos tipos de datos.
-
-Veamos cómo debemos proceder para implementar un nuevo tipo de objeto CybOX, de forma que el mismo luego pueda ser utilizado por un inspector:
-
-En primer lugar, debemos crear la nueva clase que represente al nuevo tipo de dato. De esta forma, la misma debe heredar de la clase \emph{Custom} provista por python-cybox y exponer los campos del nuevo objeto. La forma de exponer estos campos deseamos que sea mediante atributos públicos para ser coherentes a cómo son expuestos los campos por parte de los objetos CybOX que provee por defecto la biblioteca.
-
-Para realizar lo último, tenemos que tener en cuenta que la clase Custom utiliza una colección de \emph{CustomProperty} mediante la cual se definen los campos del objeto en tiempo de ejecución. Para lograr contar con una interfaz igual a la provista por los demás objetos CybOX, esto es, poder acceder a los atributos de la clase directamente, podemos utilizar la construcción de Property que brinda Python \cite{python-property-class}, para interceptar los momentos en que se asigna y acceder al atributo y de esta forma actuar como proxy para utilizar la \emph{CustomProperty} correspondiente.
+En cuanto a la posibilidad de extender los objetos que brinda el lenguaje, CybOX define un tipo de objeto al cual denomina \emph{CustomObject} y es soportado por esta biblioteca. El mismo brinda la posibilidad de que podamos representar objetos que no se encuentran definidos en el estándar. De esta forma, este mecanismo nos permite extender la capacidad de representación de datos que brinda CybOX más allá de los objetos predefinidos con los que cuenta. Este aspecto resulta fundamental dado que permite a la herramienta soportar nuevos tipos de datos.
 
 \section{Interfaces de las extensiones}
 Veamos las interfaces que brindamos a los desarrolladores de extensiones:

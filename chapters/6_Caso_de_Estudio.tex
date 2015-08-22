@@ -3,7 +3,7 @@ En este capítulo vamos a analizar una serie de operaciones que desarrollamos co
 
 Para la categoría de Mensajería, estudiaremos los tipos de datos Email y SMS utilizando como fuentes de datos las aplicaciones de Email y SMS que brinda Android por defecto.
 
-Para la categoría de Redes Sociales, estudiaremos el tipo de dato Contacto utilizando como fuentes de datos las aplicaciones de Facebook, WhatsApp y la agenda de contactos de Android.
+Para la categoría de Redes Sociales, estudiaremos el tipo de dato \emph{Contact} utilizando como fuentes de datos las aplicaciones de Facebook, WhatsApp y la agenda de contactos de Android.
 
 De esta forma, en la primera mitad del capítulo veremos diversos aspectos importantes que se deben tener en cuenta al implementar operaciones y varias formas en que la herramienta facilita el desarrollo de las mismas. Luego, en la segunda mitad describiremos los conjuntos de datos utilizados para probar las operaciones y veremos un ejemplo de ejecución de las mismas.
 
@@ -250,7 +250,7 @@ c6d6285d9fdc4074c366ef0544f1b6b23d7604183f74c8b9cc6d0cc56b1db4c0
 \section{Redes sociales}
 Las aplicaciones de redes sociales suelen manejar un gran volumen de datos personales, lo cual las hace una fuente de datos muy interesante. Desafortunadamente, CybOX no cuenta con objetos predefinidos que puedan representar adecuadamente a muchos de los tipos de datos que solemos encontrar en las mismas. Frente a esta situación, recordemos que contamos con la alternativa de extender las capacidades de CybOX diseñando un nuevo objeto CybOX para representar un nuevo tipo de dato.
 
-De esta forma, analizamos varias aplicaciones de redes sociales con el objetivo de encontrar un tipo de datos lo suficientemente interesante que fuera utilizado por todas ellas. Fue así que decidimos por trabajar con el tipo de dato Contacto ya que representa un concepto imprescindible en toda red social. El concepto a menudo es presentado con diversos nombres en las distintas redes sociales (como puede ser amigos, vínculos, seguidores, etc) dependiendo del contexto al que apunta la misma.
+De esta forma, analizamos varias aplicaciones de redes sociales con el objetivo de encontrar un tipo de datos lo suficientemente interesante que fuera utilizado por todas ellas. Fue así que decidimos por trabajar con el tipo de dato \emph{Contact} ya que representa un concepto imprescindible en toda red social. El concepto a menudo es presentado con diversos nombres en las distintas redes sociales (como puede ser amigos, vínculos, seguidores, etc) dependiendo del contexto al que apunta la misma.
 
 Los datos asociados a un contacto en cada red social particular varía pero un cierto conjunto de datos básicos es compartido a través de todas ellas (incluso en aplicaciones fuera de esta categoría como es la agenda del teléfono). Este conjunto fue al que apuntamos representar al diseñar el nuevo objeto CybOX que lo representara.
 
@@ -272,7 +272,9 @@ En la siguiente tabla podemos observar los campos del objeto Contact:
     \end{longtable}
     \normalsize
     
-La forma en que debemos implementar un nuevo objeto CybOX ya la vimos en detalle en la sección \ref{extendiendoCybOX} del capítulo de Implementación. A continuación veremos cómo el tipo de dato Contacto se ajusta a diferentes aplicaciones. También veremos qué otros detalles, además de contar con un nuevo objeto CybOX, debimos tener en cuenta al implementar cada uno de los inspectors.
+La forma en que debemos implementar un nuevo objeto CybOX se puede ver en detalle en la sección \ref{Paso 1: Diseñar e implementar el nuevo objeto CybOX} del anexo \ref{anexoGuia}.
+
+A continuación veremos cómo el tipo de dato Contact se ajusta a diferentes aplicaciones. También veremos qué otros detalles, además de contar con un nuevo objeto CybOX, debimos tener en cuenta al implementar cada uno de los inspectors.
 
 \subsection{Inspector de Facebook}
 Debido a que la aplicación de Facebook ha variado mucho en los últimos años, nos encontramos con la necesidad de desarrollar un mecanismo para obtener la versión de la aplicación a partir de los datos extraídos de la misma.
