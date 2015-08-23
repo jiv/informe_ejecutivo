@@ -21,7 +21,7 @@ Usualmente cuando ya hemos decidido que precisamos desarrollar una nueva operaci
     Fuente de datos & Determina el extractor y los parámetros utilizados por la operación. \\ \hline
     Versiones de Android & Determina las versiones del sistema operativo Android soportadas por la operación. \\ \hline
     Modelos de dispositivos & Determina los modelos de dispositivos Android soportados por la operación. \\ \hline
-    \caption {Propiedades de una operación}
+    \caption {Propiedades básicas de una operación}
     \end{longtable}
     \normalsize
     
@@ -106,7 +106,7 @@ En cuanto al manejo de errores, la clase que implemente el inspector debe lanzar
 
 Por otro lado, cabe mencionar que no es necesario implementar toda la lógica del inspector en una única clase sino que podemos dividirla en varias clases dentro del módulo que estamos desarrollando.
 
-Finalmente, con el fin de facilitar el debugging de inspectors, incluímos una bandera denominada \texttt{SIMPLE\_OUTPUT} que elimina los namespaces y utiliza enteros simples en vez de UUIDs en todos los identificadores de contenido CybOX que maneja el inspector. Mediante este mecanismo podemos obtener salidas de contenido CybOX mucho más legibles en XML a los fines de verificar el correcto funcionamiento del inspector siendo desarrollado. Para encender esta modalidad simplemente debemos inicializar Android Inspector con la bandera \texttt{--simple-output} de la siguiente forma:
+Finalmente, con el fin de facilitar el debugging de inspectors, incluímos una bandera denominada \texttt{simple\_output} que elimina los namespaces y utiliza enteros simples en vez de UUIDs en todos los identificadores de contenido CybOX que maneja el inspector. Mediante este mecanismo podemos obtener salidas de contenido CybOX mucho más legibles en XML a los fines de verificar el correcto funcionamiento del inspector siendo desarrollado. Para activar esta modalidad simplemente debemos inicializar Android Inspector indicándole la bandera mencionada de la siguiente forma:
 \newline
 
 \begin{bash}
@@ -148,7 +148,7 @@ A continuación veremos los detalles de cada uno de los campos de la definición
     android\_versions & Versiones de Android que soporta la operación. Los identificadores de versiones de Android pueden ser consultados en \cite{androidVersions}. \\ \hline
     device\_models & Modelos de dispositivos que soporta la operación. Los identificadores de modelos de dispositivos 
 pueden ser consultados en \cite{supportedDevices}. \\ \hline
-    \caption {Campos de una definición de una operación}
+    \caption {Campos de la definición de una operación}
     \end{longtable}
     \normalsize
     
@@ -188,7 +188,7 @@ A continuación veremos los detalles de los campos de la definición:
     \BlackCell{Nombre} & \BlackCell{Descripción} \\ \hline \hline
     name & Nombre del tipo de dato. Al igual que operation, tiene el formato \emph{namespace:name}. \\ \hline
     cybox\_object\_name & Nombre de la clase del objeto CybOX que representa al tipo de dato. \\ \hline
-    \caption {Campos de una definición de un tipo de dato}
+    \caption {Campos de la definición de un tipo de dato}
     \end{longtable}
     \normalsize
     
@@ -258,7 +258,7 @@ A continuación veremos los detalles de cada uno de los campos de la definición
     name & Nombre del tipo de fuente de dato. Al igual que operation, tiene el formato \emph{namespace:name}. \\ \hline
     extractor\_name & Nombre del extractor responsable de obtener los datos de este tipo de fuente de datos. \\ \hline
     required\_params & Listado de parámetros requeridos por este el extractor. \\ \hline
-    \caption {Campos de una definición de un tipo de fuente de datos}
+    \caption {Campos de la definición de un tipo de fuente de datos}
     \end{longtable}
     \normalsize
     
