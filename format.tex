@@ -16,6 +16,7 @@
 \RequirePackage[bookmarksnumbered]{hyperref}
 \RequirePackage{hyperref}  
 \RequirePackage{fancyhdr}
+\RequirePackage{afterpage}
 
 % Set image directory
 \graphicspath{ {figures/} }
@@ -156,6 +157,11 @@ showstringspaces=false
 \setlength\cftparskip{-2pt}
 \setlength\cftbeforechapskip{10pt}
 
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
 
 
 

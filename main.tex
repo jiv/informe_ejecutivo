@@ -8,35 +8,37 @@
 \selectlanguage{spanish}
 \thispagestyle{empty}
 \include{caratula}
+\blankpage
 \tableofcontents
 \clearpage
 \listoftables
 \clearpage
 \listoffigures
+\include{resumen}
 
 \include{chapters/1_Introduccion}
-\clearpage\null\newpage
+\blankpage
 \include{chapters/2_Estado_del_Arte}
 \include{chapters/3_Analisis}
-\clearpage\null\newpage
+\blankpage
 \include{chapters/4_Disenio}
-\clearpage\null\newpage
+\blankpage
 \include{chapters/5_Implementacion}
-\clearpage\null\newpage
+\blankpage
 \include{chapters/6_Caso_de_Estudio}
-\clearpage\null\newpage
+\blankpage
 \include{chapters/7_Trabajo_a_Futuro}
-\clearpage\null\newpage
+\blankpage
 \include{chapters/8_Conclusiones}
-\clearpage\null\newpage
+\blankpage
 
 \addcontentsline{toc}{chapter}{Bibliografia}
 \bibliographystyle{amsplain}
 \bibliography{Bibliografia}
 
 \appendix
-\include{chapters/A_anexo_guia}
-\include{chapters/B_anexo_diagramas_flujo}
+\include{apendix/A_guia_extension}
+\include{apendix/B_diagramas_flujo}
 
 \end{document}
     

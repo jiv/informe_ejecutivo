@@ -60,4 +60,11 @@ Otra idea que creemos que puede ser de sumo interés es el desarrollo de extract
 \section{Añadir más datos del proceso al contenido CybOX generado}
 Actualmente la herramienta añade algunos datos como son el nombre y versión de la misma (esto es, Android Inspector v1.0), un listado de archivos extraídos (con su respectiva información y hashes) y en cada objeto CybOX de los datos examinados referenciamos a los archivos de los cuales se obtuvo su información.
 
-Dado que CybOX permite representar otros datos de interés como pueden ser información sobre los colaboradores que llevaron a cabo el proceso e información sobre el dispositivo del cual se realizó la extracción, puede ser interesante contemplar la posibilidad de agregar este tipo de información. 
+Dado que CybOX permite representar otros datos de interés como pueden ser información sobre los colaboradores que llevaron a cabo el proceso e información sobre el dispositivo del cual se realizó la extracción, puede ser interesante contemplar la posibilidad de agregar este tipo de información.
+
+\section{Soporte para otras plataformas}
+Un aspecto que consideramos que podría resultar muy importante para la herramienta es el de agregar soporte para la extracción y examinación de datos de otros sistemas operativos móviles como iOS y Windows Phone.
+
+Desde el punto de vista del diseño de la herramienta, en principio no serían necesarios cambios importantes. El principal cambio que deberíamos realizar es el de agregar un campo que indique el sistema operativo que soporta la operación y cambiar el nombre del campo \emph{versiones de Android soportadas} por \emph{versiones soportadas} para indicar las versiones del sistema operativo correspondiente que la misma soporta. De esta forma, el comando \texttt{set\_device\_info} además de requerir especificar el modelo del dispositivo y versiones del sistema operativo que soporta también deberá solicitar al usuario el sistema operativo del dispositivo.
+
+El desafío para soportar nuevas plataformas viene por el lado del desarrollo de extractors que realicen el trabajo de obtener los datos. Para ello, se deberán investigar los mecanismos disponibles con los que se cuenta en cada plataforma y las condiciones necesarias en las que debe estar el dispositivo para poder obtener los datos.
