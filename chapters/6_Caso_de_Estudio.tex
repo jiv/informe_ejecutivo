@@ -1,5 +1,4 @@
-\chapter{Caso de Estudio}
-\label{capCasoDeEstudio}
+\chapter{Caso de Estudio} \label{chap:CasoDeEstudio}
 En este capítulo vamos a analizar una serie de operaciones que desarrollamos con el fin de mostrar varios de los aspectos claves que brinda la herramienta. Para ello, planteamos el estudio de diversos tipos y fuentes de datos de aplicaciones de Mensajería y Redes Sociales dado que estas dos categorías representan hoy en día una proporción muy importante de la actividad promedio de los usuarios de dispositivos móviles.
 
 Para la categoría de Mensajería, estudiaremos los tipos de datos Email y SMS utilizando como fuentes de datos las aplicaciones de Email y SMS que brinda Android por defecto.
@@ -12,10 +11,10 @@ De esta forma, en la primera mitad del capítulo veremos diversos aspectos impor
 Consideremos las operaciones antes descritas para datos de tipo SMS e Email. En el caso de ambas, hay un par de observaciones importantes a hacer:
 \begin{itemize}
 \item CybOX provee objetos predefinidos que permiten representar a sus tipos de datos (\emph{SMSMessage} e \emph{EmailMessage} respectivamente).
-\item Podemos utilizar el \emph{ApplicationExtractor} que es provisto por la herramienta por defecto (como se menciona en el apéndice \ref{GuiaExtension}) dado que nuestro interés se encuentra en datos de aplicación.
+\item Podemos utilizar el \emph{ApplicationExtractor} que es provisto por la herramienta por defecto (como se menciona en el \autoref{app:GuiaExtension}) dado que nuestro interés se encuentra en datos de aplicación.
 \end{itemize}
 
-De esta forma, si tomamos en cuenta los pasos que se enumeran en el apéndice \ref{GuiaExtension}, los únicos componentes que debemos implementar para dichas operaciones son sus respectivos inspectors.
+De esta forma, si tomamos en cuenta los pasos que se enumeran en el \autoref{app:GuiaExtension}, los únicos componentes que debemos implementar para dichas operaciones son sus respectivos inspectors.
 
 El inspector de SMS representa un caso sencillo, por lo cual nos servirá para describir los aspectos básicos que debemos tener en cuenta al desarrollar un inspector. Mientras que en el caso del inspector de Email veremos algunos aspectos más avanzados que agrega.
 
@@ -275,7 +274,7 @@ En la siguiente tabla podemos observar los campos del objeto \emph{Contact}:
     \end{longtable}
     \normalsize
     
-La forma en que debemos implementar un nuevo objeto CybOX se puede ver en detalle en la sección \ref{nuevoTipoDeDatos} del apéndice \ref{GuiaExtension}.
+La forma en que debemos implementar un nuevo objeto CybOX se puede ver en detalle en la sección \ref{nuevoTipoDeDatos} del \autoref{app:GuiaExtension}.
 
 A continuación veremos cómo el tipo de dato Contact se ajusta a diferentes aplicaciones. También veremos qué otros detalles, además de contar con un nuevo objeto CybOX, debimos tener en cuenta al implementar cada uno de los inspectors.
 
@@ -359,7 +358,7 @@ La única dificultad que presenta la implementación del inspector de este caso 
 
 \section{Un extractor alternativo}
 \subsection{Motivación}
-El hecho de que las operaciones cuentan por separado con los mecanismo de extracción e inspección, otorga a la herramienta la flexibilidad en cómo implementar las operaciones. De esta forma, en el caso de la extracción de datos de aplicaciones podemos llegar a implementar un extractor alternativo al extractor, mencionado en el apéndice \ref{GuiaExtension}, que la herramienta brinda por defecto. Esto permite que si lo deseamos podamos cambiar operaciones que utilizan el extractor de datos de aplicaciones por defecto que brindamos, por este nuevo extractor.
+El hecho de que las operaciones cuentan por separado con los mecanismo de extracción e inspección, otorga a la herramienta la flexibilidad en cómo implementar las operaciones. De esta forma, en el caso de la extracción de datos de aplicaciones podemos llegar a implementar un extractor alternativo al extractor, mencionado en el \autoref{app:GuiaExtension}, que la herramienta brinda por defecto. Esto permite que si lo deseamos podamos cambiar operaciones que utilizan el extractor de datos de aplicaciones por defecto que brindamos, por este nuevo extractor.
 
 ¿Para qué implementar un extractor de datos de aplicaciones alternativo si los datos que obtiene son los mismos? La diferencia está en que el método que utilicemos para realizar la extracción nos puede brindar otros beneficios. En este caso, el \emph{ApplicationExtractor} que brinda la herramienta por defecto tiene la particularidad que precisa acceso root al dispositivo.
 

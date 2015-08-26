@@ -1,5 +1,4 @@
-\chapter{Guía de extensión de la herramienta}
-\label{GuiaExtension}
+\chapter{Guía de extensión de la herramienta} \label{app:GuiaExtension}
 
 Una vez determinada la necesidad de contar ya sea con una nueva operación, tipo de dato o tipo de fuente de datos, es importante que tengamos en cuenta los requerimientos que impone la herramienta Android Inspector sobre cada uno de ellos, así como también una serie de buenas prácticas que nos pueden ayudar a desarrollar las mismas con mayor facilidad.
 
@@ -45,7 +44,7 @@ Llegados a este punto, tenemos claro lo que debe realizar la operación y contam
 
 Antes de entrar en los detalles de implementación de un inspector, es oportuno que mencionemos un detalle importante. Tanto los \emph{inspectors} como los \emph{extractors} y los \emph{cybox objects} (que veremos cómo implementarlos en las próximas secciones) que maneja la herramienta son implementados como módulos de extensión en el lenguaje Python. Ya vimos en la sección \ref{lenguajeDeDesarrollo}, cómo Python es un lenguaje ideal en el cual realizar este tipo de extensiones.
 
-Tengamos en cuenta que para el desarrollo de estos módulos podemos utilizar cualquiera de las bibliotecas estándar que brinda Python, además de la biblioteca python-cybox vista en la sección \ref{bibliotecaPythonCybOX} para facilitar el manejo y producción de contenido CybOX. Por ejemplo, para examinar bases de datos SQLite contamos con la biblioteca estándar sqlite3. Además de estos módulos, en la sección \ref{modulosUtilitarios} veremos un par de módulos utilitarios que incluímos en la herramienta para facilitar el desarrollo en base a la experiencia adquirida desarrollando los diversos módulos del caso de estudio visto en el capítulo \ref{capCasoDeEstudio}.
+Tengamos en cuenta que para el desarrollo de estos módulos podemos utilizar cualquiera de las bibliotecas estándar que brinda Python, además de la biblioteca python-cybox vista en la sección \ref{bibliotecaPythonCybOX} para facilitar el manejo y producción de contenido CybOX. Por ejemplo, para examinar bases de datos SQLite contamos con la biblioteca estándar sqlite3. Además de estos módulos, en la sección \ref{modulosUtilitarios} veremos un par de módulos utilitarios que incluímos en la herramienta para facilitar el desarrollo en base a la experiencia adquirida desarrollando los diversos módulos del caso de estudio visto en el \autoref{chap:CasoDeEstudio}.
 
 Vista la plataforma que contamos para desarrollar, ahora veremos cómo implementar el inspector de la operación.
 

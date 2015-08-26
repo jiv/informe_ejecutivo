@@ -1,1 +1,51 @@
 \chapter{Introducción} \label{introduccion}
+
+\section{Motivación}
+Con la inmensa adopción que han tenido los dispositivos móviles durante esta última década, el área de \emph{mobile forensics} ha pasado a tener un papel protagónico en la informática forense. Si bien podemos encontrar en esta área muchas similitudes con la de \emph{computer forensics}, debido a varias de las características que poseen los dispositivos móviles y a su rápida evolución, los mismos presentan una serie de desafíos importantes desde el punto de vista forense.
+
+Aunque el área de \emph{mobile forensics} pasó a ocupar un lugar importante dentro de la informática forense tanto en la industria como en el ambiente académico, la misma es aún relativamente nueva comparada con \emph{computer forensics} que ya cuenta con varias décadas más de madurez. Esto queda en evidencia si observamos los estándares sobre procedimientos forenses que podemos encontrar hoy en día para dispositivos móviles.
+
+Una etapa fundamental que forma parte de cualquier proceso forense informático es la de obtener datos de un dispositivo. En este sentido, los dispositivos móviles presentan varios desafíos para llevar a cabo esta etapa de manera adecuada. En el \autoref{chap:EstadoDelArte} estudiaremos en detalle varios de ellos. En particular, veremos por qué no es una tarea sencilla obtener una copia bit-a-bit del medio de almacenamiento primario de un dispositivo móvil como lo suele ser en el caso de una PC.
+
+La diversidad con que son diseñados los dispositivos móviles y las diversas interfaces de hardware y software que presentan son un factor que juega en contra para lograr contar con un proceso de obtención de datos uniforme para los dispositivos móviles. Esto lleva a que los investigadores forense deban a menudo poseer una multitud de herramientas para extraer los datos de los diversos dispositivos móviles a los que se enfrentan. El costo de las herramientas y el aprendizaje que conlleva cada una de ellas imponen un obstáculo significativo para muchas organizaciones.
+
+Si bien el tipo de información que deseamos extraer de los dispositivos móviles usualmente es el mismo a lo largo de cualquier fabricante o sistema operativo, el formato en que dicha información se encuentra o la forma que debemos utilizar para acceder a ella pueden diferir.
+
+Si consideramos la plataforma móvil Android, que cuenta con la mayor porción del mercado a nivel mundial (más del 80\% según la firma Gartner \cite{gartnerSales}), la diversidad en sus diseños es un hecho notorio tanto en software como hardware. Para tener una noción de la magnitud de la diversidad que presenta el ecosistema Android, observemos que en agosto de 2015 se podían encontrar más de 24.000 modelos de dispositivos Android producidos por más de 1.000 fabricantes distintos \cite{androidFragment}.
+
+De esta forma, vemos que si pudiéramos contar con un nivel de abstracción que nos permitiera concentrarnos en qué datos deseamos obtener, sin tener que estar considerando cómo debemos realizar la extracción de los mismos de cada dispositivo en particular, estaríamos dando un paso muy importante hacia el desarrollo de herramientas y procesos forenses que escalen ante la creciente variedad de dispositivos móviles.
+
+\section{Objetivos}
+En una primera instancia, el objetivo que se planteó fue realizar una recopilación del estado del arte en lo que refiere a extracción de datos de dispositivos móviles. La misma nos permitió comprender las distintas problemáticas que presenta hoy en día llevar a cabo esta tarea. De esta forma, luego pudimos identificar diversas oportunidades interesantes para investigar en mayor profundidad.
+
+En una segunda instancia y en base al trabajo de estado del arte elaborado, buscamos abordar la problemática descrita en la sección anterior con el objetivo de dar solución a varios de los problemas planteados mediante el diseño de una herramienta que facilitara la extracción de datos, fuera extensible y utilizara un lenguaje estándar para expresar sus salidas.
+
+\section{Enfoque seguido}
+Este trabajo acompaña a la línea de investigación que viene desarrollando en el área de informática forense el grupo de seguridad informática (GSI) de la Facultad de Ingeniería de la República Oriental del Uruguay. El mismo, que como vimos se enfoca a la extracción de datos de dispositivos móviles, complementa a un trabajo dedicado al análisis forense de estos datos que fue realizado de forma simultánea a este por otros estudiantes de grado.
+
+Para la investigación del estado del arte sobre el tema, partimos de los lineamientos que ofrece el NIST sobre cómo trabajar con dispositivos móviles en el ámbito forense. Esto nos brindó una perspectiva completa de las diversas etapas del proceso forense en el que se encuentra inmerso el proceso de extracción de datos. Luego, investigamos varios de los tipos de métodos de extracción que existen y su aplicados a dispositivos móviles, en donde terminamos tomando especial interés por los tipos de extracciones lógicas. Posteriormente, realizamos una extensa investigación de los formatos disponibles para almacenar datos extraídos así también como lenguajes para representar información sobre los mismos. Finalmente, decidimos tomar a la plataforma móvil Android para profundizar y aplicar los temas estudiados.
+
+Para el diseño de la herramienta buscamos cumplir con los tres objetivos mencionados en la sección anterior. La misma fue concebida para ser utilizada por investigadores forenses sin necesidad de poseer el conocimiento técnico específico de cómo se realiza la extracción y examinación de los datos. Asimismo, se hizo especial énfasis en el diseño de su arquitectura con la finalidad de permitir la extensibilidad de varios de sus componentes fundamentales como son operaciones, tipos de datos y tipos de fuentes de datos. Por último, para representar información sobre los datos extraídos la herramienta hace uso del lenguaje CybOX desarrollado por MITRE y que recientemente acaba de pasar a manos de OASIS (\emph{Organization for the Advancement of Structured Information Standards}) para continuar su desarrollo como estándar abierto.
+
+En cuanto al proceso de desarrollo utilizado para implementar el prototipo de la herramienta, tomamos un enfoque iterativo e incremental. El mismo estuvo acompañado por el desarrollo de un conjunto de pruebas automáticas con el fin de ir verificando las funcionalidades desarrolladas en cada etapa y permitir una rápida sucesión de iteraciones al reducir la cantidad de defectos introducidos en cada iteración.
+
+Por último, el caso de estudio realizado tiene la finalidad de validar el prototipo de la herramienta construida para una serie de escenarios similares al uso real que se le daría y además mostrar varios de los aspectos claves del desarrollo de extensiones de la misma.
+
+\section{Estructura del documento}
+A continuación describiremos el contenido del resto del documento de forma de brindar una noción de alto nivel del documento.
+
+El \autoref{chap:EstadoDelArte} presenta un resumen del trabajo de investigación de estado del arte que realizamos. A menos que el lector ya se encuentre familiarizado con las temáticas tratadas (en especial el lenguaje CybOX y la plataforma Android), este capítulo sienta las bases que permitirán comprender el trabajo.
+
+El \autoref{chap:Analisis} plantea y analiza el problema a resolver. Se muestra el enfoque inicial tomado para encarar el problema y se describen los conceptos fundamentales. Luego, se establecen los requerimientos, los casos de uso considerados y el alcance del trabajo. Finalmente, se analizan las decisiones por las cuales se escogió el lenguaje CybOX para representar los datos de salida.
+
+El \autoref{chap:Disenio} presenta el diseño de la herramienta propuesta para resolver el problema. De esta forma, se describe el modelo de datos utilizado y la arquitectura propuesta. Además, se ven en detalle los puntos de extensibilidad con que la misma deberá contar.
+
+El \autoref{chap:Implementacion} describe las decisiones más importantes que tomamos al realizar la implementación del prototipo de la herramienta así también como las herramientas y el ambiente utilizado para llevar a cabo la misma.
+
+El \autoref{chap:CasoDeEstudio} muestra varias de las funcionalidades claves de la herramienta a través del desarrollo de diversas extensiones de la herramienta y la forma en que pusimos a prueba las mismas utilizando un conjunto de datos realístico.
+
+El \autoref{chap:TrabajoFuturo} plantea una serie de oportunidades interesantes para continuar trabajando en el desarrollo de la herramienta.
+
+El \autoref{chap:Conclusiones} presenta las conclusiones obtenidas a partir del trabajo realizado así como las dificultades a las cuales nos enfrentamos.
+
+Por último, el documento cuenta con dos apéndices. Si bien ninguno de estos resulta esencial para la comprensión del trabajo, el \autoref{app:GuiaExtension} en particular contiene una guía que resulta imprescindible en caso que el lector tenga interés en desarrollar extensiones para la herramienta.
