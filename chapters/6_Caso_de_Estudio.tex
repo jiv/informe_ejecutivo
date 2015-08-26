@@ -412,7 +412,7 @@ A continuación se muestra cómo podemos utilizar el script para realizar la imp
 \newline
 
 \begin{bash}
-$ python load_datasets.py htc_evo_3d
+$ ./load_datasets.py HTC_Evo_3D
 Installing 'com.facebook.katana-1.apk' into the device...
 Installing 'com.whatsapp-1.apk' into the device...
 Pushing 'com.whatsapp' data into the device...
@@ -423,3 +423,150 @@ Pushing 'com.android.email' data into the device...
 The dataset was pushed successfully.
 \end{bash}
 
+
+\section{Ejemplo de una ejecución}
+Comenzamos cargando los datos del dispositivo HTC obtenido utilizando el comando \texttt{./load\_data\_sets.py}
+\newline
+
+\begin{bash}
+$ ./load_data_sets.py --ds HTC_Evo_3D
+Installing 'com.facebook.katana-1.apk' into the device...
+Installing 'com.whatsapp-1.apk' into the device...
+Pushing 'com.whatsapp' data into the device...
+Pushing 'com.android.providers.telephony' data into the device...
+Pushing 'com.facebook.katana' data into the device...
+Pushing 'com.android.providers.contacts' data into the device...
+The data set was pushed successfully.
+\end{bash}
+
+Iniciamos la herramienta ejecutando el comando \texttt{./andi.py}
+\newline
+
+\begin{bash}
+$ ./andi.py 
+Android Inspector v1.0
+\end{bash}
+
+
+Establecemos la información del dispositivo con el comando \texttt{set\_device\_info}.
+\newline
+
+\begin{bash}
+(Andi) set_device_info -m GT-I9300 -v 4.3
+Device model 'GT-I9300' running Android version '4.3' was set as the current device information.
+\end{bash}
+
+Utilizamos el comando \texttt{list} para listar las operaciones soportadas por el dispositivo.
+\newline
+
+\begin{bash}
+(Andi) list
+Name                   Data type     
+---------------------  ------------  
+EmailMessageAOSPEmail  EmailMessage  
+SmsMessageAOSPSms      SMSMessage    
+ContactFacebook        Contact       
+ContactWhatsApp        Contact       
+ContactAOSPAgenda      Contact       
+
+Data Source                                                
+---------------------------------------------------------  
+Application{package_name:com.android.email}                
+Application{package_name:com.android.providers.telephony}  
+Application{package_name:com.facebook.katana}              
+Application{package_name:com.whatsapp}                     
+Application{package_name:com.android.providers.contacts}   
+
+Supported devices           Supported Ver.
+----------------------------------------  
+[GT-I9300, XT1053]          [2.3.7-5.1.1]
+[GT-I9300, XT1053]          [2.2.0-4.4.4]
+[GT-I9300, Nexus5, XT1053]  [4.1-4.4.4]
+[GT-I9300, XT1053]          [4.1-4.4.4]
+[GT-I9300, XT1053]          [2.3-4.4.4]
+\end{bash}
+
+Utilizamos el comando \texttt{execute} para ejecutar primero la operación que extrae SMS.
+\newline
+
+\begin{bash}
+(Andi) execute -op SmsMessageAOSPSms 
+
+[1/1] Executing 'SmsMessageAOSPSms': 
+Fetching '/system/app/TelephonyProvider.apk' file...
+Fetching '/data/data/com.android.providers.telephony' directory...
+COMPLETED. Data stored to 'results/SmsMessageAOSPSms_20150826_081415'.
+
+1 operation(s) completed successfully.
+\end{bash}
+
+Utiizamos el comando \texttt{execute} para ejecutar las operaciones que extraen datos de contactos de Facebook y WhatsApp.
+\newline
+
+\begin{bash}
+(Andi) execute -op ContactFacebook ContactWhatsApp
+
+[1/2] Executing 'ContactFacebook': 
+Fetching '/data/app/com.facebook.katana-1.apk' file...
+Fetching '/data/data/com.facebook.katana' directory...
+COMPLETED. Data stored to 'results/ContactFacebook_20150826_084055'.
+
+[2/2] Executing 'ContactWhatsApp': 
+Fetching '/data/app/com.whatsapp-1.apk' file...
+Fetching '/data/data/com.whatsapp' directory...
+COMPLETED. Data stored to 'results/ContactWhatsApp_20150826_084107'.
+
+2 operation(s) completed successfully.
+\end{bash}
+
+A continuación se puede ver la estructura de los datos resultantes de ejecutar las operaciones recién descritas.
+\newline
+
+\begin{bash}
+$ tree -L 3
+.
+|__ ContactFacebook_20150826_084055
+|   |__ extracted_data
+|   |   |__ com.facebook.katana-1.apk
+|   |   |__ databases
+|   |__ inspected_data.xml
+|   |__ source_data.xml
+|__ ContactWhatsApp_20150826_084107
+|   |__ extracted_data
+|   |   |__ com.whatsapp-1.apk
+|   |   |__ databases
+|   |   |__ files
+|   |   |__ shared_prefs
+|   |__ inspected_data.xml
+|   |__ source_data.xml
+|__ SmsMessageAOSPSms_20150826_081415
+    |__ extracted_data
+    |   |__ app_parts
+    |   |__ databases
+    |   |__ shared_prefs
+    |   |__ TelephonyProvider.apk
+    |__ inspected_data.xml
+    |__ source_data.xml
+\end{bash}
+
+Como se puede ver en la imagen, cada operación almacena los datos en una carpeta independiente.
+
+Finalmente, utilizando la herramienta cybox-to-html podemos ver los datos inspeccionados de una forma más clara. En la siguiente imagen se muestra el objeto File que representa a la base de datos fb.db de la cual se extrajeron los contactos:
+\newline
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=\textwidth]{figures/FbDBFileObject}
+        \caption{Objeto File que representa a la base de datos fb.db}
+    \end{center}
+\end{figure}
+
+A continuación se pueden ver algunos de objetos Contact que representan a los contactos encontrados:
+\newline
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=\textwidth]{figures/FBContactObjects}
+        \caption{Objetos Contact que representan los contactos encontrados}
+    \end{center}
+\end{figure}
