@@ -22,7 +22,7 @@ Estructura utilizada para facilitar la representación de una fuente de dato, es
 De esta forma, una posible instancia de fuente de dato podría contar con: type = 'Application' y parameters = \{('package\_name', 'com.example.app')\}.
 
 \subsection{OperationInfo}
-Estructura utilizada para representar la información de una operación. La misma es utilizada por el comando \texttt{list\_operations} al desplegar dicha información al usuario. \newline
+Estructura utilizada para representar la información de una operación. La misma es utilizada por el comando \texttt{list} al desplegar dicha información al usuario. \newline
 
 \footnotesize
     \renewcommand*{\arraystretch}{1.4}
@@ -418,14 +418,14 @@ Esta tabla se utiliza para almacenar los distintos dispositivos soportados por l
 
 \section{Descripción de los comandos}
 \subsection*{SetDeviceInfo}
-El comando permite indicarle al sistema la información del dispositivo que va a ser utilizado. Esto resulta muy útil al trabajar en el modo interactivo ya que evita que tengamos que indicar esta información como parámetro a los comandos \texttt{list\_operations} y \texttt{execute\_operations} cada vez que los deseamos utilizar. En caso que se le indique de todas formas como parámetro la información del dispositivo a estas operaciones y ya hayamos utilizado el comando \texttt{set\_device\_info}, la información indicada por parámetro será la considerada por el comando.
+El comando permite indicarle al sistema la información del dispositivo que va a ser utilizado. Esto resulta muy útil al trabajar en el modo interactivo ya que evita que tengamos que indicar esta información como parámetro a los comandos \texttt{list} y \texttt{execute} cada vez que los deseamos utilizar. En caso que se le indique de todas formas como parámetro la información del dispositivo a estas operaciones y ya hayamos utilizado el comando \texttt{set\_device\_info}, la información indicada por parámetro será la considerada por el comando.
 
-\subsection*{ListOperations}
+\subsection*{List}
 El comando es de utilidad al trabajar en modo interactivo para consultar las operaciones disponibles en el sistema y obtener información de las mismas antes de utilizarlas \hyperref[reqA2]{(Req. A2)}.
 
 Los parámetros de este comando (\emph{data\_type}, \emph{data\_source}, \emph{device\_info}) actúan como filtros de búsqueda. Esto es, si a un parámetro se le indica un valor, se retornarán sólo aquellas operaciones que lo cumplen. En caso de dejar vacío un parámetro, no estamos imponiendo condición alguna sobre el mismo.
 
-\subsection*{ExecuteOperations}
+\subsection*{Execute}
 El comando es utilizado con el objetivo de ejecutar un conjunto de operaciones \hyperref[reqA3]{(Req. A3)}, tanto en modo interactivo como en modo batch. De esta forma, el comando recibe la lista de los nombres de las operaciones a ejecutar y la información del dispositivo. En caso de estar ejecutando en modo interactivo, la especificación de la información del dispositivo es opcional si el comando \texttt{set\_device\_info} fue ejecutado previamente.
 
 Para cada operación se indica si la misma tuvo éxito o no. En caso de éxito, se indica el directorio en que fueron almacenados los datos resultantes de la operación, mientras que en caso de falla se indica el motivo de la misma.

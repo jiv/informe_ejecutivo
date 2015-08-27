@@ -140,11 +140,11 @@ Finalmente, el usuario tiene a su disposición el siguiente conjunto de comandos
     \begin{longtable}{ | >{\bfseries}m{4.8cm} | >{\itshape}m{8.2cm} | >{\itshape}c |}
     \hline
     \BlackCell{Comando} & \BlackCell{Descripción} \\ \hline \hline
-    set\_device\_info & Permite especificar la información del dispositivo en el modo de ejecución interactivo. Esto hace posible que podemos omitir dicha información de los comandos \texttt{list\_operations} y \texttt{execute\_operations} posteriores. \\ \hline
+    set\_device\_info & Permite especificar la información del dispositivo en el modo de ejecución interactivo. Esto hace posible que podemos omitir dicha información de los comandos \texttt{list} y \texttt{execute} posteriores. \\ \hline
     
-    list\_operations & Lista las operaciones disponibles del sistema. Es de especial valor su uso en el modo interactivo, ya que permite al usuario descubrir las operaciones y sus características. \\ \hline
+    list & Lista las operaciones disponibles del sistema. Es de especial valor su uso en el modo interactivo, ya que permite al usuario descubrir las operaciones y sus características. \\ \hline
     
-    execute\_operations & Permite ejecutar un conjunto de operaciones tanto en modo interactivo como en modo batch. \\ \hline
+    execute & Permite ejecutar un conjunto de operaciones tanto en modo interactivo como en modo batch. \\ \hline
     
     add\_operation & Agrega una nueva operación al sistema. \\ \hline
     
@@ -168,7 +168,7 @@ Finalmente, el usuario tiene a su disposición el siguiente conjunto de comandos
 \begin{enumerate}
 \item El usuario ejecuta la herramienta sin ningún parámetro adicional.
 \item El sistema inicia una sesión de ejecución interactiva.
-\item El usuario ejecuta el comando \texttt{list\_operations} indicando el tipo de datos, la fuente de datos (y la información del dispositivo en caso de no haber utilizado el comando \texttt{set\_device\_info}).
+\item El usuario ejecuta el comando \texttt{list} indicando el tipo de datos, la fuente de datos (y la información del dispositivo en caso de no haber utilizado el comando \texttt{set\_device\_info}).
 \item El sistema retorna la información de todas las operaciones que cumplen con los valores indicados. Para cada operación se muestra:
     \begin{itemize}
     \item Identificador de la operación.
@@ -176,7 +176,7 @@ Finalmente, el usuario tiene a su disposición el siguiente conjunto de comandos
     \item Fuente de datos utilizada para extraer los datos.
     \item Información de versiones de Android y modelos de dispositivos soportados.
     \end{itemize}
-\item El usuario ejecuta el comando \texttt{execute\_operations} indicando los identificadores de las operaciones que desea ejecutar (y la información del dispositivo en caso de no haber utilizado el comando \texttt{set\_device\_info}).
+\item El usuario ejecuta el comando \texttt{execute} indicando los identificadores de las operaciones que desea ejecutar (y la información del dispositivo en caso de no haber utilizado el comando \texttt{set\_device\_info}).
 \item Para cada operación ejecutada:
     \begin{itemize}
     \item Si completó exitosamente, el sistema indica la ruta al directorio en donde fue almacenada la información obtenida.
@@ -192,7 +192,7 @@ Finalmente, el usuario tiene a su disposición el siguiente conjunto de comandos
 \item 3A.
     \begin{enumerate}
     \item El usuario ejecuta el comando \texttt{set\_device\_info} indicando la información del dispositivo.
-    \item El sistema guarda la información del dispositivo. Esta información será tenida en cuenta por los comandos \texttt{list\_operations} y \texttt{execute\_operations}.
+    \item El sistema guarda la información del dispositivo. Esta información será tenida en cuenta por los comandos \texttt{list} y \texttt{execute}.
     \item Retorna al paso 3 del flujo principal.
     \end{enumerate}
 \end{itemize}
@@ -200,7 +200,7 @@ Finalmente, el usuario tiene a su disposición el siguiente conjunto de comandos
 \begin{itemize}
 \item 5A.
     \begin{enumerate}
-    \item El usuario ejecuta el comando \texttt{execute\_operations} indicando los identificadores de las operaciones que desea ejecutar, pero no indica la información sobre el dispositivo.
+    \item El usuario ejecuta el comando \texttt{execute} indicando los identificadores de las operaciones que desea ejecutar, pero no indica la información sobre el dispositivo.
     \item El sistema retorna un mensaje de error indicando que es necesario conocer la información del dispositivo.
     \item Se retorna al paso 5 del flujo principal.
     \end{enumerate}
@@ -218,7 +218,7 @@ La diferencia más importante entre este modo de ejecución de operaciones y el 
 
 \subsubsection*{Flujo principal}
 \begin{enumerate}
-\item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{execute\_operations}, los identificadores de las operaciones que desea ejecutar y la información sobre el dispositivo.\end{sloppypar}
+\item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{execute}, los identificadores de las operaciones que desea ejecutar y la información sobre el dispositivo.\end{sloppypar}
 \item Para cada operación ejecutada:
     \begin{itemize}
     \item Si completó exitosamente, el sistema indica la ruta al directorio en donde fue almacenada la información obtenida.
@@ -231,7 +231,7 @@ La diferencia más importante entre este modo de ejecución de operaciones y el 
 \begin{itemize}
 \item 1A.
     \begin{enumerate}
-    \item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{execute\_operations}, pero no indica los identificadores de las operaciones a ejecutar y/o la información sobre el dispositivo.\end{sloppypar}
+    \item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{execute}, pero no indica los identificadores de las operaciones a ejecutar y/o la información sobre el dispositivo.\end{sloppypar}
     \item El sistema retorna un mensaje de error indicando los datos omitidos.
     \item Fin del caso de uso.
     \end{enumerate}

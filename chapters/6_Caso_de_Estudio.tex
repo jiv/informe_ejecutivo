@@ -18,7 +18,7 @@ De esta forma, si tomamos en cuenta los pasos que se enumeran en el \autoref{app
 
 El inspector de SMS representa un caso sencillo, por lo cual nos servirá para describir los aspectos básicos que debemos tener en cuenta al desarrollar un inspector. Mientras que en el caso del inspector de Email veremos algunos aspectos más avanzados que agrega.
 
-\subsection{Inspector de SMS}
+\subsection{Inspector de SMS} \label{InspectorSMS}
 Este inspector extrae el tipo de dato \emph{SMSMessage} definido en CybOX. La fuente de datos considerada es la aplicación por defecto de SMS de Android. A continuación veamos cuales son los puntos que tuvimos en cuenta para su implementación.
 
 Para obtener la información sobre los SMS, debemos acceder a una base de datos SQLite (en este caso la misma se llama \emph{mmssms.db}). Para esto, podemos hacer uso del módulo \texttt{sqlite3} disponible en las bibliotecas estándar de Python.
@@ -248,7 +248,7 @@ c6d6285d9fdc4074c366ef0544f1b6b23d7604183f74c8b9cc6d0cc56b1db4c0
 </cybox:Observable>
 \end{xml}
 
-\section{Redes sociales}
+\section{Redes sociales} \label{RedesSociales}
 Las aplicaciones de redes sociales suelen manejar un gran volumen de datos personales, lo cual las hace una fuente de datos muy interesante. Desafortunadamente, CybOX no cuenta con objetos predefinidos que puedan representar adecuadamente a muchos de los tipos de datos que solemos encontrar en las mismas. Frente a esta situación, recordemos que contamos con la alternativa de extender las capacidades de CybOX diseñando un nuevo objeto CybOX para representar un nuevo tipo de dato.
 
 De esta forma, analizamos varias aplicaciones de redes sociales con el objetivo de encontrar un tipo de datos lo suficientemente interesante que fuera utilizado por las mismas. Observamos que uno de los conceptos en común que manejan es el de contacto. Si bien el nombre utilizado para el mismo varía dependiendo del contexto de cada una (amigo, vínculo, seguidor, etc), éste forma parte imprescindible en todas ellas. Por lo tanto, decidimos diseñar un nuevo objeto CybOX llamado \emph{Contact} para representarlo.
@@ -406,26 +406,12 @@ Optamos por utilizar un emulador con una imagen estándar de Android en la cual 
 
 Con el fin de automatizar este proceso, creamos un script Python que se encarga de implantar un \emph{dataset}. Específicamente, le llamamos \emph{dataset} a un archivo \emph{tar} que contiene tanto APKs de aplicaciones como directorios correspondientes a los que se encuentran en la ruta \emph{/data/data} de un dispositivo. De esta forma, al especificar el nombre de uno de estos archivos el script toma los directorios contenidos en el archivo tar y los copia a la ruta \emph{/data/data} del dispositivo e instala los apks de aplicaciones. Para ello simplemente utiliza los comandos \texttt{adb install} y \texttt{adb push}.
 
-Los datasets con los que contamos corresponden a los antes descritos sólo que únicamente contienen los datos de las aplicaciones utilizadas en el caso de estudio, estas son Facebook, WhatsApp y las aplicaciones por defecto de Email, SMS y Contactos de Android. Además en el caso de las aplicaciones de terceros (Facebook y WhatsApp) contienen los APKs de sus últimas versiones.
-
-A continuación se muestra cómo podemos utilizar el script para realizar la implantación del \emph{dataset} correspondiente al dispositivo HTC Evo 3D adquirido.
-\newline
-
-\begin{bash}
-$ ./load_datasets.py HTC_Evo_3D
-Installing 'com.facebook.katana-1.apk' into the device...
-Installing 'com.whatsapp-1.apk' into the device...
-Pushing 'com.whatsapp' data into the device...
-Pushing 'com.android.providers.telephony' data into the device...
-Pushing 'com.facebook.katana' data into the device...
-Pushing 'com.android.providers.contacts' data into the device...
-Pushing 'com.android.email' data into the device...
-The dataset was pushed successfully.
-\end{bash}
-
+Los \emph{datasets} con los que contamos corresponden a los antes descritos sólo que únicamente contienen los datos de las aplicaciones utilizadas en el caso de estudio, estas son Facebook, WhatsApp y las aplicaciones por defecto de Email, SMS y Contactos de Android. Además en el caso de las aplicaciones de terceros (Facebook y WhatsApp) contienen los APKs de sus últimas versiones.
 
 \section{Ejemplo de una ejecución}
-Comenzamos cargando los datos del dispositivo HTC obtenido utilizando el comando \texttt{./load\_data\_sets.py}
+Para terminar, veremos un ejemplo de ejecución interactiva de la herramienta en la cual primero utilizaremos el script visto en la sección anterior para cargar los datos en un emulador y luego realizaremos varias extracciones de datos utilizando varias de las operaciones que se desarrollaron a lo largo de este capítulo.
+
+Comenzamos ejecutando el script \texttt{load\_data\_sets} utilizando el \emph{dataset} correspondiente al dispositivo HTC Evo 3D adquirido.
 \newline
 
 \begin{bash}
@@ -439,7 +425,7 @@ Pushing 'com.android.providers.contacts' data into the device...
 The data set was pushed successfully.
 \end{bash}
 
-Iniciamos la herramienta ejecutando el comando \texttt{./andi.py}
+Una vez que contamos con los datos cargados en el emulador, iniciamos la herramienta en modo interactivo de la siguiente forma:
 \newline
 
 \begin{bash}
@@ -447,8 +433,7 @@ $ ./andi.py
 Android Inspector v1.0
 \end{bash}
 
-
-Establecemos la información del dispositivo con el comando \texttt{set\_device\_info}.
+El primer comando que vamos a utilizar es \texttt{set\_device\_info} para indicarle a \emph{Android Inspector} el modelo del dispositivo emulado que se encuentra conectado y la versión de Android que está corriendo.
 \newline
 
 \begin{bash}
@@ -456,7 +441,9 @@ Establecemos la información del dispositivo con el comando \texttt{set\_device\
 Device model 'GT-I9300' running Android version '4.3' was set as the current device information.
 \end{bash}
 
-Utilizamos el comando \texttt{list} para listar las operaciones soportadas por el dispositivo.
+De esta forma, cuando utilicemos los comandos \texttt{list} y \texttt{execute}, la información del dispositivo recién establecida será tomada en cuenta de forma implícita tanto para filtrar por las operaciones soportadas en el caso del primero como para pasarle esta información a cada operación que ejecuta en el caso del segundo (recordemos que la misma es utilizada por los inspectors al ejecutar una operación).
+
+Veamos la información de las operaciones que se encuentran disponibles para el dispositivo que establecimos utilizando el comando \texttt{list}.
 \newline
 
 \begin{bash}
@@ -486,7 +473,7 @@ Supported devices           Supported Ver.
 [GT-I9300, XT1053]          [2.3-4.4.4]
 \end{bash}
 
-Utilizamos el comando \texttt{execute} para ejecutar primero la operación que extrae SMS.
+Ahora que conocemos las operaciones que podemos ejecutar para este dispositivo podemos empezar a extraer los datos que deseamos. Por ejemplo, para extraer los mensajes de texto de la aplicación por defecto de mensajería de Android observamos que tenemos la operación \emph{EmailMessageAOSPEmail} que desarrollamos en la sección \ref{InspectorSMS}. De esa forma, podemos ejecutarla pasándole el nombre de la misma al comando \texttt{execute}.
 \newline
 
 \begin{bash}
@@ -500,7 +487,9 @@ COMPLETED. Data stored to 'results/SmsMessageAOSPSms_20150826_081415'.
 1 operation(s) completed successfully.
 \end{bash}
 
-Utiizamos el comando \texttt{execute} para ejecutar las operaciones que extraen datos de contactos de Facebook y WhatsApp.
+La salida del comando en este caso nos muestra que la operación que ejecutamos completó exitosamente. Además, nos indica el directorio en dónde quedaron almacenados tanto los datos extraídos como los archivos XML de CybOX conteniendo los datos examinados.
+
+El comando \texttt{execute} permite ejecutar múltiples operaciones, una detrás de la otra, si especificamos varias. Por ejemplo, podemos ejecutar las operaciones \emph{ContactFacebook} y \emph{ContactWhatsApp} que desarrollamos en la sección \ref{RedesSociales} para extraer los datos de contactos de estas dos aplicaciones.
 \newline
 
 \begin{bash}
@@ -519,7 +508,7 @@ COMPLETED. Data stored to 'results/ContactWhatsApp_20150826_084107'.
 2 operation(s) completed successfully.
 \end{bash}
 
-A continuación se puede ver la estructura de los datos resultantes de ejecutar las operaciones recién descritas.
+Utilizando el comando \texttt{tree} de Unix podemos observar la estructura de los directorios con los datos resultantes de las tres operaciones que ejecutamos.
 \newline
 
 \begin{bash}
@@ -549,24 +538,27 @@ $ tree -L 3
     |__ source_data.xml
 \end{bash}
 
-Como se puede ver en la imagen, cada operación almacena los datos en una carpeta independiente.
+Sería interesante observar una porción de los archivos XML que contienen los objetos CybOX producidos por las operaciones. Para esto, podemos utilizar la herramienta \texttt{cybox-to-html} \cite{stix-to-html} que produce una representación de los XML más clara en HTML. A continuación veremos un par de extractos de los objetos CybOX que contienen los archivos \emph{source\_data.xml} y \emph{inspected\_data.xml} correspondientes a la ejecución de la operación \emph{ContactFacebook}.
 
-Finalmente, utilizando la herramienta cybox-to-html podemos ver los datos inspeccionados de una forma más clara. En la siguiente imagen se muestra el objeto File que representa a la base de datos fb.db de la cual se extrajeron los contactos:
+En el archivo \emph{source\_data.xml} podemos encontrar el siguiente objeto File:
 \newline
 
 \begin{figure}[H]
     \begin{center}
         \includegraphics[width=\textwidth]{figures/FbDBFileObject}
-        \caption{Objeto File que representa a la base de datos fb.db}
+        \caption{Objeto \emph{File} que representa al archivo de base de datos \emph{fb.db} del cual se extrajeron los datos sobre los contactos de Facebook.}
     \end{center}
 \end{figure}
 
-A continuación se pueden ver algunos de objetos Contact que representan a los contactos encontrados:
+En tanto, en el archivo \emph{inspected\_data.xml} podemos encontrar una serie de objetos \emph{Contact} representando a cada uno de los contactos de Facebook obtenidos. Veamos un par de ellos:
 \newline
 
 \begin{figure}[H]
     \begin{center}
-        \includegraphics[width=\textwidth]{figures/FBContactObjects}
-        \caption{Objetos Contact que representan los contactos encontrados}
+        \includegraphics[width=\textwidth]{figures/contact1}
+        \includegraphics[width=\textwidth]{figures/contact2}
+        \caption{Información de los dos primeros objetos \emph{Contact} del archivo \emph{inspected\_data.xml}.}
     \end{center}
 \end{figure}
+
+De esta forma, vimos una sesión completa de ejecución de la herramienta en la cual realizamos diversas extracciones de datos y examinamos su representación. Queda en manos del investigador forense cómo utilizar esta información expresada mediante el lenguaje CybOX para realizar diversos análisis a partir de la misma.
