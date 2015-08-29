@@ -157,16 +157,7 @@ showstringspaces=false
 \setlength\cftparskip{-2pt}
 \setlength\cftbeforechapskip{10pt}
 
-\newcommand\blankpage{%
+\newcommand\blankpage{
     \null
-    \thispagestyle{empty}%
-    \addtocounter{page}{-1}%
+    \thispagestyle{empty}
     \newpage}
-
-\newcommand{\mutilatepages}{%
-\ifodd\thepage%
-\else%
-\addtocounter{page}{1}%
-\fi%
-}
-

@@ -276,7 +276,7 @@ En la siguiente tabla podemos observar los campos del objeto \emph{Contact}:
     
 La forma en que debemos implementar un nuevo objeto CybOX se puede ver en detalle en la sección \ref{nuevoTipoDeDatos} del \autoref{app:GuiaExtension}.
 
-A continuación veremos cómo el tipo de dato Contact se ajusta a diferentes aplicaciones. También veremos qué otros detalles, además de contar con un nuevo objeto CybOX, debimos tener en cuenta al implementar cada uno de los inspectors.
+A continuación veremos cómo el tipo de dato \emph{Contact} se ajusta a diferentes aplicaciones. También veremos qué otros detalles, además de contar con un nuevo objeto CybOX, debimos tener en cuenta al implementar cada uno de los inspectors.
 
 \subsection{Inspector de Facebook}
 Debido a que la aplicación de Facebook ha variado mucho en los últimos años, nos encontramos con la necesidad de desarrollar un mecanismo para obtener la versión de la aplicación a partir de los datos extraídos de la misma.
@@ -299,9 +299,9 @@ Veamos ahora algunos detalles de la estructura que presenta la aplicación de Fa
 
 Al igual que las aplicaciones de SMS e Email ya vistas, la aplicación Facebook cuenta una base de datos (de nombre \emph{fb.db}) en la cual se encuentra toda la información que precisamos relevante a contactos (o como Facebook los llama en este caso, amigos).
 
-En el caso de Facebook, contamos con información de todos los campos representados en el objeto Contact y la misma se encuentra almacenada en una única tabla (friends). Por lo tanto, la obtención de los datos de contactos de Facebook resulta muy directa.
+En el caso de Facebook, contamos con información de todos los campos representados en el objeto \emph{Contact} y la misma se encuentra almacenada en una única tabla (friends). Por lo tanto, la obtención de los datos de contactos de Facebook resulta muy directa.
 
-Veamos para la representación en XML para un objeto Contact de Facebook:
+Veamos para la representación en XML para un objeto \emph{Contact} de Facebook:
 \newline
 
 \begin{xml}
@@ -406,7 +406,7 @@ Optamos por utilizar un emulador con una imagen estándar de Android en la cual 
 
 Con el fin de automatizar este proceso, creamos un script Python que se encarga de implantar un \emph{dataset}. Específicamente, le llamamos \emph{dataset} a un archivo \emph{tar} que contiene tanto APKs de aplicaciones como directorios correspondientes a los que se encuentran en la ruta \emph{/data/data} de un dispositivo. De esta forma, al especificar el nombre de uno de estos archivos el script toma los directorios contenidos en el archivo tar y los copia a la ruta \emph{/data/data} del dispositivo e instala los apks de aplicaciones. Para ello simplemente utiliza los comandos \texttt{adb install} y \texttt{adb push}.
 
-Los \emph{datasets} con los que contamos corresponden a los antes descritos sólo que únicamente contienen los datos de las aplicaciones utilizadas en el caso de estudio, estas son Facebook, WhatsApp y las aplicaciones por defecto de Email, SMS y Contactos de Android. Además en el caso de las aplicaciones de terceros (Facebook y WhatsApp) contienen los APKs de sus últimas versiones.
+Los \emph{datasets} con los que contamos corresponden a los antes descritos sólo que únicamente contienen los datos de las aplicaciones utilizadas en el caso de estudio, estas son Facebook, WhatsApp y las aplicaciones por defecto de email, SMS y contactos de Android. Además en el caso de las aplicaciones de terceros (Facebook y WhatsApp) contienen los APKs de sus últimas versiones.
 
 \section{Ejecución de la herramieta}
 Para terminar, veremos un ejemplo de ejecución interactiva de la herramienta en la cual primero utilizaremos el script visto en la sección anterior para cargar los datos en un emulador y luego realizaremos varias extracciones de datos utilizando varias de las operaciones que se desarrollaron a lo largo de este capítulo.
