@@ -17,7 +17,6 @@
 \RequirePackage{hyperref}  
 \RequirePackage{fancyhdr}
 \RequirePackage{afterpage}
-\RequirePackage[hmarginratio=1:1]{geometry}
 
 % Set image directory
 \graphicspath{ {figures/} }
@@ -157,3 +156,12 @@ showstringspaces=false
 \usepackage{tocloft}
 \setlength\cftparskip{-2pt}
 \setlength\cftbeforechapskip{10pt}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+
+
+
