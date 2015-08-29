@@ -163,5 +163,10 @@ showstringspaces=false
     \addtocounter{page}{-1}%
     \newpage}
 
-
+\newcommand{\mutilatepages}{%
+\ifodd\thepage%
+\else%
+\addtocounter{page}{1}%
+\fi%
+}
 
