@@ -146,17 +146,9 @@ Finalmente, el usuario tiene a su disposición el siguiente conjunto de comandos
     
     execute & Permite ejecutar un conjunto de operaciones tanto en modo interactivo como en modo batch. \\ \hline
     
-    add\_operation & Agrega una nueva operación al sistema. \\ \hline
+    add\_ext & Permite añadir una nueva extensión al sistema, ya sea operación, tipo de dato o tipo de fuente de datos. \\ \hline
     
-    remove\_operation & Elimina una operación del sistema. \\ \hline
-    
-    add\_data\_type & Agrega un nuevo tipo de datos al sistema. \\ \hline
-    
-    remove\_data\_type & Elimina un tipo de datos del sistema, en caso que este no existan operaciones que lo utilizan. \\ \hline
-    
-    add\_data\_source\_type & Agrega un nuevo tipo fuente de datos al sistema. \\ \hline
-    
-    remove\_data\_source\_type & Elimina un tipo de fuente de datos del sistema, en caso que no existan operaciones que lo utilizan. \\ \hline
+    rm\_ext & Permite eliminar una extensión del sistema. En el caso de tipo de datos y tipo de fuentes de datos, la eliminación de la extensión se llevará a cabo únicamente en caso que la misma no esté siendo utilizada por ninguna operación. Si deseamos eliminarla, primero será necesario eliminar explícitamente las operaciones que hacen uso de la misma. \\ \hline
     \caption {Comandos disponibles de la herramienta}
     \label{tab:objetos}
     \end{longtable}
@@ -171,12 +163,13 @@ Finalmente, el usuario tiene a su disposición el siguiente conjunto de comandos
 \item El usuario ejecuta el comando \texttt{list} indicando el tipo de datos, la fuente de datos (y la información del dispositivo en caso de no haber utilizado el comando \texttt{set\_device\_info}).
 \item El sistema retorna la información de todas las operaciones que cumplen con los valores indicados. Para cada operación se muestra:
     \begin{itemize}
-    \item Identificador de la operación.
+    \item Nombre de la operación.
     \item Tipo de datos que examina.
     \item Fuente de datos utilizada para extraer los datos.
-    \item Información de versiones de Android y modelos de dispositivos soportados.
+    \item Modelos de dispositivos soportados
+    \item Versiones de Android soportadas.
     \end{itemize}
-\item El usuario ejecuta el comando \texttt{execute} indicando los identificadores de las operaciones que desea ejecutar (y la información del dispositivo en caso de no haber utilizado el comando \texttt{set\_device\_info}).
+\item El usuario ejecuta el comando \texttt{execute} indicando los nombres de las operaciones que desea ejecutar (y la información del dispositivo en caso de no haber utilizado el comando \texttt{set\_device\_info}).
 \item Para cada operación ejecutada:
     \begin{itemize}
     \item Si completó exitosamente, el sistema indica la ruta al directorio en donde fue almacenada la información obtenida.
@@ -200,7 +193,7 @@ Finalmente, el usuario tiene a su disposición el siguiente conjunto de comandos
 \begin{itemize}
 \item 5A.
     \begin{enumerate}
-    \item El usuario ejecuta el comando \texttt{execute} indicando los identificadores de las operaciones que desea ejecutar, pero no indica la información sobre el dispositivo.
+    \item El usuario ejecuta el comando \texttt{execute} indicando los nombres de las operaciones que desea utilizar, pero no indica la información sobre el dispositivo.
     \item El sistema retorna un mensaje de error indicando que es necesario conocer la información del dispositivo.
     \item Se retorna al paso 5 del flujo principal.
     \end{enumerate}
@@ -218,7 +211,7 @@ La diferencia más importante entre este modo de ejecución de operaciones y el 
 
 \subsubsection*{Flujo principal}
 \begin{enumerate}
-\item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{execute}, los identificadores de las operaciones que desea ejecutar y la información sobre el dispositivo.\end{sloppypar}
+\item El usuario ejecuta la herramienta pasándole como parámetro el comando \texttt{execute} seguido de los nombres de las operaciones que desea ejecutar y la información sobre el dispositivo.
 \item Para cada operación ejecutada:
     \begin{itemize}
     \item Si completó exitosamente, el sistema indica la ruta al directorio en donde fue almacenada la información obtenida.
@@ -231,18 +224,18 @@ La diferencia más importante entre este modo de ejecución de operaciones y el 
 \begin{itemize}
 \item 1A.
     \begin{enumerate}
-    \item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{execute}, pero no indica los identificadores de las operaciones a ejecutar y/o la información sobre el dispositivo.\end{sloppypar}
+    \item El usuario ejecuta la herramienta pasándole como parámetro \texttt{execute} sin indicar los nombres de las operaciones a ejecutar y/o la información sobre el dispositivo.
     \item El sistema retorna un mensaje de error indicando los datos omitidos.
     \item Fin del caso de uso.
     \end{enumerate}
 \end{itemize}
 
-\subsection{Adición de una operación}
+\subsection{Adición de una extensión}
 
 \subsubsection*{Flujo principal}
 \begin{enumerate}
-\item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{add\_operation} y la ruta a la definición de la nueva operación.\end{sloppypar}
-\item El sistema valida la definición de la nueva operación, la agrega y le indica al usuario que la operación fue agregada exitosamente.
+\item El usuario ejecuta (ya sea en modo batch ó interactivo) el comando \texttt{add\_ext} pasándole como parámetros el tipo de extensión (operación, tipo de dato o tipo de fuente de datos) que desea agregar y la ruta a la definición de la nueva extensión.
+\item El sistema valida la definición de la nueva extensión, la agrega y le indica al usuario que la misma fue agregada exitosamente.
 \item Fin del caso de uso.
 \end{enumerate}
 
@@ -250,25 +243,25 @@ La diferencia más importante entre este modo de ejecución de operaciones y el 
 \begin{itemize}
 \item 1A.
     \begin{enumerate}
-    \item \begin{sloppypar} El usuario desea agregar una operación que cuenta con un tipo de dato o un tipo de fuente de datos no existente en el sistema. Para esto, primero ejecuta la herramienta pasándole como parámetro el comando correspondiente (\texttt{add\_data\_type} o \texttt{add\_data\_source\_type}) con la ruta a su definición. \end{sloppypar}
-    \item El sistema valida la definición del mismo, lo agrega y le indica al usuario que fue agregado exitosamente.
-    \item Se retorna al paso 1 del flujo principal.
+    \item El usuario desea agregar una operación y la misma utiliza un tipo de dato o un tipo de fuente de datos que no existe en el sistema.
+    \item El sistema le indica al usuario que la definición de la operación hace uso de una extensión que no se encuentra en el sistema y la misma debe ser agregada previamente para poder añadir esta operación.
+    \item Fin del caso de uso.
     \end{enumerate}
     
 \item 2A. / 1A.2A
     \begin{enumerate}
-    \item El sistema intenta validar la definición recibida, pero determina que no es válida.
-    \item El sistema retorna un mensaje de error indicando los datos inválidos de la misma.
+    \item El sistema determina que la definición de la extensión recibida es inválida.
+    \item El sistema retorna un mensaje de error indicando los campos inválidos de la definición.
     \item Fin del caso de uso.
     \end{enumerate}
 \end{itemize}
 
-\subsection{Eliminación de una operación}
+\subsection{Eliminación de una extensión}
 
 \subsubsection*{Flujo principal}
 \begin{enumerate}
-\item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{remove\_operation} y el identificador de la operación que desea eliminar.\end{sloppypar}
-\item El sistema elimina la operación y retorna al usuario un mensaje indicando que la misma fue eliminada.
+\item El usuario ejecuta (ya sea en modo batch ó interactivo) el comando \texttt{rm\_ext} pasándole como parámetros el tipo de la extensión que desea eliminar y su nombre.
+\item El sistema elimina la extensión e informa al usuario de ello.
 \item Fin del caso de uso.
 \end{enumerate}
 
@@ -276,8 +269,8 @@ La diferencia más importante entre este modo de ejecución de operaciones y el 
 \begin{itemize}
 \item 1A.
     \begin{enumerate}
-    \item \begin{sloppypar} El usuario ejecuta la herramienta pasándole como parámetro \texttt{remove\_operation}, pero no indica el identificador de la operación que desea eliminar. \end{sloppypar}
-    \item El sistema retorna un mensaje de error haciendo referencia al parámetro faltante.
+    \item El usuario ejecuta el comando \texttt{rm\_ext} sin indicar el tipo y/o nombre de la extensión que desea eliminar.
+    \item El sistema retorna un mensaje de error haciendo referencia a los parámetros faltantes.
     \item Fin del caso de uso.
     \end{enumerate}
 \end{itemize}

@@ -134,7 +134,7 @@ Además, dado que en Python un módulo (esto es, un archivo con extensión .py) 
 Antes de instanciar una operación, la herramienta primero obtiene las instancias del extractor e inspector correspondientes a la misma, utilizando el \emph{RepositoriesManager}. Para esto, el \emph{RepositoriesManager} cuenta con una función para uso interno denominada \texttt{get\_class\_from\_file} que carga en tiempo de ejecución la clase a partir del archivo que le es indicado. Veamos los pasos que realiza esta función para cargar en memoria la clase:
 
 \begin{itemize}
-\item \begin{sloppypar} El primer paso es utilizar el método \texttt{import\_module} del módulo \texttt{importlib} \cite{python-importlib} para importar el módulo correspondiente al nombre del extractor o inspector. Dicho módulo es buscado en el repositorio correspondiente. \end{sloppypar}
+\item El primer paso es utilizar el método \texttt{import\_module} del módulo \texttt{importlib} \cite{python-importlib} para importar el módulo correspondiente al nombre del extractor o inspector. Dicho módulo es buscado en el repositorio correspondiente.
 \item El segundo paso es utilizar la función built-in de Python \texttt{getattr} que nos permite obtener la definición de un objeto dentro de un módulo. En este caso, lo utilizamos para obtener la clase del nombre que nos especificaron en el módulo que importamos en el paso anterior.
 \item Finalmente, el último paso es asegurarnos que dicha clase implementa la interfaz correspondiente (Extractor o Inspector) como vimos en la sección anterior y devolver la misma.
 \end{itemize}

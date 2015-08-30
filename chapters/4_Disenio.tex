@@ -246,10 +246,9 @@ Los métodos \texttt{query\_operations\_info} y \texttt{get\_operation\_info\_by
 
 El método \texttt{get\_operation\_exec\_info} se encarga de obtener los datos necesarios para ejecutar la operación cuyo nombre coincida con el recibido por parámetro.
 
-\begin{sloppypar} Los métodos \texttt{exists\_operation}, \texttt{exists\_data\_type} y \texttt{exists\-\_data\-\_source\-\_type} se encargan de consultar por la existencia de operaciones, tipos de datos y tipos de fuentes de datos respectivamente. \end{sloppypar}
+Los métodos \texttt{exists\_operation}, \texttt{exists\_data\_type} y \texttt{exists\-\_data\-\_source\-\_type} se encargan de consultar por la existencia de operaciones, tipos de datos y tipos de fuentes de datos respectivamente.
 
-Los métodos con prefijo add se encargan de agregar operaciones, tipos de datos y tipos de fuentes de datos al sistema, mientras que los métodos con prefijo remove se encargan de eliminarlos.
-\newline
+Los métodos \texttt{add\_ext} y \texttt{rm\_ext} se encargan de añadir y eliminar extensiones del sistema (esto es: operaciones, tipos de datos y tipos de fuentes de datos).
 
 \subsubsection{ExtensionsManager}
 Se encarga de gestionar los puntos de extensibilidad del sistema de forma de satisfacer el requerimiento [Req. B].
@@ -423,20 +422,18 @@ El comando permite indicarle al sistema la información del dispositivo que va a
 \subsection*{List}
 El comando es de utilidad al trabajar en modo interactivo para consultar las operaciones disponibles en el sistema y obtener información de las mismas antes de utilizarlas \hyperref[reqA2]{(Req. A2)}.
 
-Los parámetros de este comando (\emph{data\_type}, \emph{data\_source}, \emph{device\_info}) actúan como filtros de búsqueda. Esto es, si a un parámetro se le indica un valor, se retornarán sólo aquellas operaciones que lo cumplen. En caso de dejar vacío un parámetro, no estamos imponiendo condición alguna sobre el mismo.
+Los parámetros de este comando (\emph{data\_type}, \emph{source\_type}, \emph{source\_params}, \emph{model} y \emph{version}) actúan como filtros de búsqueda. Esto es, si a un parámetro se le indica un valor, se retornarán sólo aquellas operaciones que lo cumplen. En caso de dejar vacío un parámetro, no estamos imponiendo condición alguna sobre el mismo.
 
 \subsection*{Execute}
 El comando es utilizado con el objetivo de ejecutar un conjunto de operaciones \hyperref[reqA3]{(Req. A3)}, tanto en modo interactivo como en modo batch. De esta forma, el comando recibe la lista de los nombres de las operaciones a ejecutar y la información del dispositivo. En caso de estar ejecutando en modo interactivo, la especificación de la información del dispositivo es opcional si el comando \texttt{set\_device\_info} fue ejecutado previamente.
 
 Para cada operación se indica si la misma tuvo éxito o no. En caso de éxito, se indica el directorio en que fueron almacenados los datos resultantes de la operación, mientras que en caso de falla se indica el motivo de la misma.
 
-\subsection*{Comandos de extensibilidad}
-Con este nombre nos referimos a los siguientes comandos: \texttt{add\_operation}, \texttt{add\_data\_type}, \texttt{add\_data\_source\_type}, \texttt{remove\_operation}, \texttt{remove\_data\-\_type} y \texttt{remove\_data\_source\_type}.
-
-Estos comandos nos permiten agregar o remover operaciones, tipos de datos ó tipos de fuentes de datos al sistema. En el caso de adición, el comando recibe una ruta al archivo de definición, mientras que en el caso de supresión, el comando recibe el identificador del componente que deseamos remover.
+\subsection*{AddExt \& RmExt}
+El comando \texttt{add\_ext} nos permite agregar extensiones al sistema, mientras que el comando \texttt{rm\_ext} nos permite removerlas. Ambos reciben como parámetro el tipo de extensión (operación, tipo de dato o tipo de fuente de datos). En el caso de adición de una nueva extensión, el comando recibe una ruta al archivo de definición del mismo. En el caso de supresión de una extensión, el comando recibe el nombre de la extensión que deseamos remover.
 \newline
 
-Los diagramas de flujo de todos los comandos recién vistos pueden ser encontrados en el apéndice \ref{diagramasFlujo}.
+Por más detalles sobre el funcionamiento de los comandos recién descritos, en el apéndice \ref{diagramasFlujo} se encuentran los diagramas de flujo de cada comando.
 
 \section{Extensibilidad de la herramienta}
 \label{extensibilidadDeLaHerramienta}
