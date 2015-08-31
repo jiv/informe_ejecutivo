@@ -184,12 +184,8 @@ set_device_info(device_info: DeviceInfo)
 list_operations(data_type: string, data_source: DataSource,
                 device_info: DeviceInfo)
 execute_operations(names: list(string), device_info: DeviceInfo)
-add_data_type(def_path: string)
-remove_data_type(name: string)
-add_data_source_type(def_path: string)
-remove_data_source_type(name: string)
-add_operation(def_path: string)
-remove_operation(name: string)
+add_ext(type: string, def_path: string)
+rm_ext(type:string, name: string)
 \end{python}
 
 \textbf{Descripción de los métodos} \newline
@@ -218,6 +214,8 @@ Se encarga de facilitar la interacción con la base de datos de definiciones, de
 query_operations_info(data_type: string, data_source: DataSource, 
                       device_info: DeviceInfo): list(OperationInfo)
 get_operation_info_by_id(id: integer): OperationInfo
+get_data_type_custom_cybox_object_name(dt_name: string): string
+get_data_source_type_extractor_name(dst_name: string): string
 get_operation_inspector_name(op_name: string): string 
 get_operation_exec_info(name: string): string,string, dict(string)
 exists_operation(name: string): bool
@@ -244,27 +242,27 @@ remove_data_type(name: string): bool
 \textbf{Descripción de los métodos} \newline
 Los métodos \texttt{query\_operations\_info} y \texttt{get\_operation\_info\_by\_id} se encargan de realizar una consulta a la base de datos de definiciones para obtener la información de las operaciones que cumplen con los parámetros recibidos.
 
-El método \texttt{get\_operation\_exec\_info} se encarga de obtener los datos necesarios para ejecutar la operación cuyo nombre coincida con el recibido por parámetro.
+Los métodos \texttt{get\-\_data\-\_type\-\_custom\-\_cybox\-\_object\-\_name}, \texttt{get\-\_data\-\_source\-\_type\-\_extractor\-\_name} y \texttt{get\-\_operation\-\_inspector\-\_name} se encargan de obtener el nombre del módulo Python que implementa la extensión correspondiente.
+
+El método \texttt{get\-\_operation\-\_exec\-\_info} se encarga de obtener los datos necesarios para ejecutar la operación cuyo nombre coincida con el recibido por parámetro.
 
 Los métodos \texttt{exists\_operation}, \texttt{exists\_data\_type} y \texttt{exists\-\_data\-\_source\-\_type} se encargan de consultar por la existencia de operaciones, tipos de datos y tipos de fuentes de datos respectivamente.
 
-Los métodos \texttt{add\_ext} y \texttt{rm\_ext} se encargan de añadir y eliminar extensiones del sistema (esto es: operaciones, tipos de datos y tipos de fuentes de datos).
+El método \texttt{has\_all\_required\_param\_values} se encarga de verificar que una fuente de datos cuenta con valores para todos los parámetros requeridos por el tipo de dicha fuente de datos.
+
+Los métodos con prefijo \texttt{add} se encargan de agregar definiciones de operaciones, tipos de datos y tipos de fuentes de datos a la base de datos definiciones, mientras que los métodos con prefijo \texttt{remove} se encargan de eliminar las mismas de la base de datos.
 
 \subsubsection{ExtensionsManager}
 Se encarga de gestionar los puntos de extensibilidad del sistema de forma de satisfacer el requerimiento [Req. B].
 \newline
 
 \begin{python}[title=Interfaz ExtensionsManager, captionpos=b]
-add_data_type(def_path: string): bool
-remove_data_type(name: string): bool
-add_data_source_type(def_path: string): bool
-remove_data_source_type(name: string): bool
-add_operation(def_path: string): bool
-remove_operation(name: string): bool
+add_ext(type: string, def_path: string)
+rm_ext(type: string, name: string)
 \end{python}
 
 \textbf{Descripción de los métodos} \newline
-Los métodos de add validan la definición recibida y añaden el componente al sistema, mientras que los métodos de remove eliminan el componente indicado (en caso de ser posible).
+El método \texttt{add\_ext} se encarga de validar la definición de la extensión recibida y añadirla al sistema, mientras que el método \texttt{rm\_ext} es responsable de eliminar la extensión indicada.
 
 \subsubsection{RepositoriesManager}
 Se encarga de gestionar el almacenamiento de los archivos que contienen las clases utilizadas por las diversas extensiones del sistema. Para esto, maneja un repositorio para cada tipo de extensión. Además, tiene la responsabilidad de cargar en tiempo de ejecución clases a partir de sus archivos correspondientes almacenados en los repositorios y devolver instancias de las mismas.

@@ -165,7 +165,7 @@ Para exponer los campos del objeto como mencionamos, debemos de tener en cuenta 
 \textbf{Nota}: La nueva clase debe ser escrita en un nuevo módulo Python de forma que siga la misma convención de nombres descrita anteriormente para un inspector.
 
 \subsection*{Paso 2: Definir el tipo de dato}
-Para que el usuario pueda importar fácilmente el nuevo tipo de dato utilizando el comando \texttt{add\_ext ---type datatype}, debemos crear su definición en formato JSON y empaquetarla en un archivo tar junto al módulo Python implementado en la sección anterior.
+Para que el usuario pueda importar fácilmente el nuevo tipo de dato utilizando el comando \texttt{add\_ext ---type data\_type}, debemos crear su definición en formato JSON y empaquetarla en un archivo tar junto al módulo Python implementado en la sección anterior.
 
 El \textbf{archivo de definición} de un tipo de dato debe tener el siguiente formato:
 \newline
@@ -233,7 +233,7 @@ En cuanto al manejo de errores, debemos utilizar la excepción \emph{OperationEr
 Por último, cabe mencionar que la herramienta no impone ningún tipo de restricción en cuanto a la forma utilizada para realizar la extracción de los datos ni el medio a través del cual se debe realizar la extracción. El único requisito que impone es que la misma debe almacenar los datos extraídos en el directorio que se le especifica. Dicho esto, el desarrollador puede optar por utilizar el protocolo adb, que brinda la ventaja de tener un acceso universal a todos los dispositivos ya sean reales o virtuales, ó bien puede optar por utilizar otro medio.
 
 \subsection*{Paso 2: Definir el tipo de fuente de datos}
-De forma similar que para las extensiones anteriores, debemos crear una definición para el tipo de fuente de dato en formato JSON y empaquetarla junto al módulo del extractor implementado en un archivo tar. De esta forma, el usuario podrá importar el nuevo tipo de fuente de datos utilizando el comando \texttt{add\_ext ---type datasourcetype}.
+De forma similar que para las extensiones anteriores, debemos crear una definición para el tipo de fuente de dato en formato JSON y empaquetarla junto al módulo del extractor implementado en un archivo tar. De esta forma, el usuario podrá importar el nuevo tipo de fuente de datos utilizando el comando \texttt{add\_ext ---type data\-\_source\-\_type}.
 
 El \textbf{archivo de definición} de un tipo de fuente de datos utiliza JSON y tiene el siguiente formato:
 \newline
