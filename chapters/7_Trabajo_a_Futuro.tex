@@ -18,7 +18,7 @@ Por último, debemos notar que el comando \texttt{execute} continuará recibiend
 \section{Automatización de la obtención de la información del dispositivo}
 El prototipo desarrollado cuenta con el comando \texttt{set\_device\_info} el cual es utilizado para ingresar manualmente la información del dispositivo, esto es, el modelo del mismo y la versión de Android que corre.
 
-Dado que esta información resulta importante para la ejecución de las operaciones, la herramienta requiere que la misma sea especificada antes poder ejecutar cualquier operación. Por lo tanto, la obtención de esta información es una tarea indispensable que siempre debemos realizar. De esta forma, consideramos que automatizar esta tarea facilitaría el uso de la herramienta.
+Dado que esta información resulta importante para la ejecución de las operaciones, la herramienta requiere que la misma sea especificada antes de poder ejecutar cualquier operación. Por lo tanto, la obtención de esta información es una tarea indispensable que siempre debemos realizar. De esta forma, consideramos que automatizar esta tarea facilitaría el uso de la herramienta.
 
 Para implementar esto, podría añadirse un nuevo comando para que desempeñe la tarea de obtención de la información de forma automática y luego establezca la información del dispositivo llamando internamente al comando \texttt{set\_device\_info}.
 

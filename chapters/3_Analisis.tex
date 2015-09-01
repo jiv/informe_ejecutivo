@@ -17,10 +17,10 @@ Asimismo, tener este nivel de abstracción no sólo resultaría útil para unifo
 
 Por último, vemos que este nivel de abstracción también nos brinda la oportunidad de poder \enquote*{empaquetar} las técnicas de extracción de datos de una forma uniforme. Esto permite que luego de desarrolladas puedan ser compartidas y reutilizadas por otros. Este aspecto resulta vital para crear un ambiente de desarrollo colaborativo el cual permita soportar una porción considerable del ecosistema Android.
 
-Estos entonces representan los motivos por los cuales estamos convencidos que la construcción de una herramienta que asista en la extracción de datos de dispositivos móviles Android podría favorecer sustancialmente el trabajo del investigador forense. En la siguiente sección describiremos los problemas que apuntamos resolver mediante la creación de la misma.
+Las consideraciones arriba descritas respaldan nuestra convicción de la necesidad de contar con una herramienta que asista en la extracción de datos de dispositivos móviles Android podría favorecer sustancialmente el trabajo del investigador forense. En la siguiente sección describiremos los problemas que apuntamos resolver mediante la creación de la misma.
 
 \section{Objetivos planteados}
-El objetivo principal de la herramienta propuesta es \textbf{facilitar la extracción de datos} de dispositivos móviles Android. Para esto, la herramienta realiza una fuerte separación entre cómo el usuario expresa lo que desea extraer y cómo se lleva a cabo la extracción. Esta separación permite a los usuarios concentrarse en qué datos extraer y no en cómo debe implementar el procedimiento de extracción. De esta forma, evitamos que los usuarios requieran contar con amplio conocimiento técnico para utilizar la herramienta, lo cual permite que la misma sea utilizada por un espectro más amplio de investigadores forenses.
+El objetivo principal de la herramienta propuesta es \textbf{facilitar la extracción de datos} de dispositivos móviles Android. Para esto, la herramienta deberá realizar una fuerte separación entre cómo el usuario expresa lo que desea extraer y cómo se lleva a cabo la extracción. Esta separación permite a los usuarios concentrarse en qué datos extraer y no en cómo debe implementar el procedimiento de extracción. De esta forma, evitamos que los usuarios requieran contar con amplio conocimiento técnico para utilizar la herramienta, lo cual permite que la misma sea utilizada por un espectro más amplio de investigadores forenses.
 
 Como vimos, una de las características fundamentales del ecosistema Android es su diversidad. Esto hace que sea importante abordar el desafío de extraer datos de forma escalable desde la concepción de la herramienta. Para esto, la misma deberá contar con una arquitectura que \textbf{facilite su extensibilidad} con el fin de poder soportar rápidamente nuevas formas de extraer datos. Esta es una necesidad clave ante la permanente evolución de Android y su ecosistema de dispositivos.
 
@@ -293,7 +293,7 @@ En base a los requerimientos establecidos, veremos a continuación varios aspect
 El prototipo de la herramienta por defecto contará con un conjunto básico de tipos de datos correspondientes a los diversos objetos predefinidos por el lenguaje que veremos en la siguiente sección.
 
 \subsubsection*{2. Tipos de fuentes de datos}
-El prototipo de la herramienta se encuentra enfocado en la extracción de datos de aplicaciones. Para esto, contaremos con un tipo de fuente de datos llamado Application, que permitirá tomar como fuente de datos aquellos datos pertenecientes a una aplicación instalada en el dispositivo.
+El prototipo de la herramienta se deberá estar enfocado en la extracción de datos de aplicaciones. Para esto, contaremos con un tipo de fuente de datos llamado Application, que permitirá tomar como fuente de datos aquellos datos pertenecientes a una aplicación instalada en el dispositivo.
 
 De todas formas, el hecho de contar con la posibilidad de tener diversos tipos de fuentes de datos permite a la herramienta extender su soporte para extraer datos de otros tipos de fuentes. Por esto, vemos que como contrapartida a datos de aplicaciones, sería interesante desarrollar en una futura iteración de la herramienta la extracción de datos del sistema. Para esto, planteamos dos posibilidades que se podrían tomar:
 
@@ -371,7 +371,7 @@ Ahora veamos el estilo de tipos de datos que pretendemos que el lenguaje nos per
 En el primer grupo vemos ejemplos de tipos de datos que podemos obtener de fuentes de datos del tipo de Application como con los que nos enfocaremos. En el segundo, vemos ejemplos de datos relevantes al sistema, que si bien no los consideraremos directamente, es deseable que el lenguaje pueda representarlos para que luego sea posible extender la herramienta y soportar el uso de los mismos.
 
 \subsection{CybOX como lenguaje escogido}
-Para representar los datos examinados y del proceso elegimos un lenguaje desarrollado originalmente por MITRE llamado CybOX. El mismo tiene la capacidad de representar eventos o propiedades con estado que puedan ser observadas en el dominio cibernético. Además, el mismo pretende ser utilizado por un amplio espectro de casos de uso a lo largo de diversas áreas de seguridad informática, entre ellas digital forensics.
+Para representar los datos examinados y del proceso elegimos un lenguaje desarrollado originalmente por MITRE llamado CybOX, el cual fue brevemente descrito en el capítulo \ref{chap:EstadoDelArte}. El mismo tiene la capacidad de representar eventos o propiedades con estado que puedan ser observadas en el dominio cibernético. Además, el mismo pretende ser utilizado por un amplio espectro de casos de uso a lo largo de diversas áreas de seguridad informática, entre ellas digital forensics.
 
 En el \autoref{app:GuiaExtension} describimos los aspectos interesantes del lenguaje en detalle y vemos como el mismo se alinea a nuestros objetivos.
 

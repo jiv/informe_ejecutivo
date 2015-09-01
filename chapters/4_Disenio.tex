@@ -158,7 +158,7 @@ Por lo tanto, el directorio del resultado de la operación contendrá:
 \section{Arquitectura} \label{arquitectura}
 El sistema cuenta con un único punto de entrada y salida de datos a través del componente que denominamos \textbf{Coordinator}. De esta forma, el mismo ofrece todos los comandos con los que cuenta el usuario.
 
-Para llevar a cabo los diversos comandos, el Coordinator se comunica con, o bien el \textbf{Operations Manager}, para ejecutar operaciones o consultar información sobre las mismas; o bien el \textbf{Extension Manager}, para extender alguno de los puntos de extensibilidad con los que vimos que cuenta el sistema.
+Para llevar a cabo los diversos comandos, el Coordinator se comunica con, o bien el \textbf{Operations Manager}, para ejecutar operaciones o consultar información sobre las mismas; o bien el \textbf{Extension Manager}, para llevar a cabo alguno de los puntos de extensibilidad con los que vimos cuenta el sistema.
 
 Luego, por un lado podemos ver que el Operation Manager utiliza el \textbf{Definitions Database Manager} para obtener la información necesaria sobre las operaciones y con el \textbf{Repositories Manager} para obtener el extractor e inspector correspondientes a la operación a ejecutar.
 

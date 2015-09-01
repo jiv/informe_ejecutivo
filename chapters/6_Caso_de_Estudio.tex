@@ -297,7 +297,7 @@ De esta forma, podemos invocar dicha herramienta desde el inspector para obtener
 
 Veamos ahora algunos detalles de la estructura que presenta la aplicación de Facebook.
 
-Al igual que las aplicaciones de SMS e Email ya vistas, la aplicación Facebook cuenta una base de datos (de nombre \emph{fb.db}) en la cual se encuentra toda la información que precisamos relevante a contactos (o como Facebook los llama en este caso, amigos).
+Al igual que las aplicaciones de SMS e Email ya vistas, la aplicación Facebook cuenta con una base de datos (de nombre \emph{fb.db}) en la cual se encuentra toda la información que precisamos relevante a contactos (o como Facebook los llama en este caso, amigos).
 
 En el caso de Facebook, contamos con información de todos los campos representados en el objeto \emph{Contact} y la misma se encuentra almacenada en una única tabla (friends). Por lo tanto, la obtención de los datos de contactos de Facebook resulta muy directa.
 
@@ -358,7 +358,7 @@ La única dificultad que presenta la implementación del inspector de este caso 
 
 \section{Un extractor alternativo}
 \subsection{Motivación}
-El hecho de que las operaciones cuentan por separado con los mecanismo de extracción e inspección, otorga a la herramienta la flexibilidad en cómo implementar las operaciones. De esta forma, en el caso de la extracción de datos de aplicaciones podemos llegar a implementar un extractor alternativo al extractor, mencionado en el \autoref{app:GuiaExtension}, que la herramienta brinda por defecto. Esto permite que si lo deseamos podamos cambiar operaciones que utilizan el extractor de datos de aplicaciones por defecto que brindamos, por este nuevo extractor.
+El hecho de que las operaciones cuentan por separado con los mecanismos de extracción e inspección, otorga a la herramienta la flexibilidad en cómo implementar las operaciones. De esta forma, en el caso de la extracción de datos de aplicaciones podemos llegar a implementar un extractor alternativo al extractor, mencionado en el \autoref{app:GuiaExtension}, que la herramienta brinda por defecto. Esto permite que si lo deseamos podamos cambiar operaciones que utilizan el extractor de datos de aplicaciones por defecto que brindamos, por este nuevo extractor.
 
 ¿Para qué implementar un extractor de datos de aplicaciones alternativo si los datos que obtiene son los mismos? La diferencia está en que el método que utilicemos para realizar la extracción nos puede brindar otros beneficios. En este caso, el \emph{ApplicationExtractor} que brinda la herramienta por defecto tiene la particularidad que precisa acceso root al dispositivo.
 
