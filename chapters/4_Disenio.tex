@@ -156,13 +156,13 @@ Por lo tanto, el directorio del resultado de la operación contendrá:
 \end{itemize}
 
 \section{Arquitectura} \label{arquitectura}
-El sistema cuenta con un único punto de entrada y salida de datos a través del componente que denominamos \textbf{Coordinator}. De esta forma, el mismo ofrece todos los comandos con los que cuenta el usuario.
+El sistema cuenta con un único punto de entrada y salida de datos a través del componente que denominamos \emph{Coordinator}. De esta forma, el mismo ofrece todos los comandos con los que cuenta el usuario.
 
-Para llevar a cabo los diversos comandos, el Coordinator se comunica con, o bien el \textbf{Operations Manager}, para ejecutar operaciones o consultar información sobre las mismas; o bien el \textbf{Extension Manager}, para modificar las extensiones con las que vimos que cuenta el sistema.
+Para llevar a cabo los diversos comandos, el \emph{Coordinator} se comunica con, o bien el \emph{Operations Manager}, para ejecutar operaciones o consultar información sobre las mismas; o bien el \emph{Extensions Manager}, para modificar las extensiones con las que cuenta el sistema.
 
-Luego, por un lado podemos ver que el Operation Manager utiliza el \textbf{Definitions Database Manager} para obtener la información necesaria sobre las operaciones y con el \textbf{Repositories Manager} para obtener el extractor e inspector correspondientes a la operación a ejecutar.
+Luego, por un lado podemos ver que el \emph{Operations Manager} utiliza el \emph{Definitions Database Manager} para obtener la información necesaria sobre las operaciones y con el \emph{Repositories Manager} para obtener el extractor e inspector correspondientes a la operación a ejecutar.
 
-Por otro lado, vemos que el \textbf{Extension Manager} utiliza el Definitions Database Manager para agregar o eliminar definiciones de operaciones, tipos de datos y tipos de fuentes de datos. Luego, se comunica con el Repositories Manager para agregar o eliminar los archivos según dichas definiciones.
+Por otro lado, vemos que el \emph{Extensions Manager} utiliza el \emph{Definitions Database Manager} para agregar o eliminar definiciones de operaciones, tipos de datos y tipos de fuentes de datos. Luego, se comunica con el \emph{Repositories Manager} para agregar o eliminar los archivos según dichas definiciones.
 
 \subsection{Diagrama de componentes}
 \begin{figure}[H]
