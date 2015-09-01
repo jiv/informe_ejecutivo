@@ -139,7 +139,7 @@ Esta clase es utilizada para representar una operación a ejecutar. La misma con
     
 El método execute recibe como parámetro la información sobre el dispositivo y la ruta al directorio en donde se deben almacenar los datos obtenidos. De esta forma:
 
-\begin{enumerate}
+\begin{enumerate}[topsep=0pt, parsep=0pt, partopsep=0pt]
 \item Ejecuta el método execute del extractor, indicándole el subdirectorio en donde debe almacenar los datos extraídos.
 \item Posteriormente, ejecuta el método execute del inspector, indicándole el subdirectorio en donde fueron almacenados los datos extraídos previamente.
 \item Luego, almacena los datos producidos por el inspector en los siguientes dos archivos dentro del directorio que le fue indicado:
@@ -286,26 +286,23 @@ Los métodos \texttt{get\_extractor\_instance} y \texttt{get\_inspector\_instanc
 \subsection{Repositorios} \label{repositorios}
 La herramienta cuenta con varios repositorios, o en otras palabras directorios, en donde se almacenan artefactos de las extensiones del sistema (aquellas definidas en Req. B). Concretamente se cuenta con tres repositorios:
 
-\begin{enumerate}
+\begin{enumerate}[topsep=0pt, parsep=0pt, partopsep=0pt]
 \item \textbf{Custom CybOX objects}: Utilizado para almacenar las clases que implementan custom cybox objects para representar nuevos tipos de datos.
 \item \textbf{Extractors}: Utilizado para almacenar las clases que implementan los extractors para cada tipo de fuente de dato.
 \item \textbf{Inspectors}: Utilizado para almacenar las clases que implementan los inspectors para cada operación.
 \end{enumerate}
 
 \subsection{Base de datos}
-Utilizaremos una base de datos para persistir las definiciones que describen los diversos tipos de datos, tipos de fuentes de datos y operaciones disponibles en el sistema (estos son los tres puntos en los cuales podemos extender el sistema). A dicha base de dato le llamaremos \emph{DefinitionsDB}.
-
-A continuación veremos en detalle la información almacenada para cada uno de los distintos puntos de extensión.
-\newline
+Utilizaremos una base de datos, a la cual llamaremos \emph{DefinitionsDB}, para persistir las definiciones que describen a los diversos tipos de datos, tipos de fuentes de datos y operaciones disponibles en el sistema.
 
 \begin{figure}[H]
     \begin{center}
-        \includegraphics[width=\textwidth]{figures/esquema_de_base_de_datos}
+        \includegraphics[width=0.95\textwidth]{figures/esquema_de_base_de_datos}
         \caption{Esquema de la base de datos de definiciones}
     \end{center}
 \end{figure}
 
-A continuación describimos cada una de las tablas que vemos en el modelo.
+A continuación, veremos en detalle la información almacenada para cada una de las tablas de la base de datos de definiciones.
 
 \subsubsection{Tabla Operations}
 
@@ -440,7 +437,7 @@ Uno de los requerimientos fundamentales planteados [Req. B] es que la herramient
 Para lograr esto, analizamos las etapas en que consiste una operación y buscamos modelar la misma de forma de facilitar la reutilización de partes que puedan ser compartidas. Esto permite reducir el esfuerzo requerido para desarrollar una nueva operación.
 
 Dada la naturaleza del proceso que implica una operación (como vimos en la sección Conceptos Fundamentales), podemos distinguir las siguientes etapas:
-\begin{enumerate}
+\begin{enumerate}[topsep=0pt, parsep=0pt, partopsep=0pt]
 \item Extracción de los datos.
 \item Examinación de los datos extraídos.
 \item Presentación de la información encontrada.

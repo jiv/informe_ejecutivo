@@ -371,7 +371,7 @@ En \cite{unpkbckp} se describe en detalle el formato utilizado para crear los ar
 
 La implementación de este nuevo extractor, al cual llamamos \emph{AdbBackupExtractor}, consta de tres etapas:
 
-\begin{enumerate}
+\begin{enumerate}[topsep=0pt, parsep=0pt, partopsep=0pt]
 \item Mediante el comando \texttt{adb backup} se obtiene el archivo \emph{backup.ab}.
 \item A este archivo, primero le quitamos el cabezal (que corresponde a los primeros 24 bytes). Luego, descomprimimos su contenido utilizando la biblioteca estándar \emph{zlib} de Python, obteniendo un archivo tar. Finalmente, desempaquetamos el contenido del archivo tar utilizando la biblioteca estándar \emph{tarfile} de Python.
 \item De forma de preservar los nombres de directorios que son utilizados por las aplicaciones debemos renombrarlos a sus nombre originales, como ya vimos.

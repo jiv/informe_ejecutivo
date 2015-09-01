@@ -210,7 +210,7 @@ A su vez, resulta importante tener en cuenta los recursos disponibles con los qu
 
 La documentación de CybOX \cite{cyboxGitHub} provee una guía que describe a grandes rasgos los pasos que debemos tomar cuando vamos a crear un nuevo objeto:
 
-\begin{enumerate}
+\begin{enumerate}[topsep=0pt, parsep=0pt, partopsep=0pt]
 \item Decidir qué es lo que queremos representar en CybOX.
 \item Determinar qué campos/atributos pueden ser utilizados para caracterizar el objeto CybOX.
 \item Establecer una correspondencia entre los tipos de datos de dichos campos y los tipos de propiedades disponibles en CybOX.
@@ -265,13 +265,13 @@ xmllint --noout --dtdvalid http://www.w3.org/2001/XMLSchema.dtd Telephone_Device
 En esta sección estudiaremos las características más importantes a tener en cuenta para extraer datos de un dispositivo Android. Veremos la arquitectura de la plataforma y el modelo de seguridad impuesto por la misma. Luego, observaremos los datos que podemos encontrar en estos dispositivos y las estructuras en que éstos son almacenados. Finalmente, terminaremos mostrando los mecanismos que podemos utilizar para extraerlos.
 
 \subsection{Arquitectura de la plataforma}
-La plataforma Android está diseñada como un stack de componentes de software, en donde se pueden ver 5 secciones, las cuales están divididas en 4 capas \cite{androidArch}.
-\newline
+La plataforma Android cuenta con una arquitectura dividida en cuatro capas \cite{androidArch}, como se muestra en la figura \ref{arquitecturaDeAndroid}.
 
-\begin{figure}[H]
+\begin{figure}[t]
     \begin{center}
         \includegraphics[scale=0.6]{figures/android_architecture}
         \caption{Arquitectura de la plataforma Android}
+        \label{arquitecturaDeAndroid}
     \end{center}
 \end{figure}
 
@@ -324,7 +324,7 @@ Desde el punto de vista de la extracción de datos, no es necesario realizar un 
 
 Algunas de las consideraciones que se deben tener en cuenta cuando se va a realizar el rooting del dispositivo son \cite{collectmethod}:
 
-\begin{enumerate}
+\begin{enumerate}[topsep=0pt, parsep=0pt, partopsep=0pt]
 \item Dado que el proceso de rooteo se basa en aprovechar una vulnerabilidad del dispositivo, esta vulnerabilidad depende del modelo y versión de Android del mismo. Por lo tanto, es importante conocer las caracteristicas del mismo antes de realizar el rooteo.
 \item Al realizar el rooting del dispositivo se pierden las protecciones del modelo de seguridad de Android, ya que un dispositivo rooteado permite la ejecución de aplicaciones con privilegios totales.
 \item Se pueden llegar a modificar áreas del dispositivo en las cuales se guardan datos del usuario.

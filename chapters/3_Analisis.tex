@@ -97,7 +97,7 @@ La herramienta debe contar con dos modos de ejecución:
 \subsection*{B. Extensibilidad}
 \label{reqB}
 La herramienta debe proveer mecanismos que permitan extender fácilmente los siguientes tres puntos:
-\begin{enumerate}
+\begin{enumerate}[topsep=0pt, parsep=0pt, partopsep=0pt]
 \item Tipos de datos
 \item Tipos de fuente de datos
 \item Operaciones
@@ -123,7 +123,7 @@ Comencemos por describir al usuario el cual apuntamos que haga uso de nuestra he
 
 Deseamos que este usuario pueda hacer uso de la herramienta principalmente de dos posibles formas:
 
-\begin{enumerate}
+\begin{enumerate}[topsep=0pt, parsep=0pt, partopsep=0pt]
 \item Manual, esto es, interactuando directamente con la herramienta con el fin de obtener los datos que desea de un cierto dispositivo.
 \item Automática, con el fin de permitirle automatizar tareas de obtención de datos o facilitar la integración de la herramienta con otras herramientas utilizadas por el usuario.
 \end{enumerate}
@@ -338,13 +338,14 @@ Acabamos de ver la necesidad que tenemos de contar con un lenguaje que nos permi
 
 Para esto, entonces veamos los puntos que debe cumplir el lenguaje de representación que utilicemos:
 
-\begin{enumerate}
+\begin{enumerate}[topsep=0pt, parsep=0pt, partopsep=0pt]
 \item Debe ser estándar, de forma de que resulte fácil consumir los datos producidos \hyperref[reqD1]{(Req. D1)}.
 \item Debe ser extensible, de forma que podamos representar con el mismo nuevos tipos de datos \hyperref[reqD2]{(Req. D2)}.
 \item Debe ser capaz de representar datos sobre el proceso de extracción (en particular, aquellos vistos en la sección de alcance del \hyperref[reqA1]{Req. A1}).
 \end{enumerate}
 
 Ahora veamos el estilo de tipos de datos que pretendemos que el lenguaje nos permita representar:
+\newline
 
 \textbf{Datos de aplicaciones}
 \begin{itemize}

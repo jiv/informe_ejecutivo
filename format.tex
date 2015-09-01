@@ -18,11 +18,24 @@
 \RequirePackage{fancyhdr}
 \RequirePackage{afterpage}
 
+% Section titles spacing
+\usepackage{titlesec}
+\titlespacing{\section}{0pt}{2.5ex plus 1ex minus .2ex}{0pt plus 0pt}
+\titlespacing{\subsection}{0pt}{2.5ex plus 1ex minus .2ex}{0pt plus 0pt}
+\titlespacing{\subsubsection}{0pt}{2.5ex plus 1ex minus .2ex}{0pt plus 0pt}
+
+% Itemize and enumerate spacing
+\usepackage{enumitem}
+\setlist[itemize]{topsep=0pt, parsep=0pt, partopsep=0pt}
+\setlist[enumerate]{topsep=0pt}
+
+\newenvironment{narrowenumerate}
+{ \begin{enumerate} \setlist[enumerate]{topsep=0pt, parsep=0pt, partopsep=0pt} }
+{ \end{enumerate} } 
+
+
 % Set image directory
 \graphicspath{ {figures/} }
-
-% Eliminar sangrías
-\setlength{\parindent}{0in}
 
 % Separar párrafos
 \setlength{\parskip}{1em}
@@ -34,6 +47,7 @@
   \multicolumn{1}{c|}{\cellcolor{black}\textcolor{white}{\textbf{#1}}}
 }
 
+% Estilos de los cabezales y pies de página
 \setlength{\headsep}{0.25in} 
 \setlength{\parindent}{0in}
 \setlength{\headheight}{25.3368pt}
@@ -50,10 +64,25 @@
 \lfoot{Informe ejecutivo}
 \rfoot{Página \thepage\ de \pageref{LastPage}}
 
+% Reducir el tamaño del indice
+\RequirePackage{tocloft}
+\setlength\cftparskip{-2pt}
+\setlength\cftbeforechapskip{10pt}
+
+\newcommand\blankpage{
+    \null
+    \thispagestyle{empty}
+    \newpage}
+
 % Default fixed font does not support bold face
 \DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
 \DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
 
+%%%%%%%%%%%%%%%%%%%%%
+% Formato lenguajes %
+%%%%%%%%%%%%%%%%%%%%%
+
+% XML %
 \definecolor{forestgreen}{RGB}{34,139,34}
 \definecolor{orangered}{RGB}{239,134,64}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.6}
@@ -79,7 +108,6 @@
     basicstyle=\scriptsize
 }}
 
-% Xml environment
 \lstnewenvironment{xml}[1][]
 {
 \xmlstyle
@@ -87,6 +115,7 @@
 }
 {}
 
+% PYTHON %
 \newcommand\pythonstyle{\lstset{
 language=Python,
 otherkeywords={set_device_info, list_operations, execute_operations, add_data_type, remove_data_type, add_data_source_type, remove_data_source_type, add_operation, remove_operation, query_operations_info, get_operation_info, get_operation, get_operation_info_by_id, get_operation_exec_info, exists_operation, exists_data_type, exists_data_source_type, has_all_required_param_values, add_file, remove_file, get_extractor, get_inspector, get_custom_cybox_object, add_related, inline, create_file_object},
@@ -99,7 +128,6 @@ showstringspaces=false,
 basicstyle=\scriptsize
 }}
 
-% Python environment
 \lstnewenvironment{python}[1][]
 {
 \pythonstyle
@@ -107,6 +135,7 @@ basicstyle=\scriptsize
 }
 {}
 
+% BASH %
 \newcommand\bashstyle{\lstset{
 language=bash,
 basicstyle=\scriptsize,
@@ -116,7 +145,6 @@ breakatwhitespace=true,
 showstringspaces=false
 }}
 
-% Recuadro
 \lstnewenvironment{bash}[1][]
 {
 \bashstyle
@@ -124,6 +152,7 @@ showstringspaces=false
 }
 {}
 
+% JSON %
 \colorlet{punct}{red!60!black}
 \definecolor{delim}{RGB}{20,105,176}
 \colorlet{numb}{magenta!60!black}
@@ -151,13 +180,3 @@ showstringspaces=false
       {<}{{{\color{delim}{<}}}}{1}
       {>}{{{\color{delim}{>}}}}{1},
 }
-
-% Reducir el tamaño del indice
-\usepackage{tocloft}
-\setlength\cftparskip{-2pt}
-\setlength\cftbeforechapskip{10pt}
-
-\newcommand\blankpage{
-    \null
-    \thispagestyle{empty}
-    \newpage}
