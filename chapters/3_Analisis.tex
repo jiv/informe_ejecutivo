@@ -275,6 +275,22 @@ La diferencia más importante entre este modo de ejecución de operaciones y el 
     \end{enumerate}
 \end{itemize}
 
+\subsection{Diagrama de casos de uso}
+Como forma de resumir la interacción entre el usuario y el sistema, en la figura \ref{diagramaCasosDeUso} se muestran los casos de uso en base a dos roles:
+
+\begin{itemize}
+\item El primero de ellos trata del rol \emph{usuario}, en el cual se puede utilizar el sistema tanto en modo interactivo como en modo batch.
+\item El segundo trata del rol \emph{administrador}, el cual permite configurar la herramienta agregando y removiendo extensiones de la misma.
+\end{itemize}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=\textwidth]{figures/diagrama_casos_de_uso}
+        \caption{Diagrama de casos de uso}
+        \label{diagramaCasosDeUso}
+    \end{center}
+\end{figure}
+
 \section{Definición del alcance}
 En base a los requerimientos establecidos, veremos a continuación varios aspectos que merecen la pena ser mencionados con el fin de ayudar a delimitar con claridad el alcance del proyecto.
 
@@ -293,7 +309,7 @@ En base a los requerimientos establecidos, veremos a continuación varios aspect
 El prototipo de la herramienta por defecto contará con un conjunto básico de tipos de datos correspondientes a los diversos objetos predefinidos por el lenguaje que veremos en la siguiente sección.
 
 \subsubsection*{2. Tipos de fuentes de datos}
-El prototipo de la herramienta deberá estar enfocado en la extracción de datos de aplicaciones. Para esto, contaremos con un tipo de fuente de datos llamado Application, que permitirá tomar como fuente de datos aquellos datos pertenecientes a una aplicación instalada en el dispositivo.
+El prototipo de la herramienta deberá estar enfocado en la extracción de datos de aplicaciones. Para esto, contaremos con un tipo de fuente de datos llamado \emph{Application} que permitirá tomar como fuente de datos aquellos datos pertenecientes a una aplicación instalada en el dispositivo.
 
 De todas formas, el hecho de contar con la posibilidad de tener diversos tipos de fuentes de datos permite a la herramienta extender su soporte para extraer datos de otros tipos de fuentes. Por esto, vemos que como contrapartida a datos de aplicaciones, sería interesante desarrollar en una futura iteración de la herramienta la extracción de datos del sistema. Para esto, planteamos dos posibilidades que se podrían tomar:
 
@@ -306,7 +322,7 @@ De todas formas, el hecho de contar con la posibilidad de tener diversos tipos d
 El prototipo contará con una serie de operaciones por defecto, seguramente sean desarrolladas como parte del caso de estudio a realizarse.
 
 \subsection*{C. Acceso de datos}
-Vimos que la idea es poder abstraer la forma utilizada para acceder a los datos, con el fin de poder interoperar con múltiples tipos de dispositivos e incluso con emuladores.
+Vimos que la idea es poder abstraer la forma utilizada para acceder a los datos con el fin de poder interoperar con múltiples tipos de dispositivos e incluso con emuladores.
 
 En este sentido, el protocolo ADB (Android Debug Bridge) y sus herramientas nos proveen la abstracción necesaria que precisamos para cumplir con el requerimiento \hyperref[reqC]{(Req. C)}. El mismo nos posibilita el intercambio de datos y ejecución de comandos de forma transparente tanto en dispositivos físicos como en emuladores.
 
@@ -316,8 +332,8 @@ Para el ambiente de desarrollo del prototipo, utilizaremos el emulador por la fl
 
 \begin{itemize}
 \item Nos da la posibilidad de crear imágenes específicas del estado de un dispositivo.
-\item Evitamos preocuparnos fallas o pérdida de datos de un dispositivo real.
-\item Al estar rooteado el emulador, tenemos acceso a todos los datos. El aspecto de cómo rootear un dispositivo, no es un punto en el cual deseamos concentrarnos.
+\item Evitamos preocuparnos por fallas o pérdida de datos de un dispositivo real.
+\item Al estar rooteado el emulador, contamos con acceso a todos los datos del mismo.
 \end{itemize}
 
 De todas formas, la herramienta será diseñada para soportar tanto dispositivos reales como virtuales (emuladores). El hecho de contar con una interfaz de acceso a los dispositivos como es adb y un emulador que emula el hardware de un dispositivo real (y no simulador) hace que esta transición, en teoría, no deba requerir esfuerzo adicional.
