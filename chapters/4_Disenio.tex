@@ -20,7 +20,7 @@ En la figura \ref{DiagramaFuncionamientoAltoNivel} podemos observar las interacc
 Observemos lo que sucede internamente:
 \begin{itemize}
 \item El componente \emph{Coordinator} obtiene los datos de la capa de presentación. Utiliza el nombre de la operación para pedirle al \emph{OperationsManager} que le construya una instancia de la misma. Luego, la ejecuta pasándole la información del dispositivo, produciendo los datos de salida que se pueden observar en la figura, e informa al usuario del resultado de la operación.
-\item El \emph{OperationsManager} a su vez, se encarga de construir una operación. Para eso, debe recurrir al \emph{DatabaseManager} para obtener la información de la operación. Luego, con dicha información obtiene las instancias del extractor e inspector correspondientes a dicha operación solicitándoselas al \emph{RepositoriesManager}.
+\item El \emph{OperationsManager} a su vez, se encarga de construir una operación. Para eso, debe recurrir al \emph{DatabaseManager} para obtener la información de la misma. Luego, con esta información le solicita al \emph{RepositoriesManager} las instancias de los componentes necesarios para construir dicha operación (extractor e inspector).
 \item Los componentes \emph{DatabaseManager} y \emph{RepositoriesManager} realizan las tareas de persistir y recuperar datos. El \emph{DatabaseManager} se encarga de las definiciones de las extensiones mientras que el \emph{RepositoriesManager} de las extensiones en sí.
 \end{itemize}
 
