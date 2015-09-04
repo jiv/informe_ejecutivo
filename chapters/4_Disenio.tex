@@ -1,5 +1,28 @@
 \chapter{Diseño de la herramienta} \label{chap:Disenio}
+
+\section{Introducción}
 Este capítulo describe el diseño que elaboramos para la herramienta propuesta, la cual denominaremos \emph{Android Inspector}. El mismo fue elaborado a partir del análisis realizado en el capítulo anterior.
+
+Comenzaremos por presentar el modelo de datos con que cuenta la herramienta. La mayoría de éstos representan una traducción casi directa de los conceptos vistos en la sección \ref{conceptos_fundamentales}. Posteriormente, describiremos la arquitectura de la herramienta profundizando en las responsabilidades de cada componente y sus interfaces. Luego, veremos cómo se realiza la persistencia de los diversos recursos que maneja la herramienta. Finalmente, describiremos los diversos puntos de extensión que brinda la herramienta.
+
+Antes de comenzar con el modelo de datos y a modo de fijar conceptos, veamos una vista general del funcionamiento de la herramienta realizando la tarea principal, esto es, ejecutando una operación.
+
+En la figura \ref{DiagramaFuncionamientoAltoNivel} podemos observar las interacciones que se producen al ejecutar una operación. Viendo el sistema desde afuera, el usuario ingresa el nombre de la operación que desea ejecutar junto a la información del dispositivo y el sistema la ejecuta. En caso de éxito, esta ejecución produce un directorio con los datos extraídos en crudo y los archivos XML conteniendo los datos examinados expresados en CybOX.
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=\textwidth]{figures/diagrama_flujo_de_trabajo}
+        \caption{Funcionamiento de alto nivel al ejecutar una operación}
+        \label{DiagramaFuncionamientoAltoNivel}
+    \end{center}
+\end{figure}
+
+Observemos lo que sucede internamente:
+\begin{itemize}
+\item El componente \emph{Coordinator} obtiene los datos de la capa de presentación. Utiliza el nombre de la operación para pedirle al \emph{OperationsManager} que le construya una instancia de la misma. Luego, la ejecuta pasándole la información del dispositivo, produciendo los datos de salida que se pueden observar en la figura, e informa al usuario del resultado de la operación.
+\item El \emph{OperationsManager} a su vez, se encarga de construir una operación. Para eso, debe recurrir al \emph{DatabaseManager} para obtener la información de la operación. Luego, con dicha información obtiene las instancias del extractor e inspector correspondientes a dicha operación solicitándoselas al \emph{RepositoriesManager}.
+\item Los componentes \emph{DatabaseManager} y \emph{RepositoriesManager} realizan las tareas de persistir y recuperar datos. El \emph{DatabaseManager} se encarga de las definiciones de las extensiones mientras que el \emph{RepositoriesManager} de las extensiones en sí.
+\end{itemize}
 
 \section{Modelo de datos} \label{modeloDeDatos}
 Comenzaremos por describir las estructuras de datos utilizadas por los componentes del sistema.
@@ -156,26 +179,25 @@ Por lo tanto, el directorio del resultado de la operación contendrá:
 \end{itemize}
 
 \section{Arquitectura} \label{arquitectura}
-El sistema cuenta con un único punto de entrada y salida de datos a través del componente que denominamos \emph{Coordinator}. De esta forma, el mismo ofrece todos los comandos con los que cuenta el usuario.
-
-Para llevar a cabo los diversos comandos, el \emph{Coordinator} se comunica con, o bien el \emph{Operations Manager}, para ejecutar operaciones o consultar información sobre las mismas; o bien el \emph{Extensions Manager}, para modificar las extensiones con las que cuenta el sistema.
+El sistema cuenta con un único punto de entrada y salida de datos a través de un componente al que denominamos \emph{Coordinator}. El mismo ofrece todos los comandos con los que dispone el usuario. A su vez, el \emph{Coordinator} se comunica con, o bien el \emph{Operations Manager}, para ejecutar operaciones o consultar información sobre las mismas; o bien el \emph{Extensions Manager}, para modificar las extensiones con las que cuenta el sistema.
 
 Luego, por un lado podemos ver que el \emph{Operations Manager} utiliza el \emph{Definitions Database Manager} para obtener la información necesaria sobre las operaciones y con el \emph{Repositories Manager} para obtener el extractor e inspector correspondientes a la operación a ejecutar.
 
 Por otro lado, vemos que el \emph{Extensions Manager} utiliza el \emph{Definitions Database Manager} para agregar o eliminar definiciones de operaciones, tipos de datos y tipos de fuentes de datos. Luego, se comunica con el \emph{Repositories Manager} para agregar o eliminar los archivos según dichas definiciones.
+\newline
 
-\subsection{Diagrama de componentes}
 \begin{figure}[H]
     \begin{center}
-        \includegraphics[scale=0.40]{figures/diagrama_de_componentes}
+        \includegraphics[width=\textwidth]{figures/diagrama_de_componentes}
         \caption{Diagrama de componentes del sistema}
         \label{DiagramaComponentes}
     \end{center}
 \end{figure}
 
+
 A continuación veremos en detalle cada uno de los componentes del sistema.
 
-\subsubsection{Coordinator}
+\subsection{Coordinator}
 Se encarga de brindar en forma de fachada todos los comandos disponibles de la herramienta, los cuales permiten llevar a cabo los casos de uso vistos. Además, es el responsable de desplegar información al usuario en la ejecución de los mismos.
 \newline
 
@@ -191,7 +213,7 @@ rm_ext(type:string, name: string)
 \textbf{Descripción de los métodos} \newline
 Los métodos brindados corresponden a los comandos del sistema ya descritos en la sección de Casos de Uso.
 
-\subsubsection{OperationsManager}
+\subsection{OperationsManager}
 Se encarga de responder a consultas realizadas por el usuario sobre operaciones del sistema [Req. A2] y también de crear las instancias de las operaciones que son solicitadas por el Coordinator. Luego, el Coordinator se encarga de ejecutar dichas instancias de manera batch almacenando de forma organizada los resultados de cada operación [Req. A3].
 \newline
 
@@ -206,7 +228,7 @@ El método \texttt{get\_operations\_info} obtiene la información de las operaci
 
 El método \texttt{get\_operation} se encarga de crear una instancia de la operación correspondiente al nombre indicado y la devuelve.
 
-\subsubsection{DefinitionsDatabaseManager}
+\subsection{DefinitionsDatabaseManager}
 Se encarga de facilitar la interacción con la base de datos de definiciones, de manera que ayuda a los componentes OperationsManager y ExtensionsManager a cumplir con los requerimientos [Req. A2], [Req. A3] y [Req. B].
 \newline
 
@@ -252,7 +274,7 @@ El método \texttt{has\_all\_required\_param\_values} se encarga de verificar qu
 
 Los métodos con prefijo \texttt{add} se encargan de agregar definiciones de operaciones, tipos de datos y tipos de fuentes de datos a la base de datos definiciones, mientras que los métodos con prefijo \texttt{remove} se encargan de eliminar las mismas de la base de datos.
 
-\subsubsection{ExtensionsManager}
+\subsection{ExtensionsManager}
 Se encarga de gestionar los puntos de extensibilidad del sistema de forma de satisfacer el requerimiento [Req. B].
 \newline
 
@@ -264,7 +286,7 @@ rm_ext(type: string, name: string)
 \textbf{Descripción de los métodos} \newline
 El método \texttt{add\_ext} se encarga de validar la definición de la extensión recibida y añadirla al sistema, mientras que el método \texttt{rm\_ext} es responsable de eliminar la extensión indicada.
 
-\subsubsection{RepositoriesManager}
+\subsection{RepositoriesManager}
 Se encarga de gestionar el almacenamiento de los archivos que contienen las clases utilizadas por las diversas extensiones del sistema. Para esto, maneja un repositorio para cada tipo de extensión. Además, tiene la responsabilidad de cargar en tiempo de ejecución clases a partir de sus archivos correspondientes almacenados en los repositorios y devolver instancias de las mismas.
 \newline
 
@@ -283,6 +305,7 @@ El método \texttt{remove\_file} recibe el nombre de un repositorio y el nombre 
 Los métodos \texttt{get\_extractor\_instance} y \texttt{get\_inspector\_instance} devuelven una instancia de la clase correspondiente.
 
 \section{Almacenamiento de datos}
+\label{almacenamientoDeDatos}
 \subsection{Repositorios} \label{repositorios}
 La herramienta cuenta con varios repositorios, o en otras palabras directorios, en donde se almacenan artefactos de las extensiones del sistema (aquellas definidas en Req. B). Concretamente se cuenta con tres repositorios:
 
@@ -351,6 +374,7 @@ Esta tabla almacena los tipos de datos soportados por el sistema.
     \normalsize
 
 Esta tabla almacena los tipos de fuentes soportados por el sistema. Junto al nombre de la fuente de datos, se guarda el nombre del script que realiza la extracción de dicha fuente. Este último nombre será utilizado para realizar la búsqueda del script en el momento de ejecutar una operación.
+\clearpage
 
 \subsubsection{Tabla RequiredParams}
 \footnotesize

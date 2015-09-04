@@ -48,7 +48,7 @@ En primer lugar, podríamos llevar a cabo dos etapas de verificación:
 
 En segundo lugar, una posibilidad que tiene su trade-off interesante es la de limitar la libertad de los inspectors y obligarlos a utilizar un conjunto de primitivas (a ser desarrolladas). Entre las ventajas que brindaría esto se encuentra que podemos asegurar que el acceso a los archivos que realizan los inspectors sea de \emph{sólo lectura} únicamente y también poder llevar un log de todas las acciones realizadas por un inspector.
 
-\section{Desarrollo de otros tipos de extractors}
+\section{Desarrollo de otros tipos de extractors} \label{OtrosTiposDeExtractors}
 Los extractors desarrollados en este trabajo todos utilizan el protocolo \emph{adb} para obtener los datos. El mismo nos resultó conveniente dado que permite interactuar de forma indiferente tanto con dispositivos virtuales (esto es, emuladores) como con dispositivos físicos (a través de USB).
 
 Ahora bien, la única restricción con la cual fue diseñado el extractor fue que el mismo debe realizar una extracción lógica de la fuente de datos indicada y almacenar los archivos extraídos en el directorio que se le especifica. Por lo tanto, la elección de cómo extraer los datos queda en manos del desarrollador del extractor.

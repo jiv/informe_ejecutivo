@@ -24,7 +24,6 @@ Este inspector extrae el tipo de dato \emph{SMSMessage} definido en CybOX. La fu
 Para obtener la información sobre los SMS, debemos acceder a una base de datos SQLite (en este caso la misma se llama \emph{mmssms.db}). Para esto, podemos hacer uso del módulo \texttt{sqlite3} disponible en las bibliotecas estándar de Python.
 
 Los campos del objeto \emph{SMSMessage} que utilizamos para representar los datos disponibles en la aplicación de SMS de Android fueron los siguientes:
-\clearpage
 
 \footnotesize
     \renewcommand*{\arraystretch}{1.4}
@@ -556,6 +555,11 @@ En tanto, en el archivo \emph{inspected\_data.xml} podemos encontrar una serie d
 \begin{figure}[H]
     \begin{center}
         \includegraphics[width=\textwidth]{figures/contact1}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
         \includegraphics[width=\textwidth]{figures/contact2}
         \caption{Información de los dos primeros objetos \emph{Contact} del archivo \emph{inspected\_data.xml}.}
     \end{center}

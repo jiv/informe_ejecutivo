@@ -74,28 +74,23 @@ A continuación describiremos los requerimientos con los cuales consideramos que
 \subsection*{A. Funcionalidades claves}
 La herramienta debe proveer al usuario un conjunto de operaciones que faciliten la extracción de datos de dispositivos móviles Android. Para esto, la misma debe brindar las siguientes funcionalidades claves:
 
-\subsubsection*{A1. Operaciones atómicas}
-\label{reqA1}
+\subsubsection*{A1. Operaciones atómicas} \label{reqA1}
 Las operaciones deben contar con un alto nivel de granularidad. De esta forma, una operación debe extraer un único tipo de dato, de una fuente de datos determinada, soportando un determinado conjunto de dispositivos y versiones de Android.
 
-\subsubsection*{A2. Consulta de operaciones}
-\label{reqA2}
+\subsubsection*{A2. Consulta de operaciones} \label{reqA2}
 La herramienta debe contar con la posibilidad de consultar (y filtrar) por las operaciones disponibles. De esta forma, el usuario puede descubrir las mismas y sus características.
 
-\subsubsection*{A3. Ejecución de operaciones}
-\label{reqA3}
+\subsubsection*{A3. Ejecución de operaciones} \label{reqA3}
 La herramienta debe permitir ejecutar una serie de operaciones en un único paso. Esto permite al usuario combinar operaciones y, debido al alto nivel de granularidad que poseen las mismas, tener la capacidad de extraer con gran precisión los datos deseados.
 
-\subsubsection*{A4. Modos de ejecución de la herramienta}
-\label{reqA4}
+\subsubsection*{A4. Modos de ejecución de la herramienta} \label{reqA4}
 La herramienta debe contar con dos modos de ejecución:
 \begin{itemize}
 \item Un \textbf{modo interactivo}, en el cual el usuario pueda realizar consultas sobre las operaciones disponibles filtrando por los parámetros de las mismas y luego ejecutar las operaciones deseadas.
 \item Un \textbf{modo batch}, en el cual el usuario ya conoce las operaciones que desea utilizar y únicamente especifica cuáles ejecutar.
 \end{itemize}
 
-\subsection*{B. Extensibilidad}
-\label{reqB}
+\subsection*{B. Extensibilidad} \label{reqB}
 La herramienta debe proveer mecanismos que permitan extender fácilmente los siguientes tres puntos:
 \begin{enumerate}[topsep=0pt, parsep=0pt, partopsep=0pt]
 \item Tipos de datos
@@ -103,17 +98,14 @@ La herramienta debe proveer mecanismos que permitan extender fácilmente los sig
 \item Operaciones
 \end{enumerate}
 
-\subsection*{C. Acceso de datos}
-\label{reqC}
+\subsection*{C. Acceso de datos} \label{reqC}
 La herramienta debe ser capaz de abstraer la forma en que accede a los datos. De esta forma, posibilita su interoperación tanto con la diversidad de dispositivos reales que hay como con emuladores, y además permite la extensibilidad de la herramienta para soportar otros dominios de datos.
 
 \subsection*{D. Salida de datos}
-\subsubsection*{D1. Lenguaje estándar}
-\label{reqD1}
+\subsubsection*{D1. Lenguaje estándar} \label{reqD1}
 La herramienta debe hacer uso de un lenguaje estándar para expresar sus salidas de datos, con el fin de que para otras herramientas sea sencillo consumir los datos producidos.
 
-\subsubsection*{D2. Lenguaje extensible}
-\label{reqD2}
+\subsubsection*{D2. Lenguaje extensible} \label{reqD2}
 Además, el lenguaje utilizado para representar los datos de salida debe ser extensible, dado que es necesario que el mismo sea capaz de representar información de nuevos tipos de datos.
 
 \section{Casos de uso}
@@ -276,10 +268,10 @@ La diferencia más importante entre este modo de ejecución de operaciones y el 
 \end{itemize}
 
 \subsection{Diagrama de casos de uso}
-Como forma de resumir la interacción entre el usuario y el sistema, en la figura \ref{diagramaCasosDeUso} se muestran los casos de uso en base a dos roles:
+De forma de resumir la interacción entre el usuario y el sistema, en la figura \ref{diagramaCasosDeUso} se muestran los casos de uso en base a dos roles:
 
 \begin{itemize}
-\item El primero de ellos trata del rol \emph{usuario}, en el cual se puede utilizar el sistema tanto en modo interactivo como en modo batch.
+\item El primero de ellos trata del rol \emph{usuario}, el cual permite utilizar al sistema tanto en modo interactivo como en modo batch.
 \item El segundo trata del rol \emph{administrador}, el cual permite configurar la herramienta agregando y removiendo extensiones de la misma.
 \end{itemize}
 
@@ -292,91 +284,43 @@ Como forma de resumir la interacción entre el usuario y el sistema, en la figur
 \end{figure}
 
 \section{Definición del alcance}
-En base a los requerimientos establecidos, veremos a continuación varios aspectos que merecen la pena ser mencionados con el fin de ayudar a delimitar con claridad el alcance del proyecto.
+En base a los requerimientos establecidos, veremos a continuación varios aspectos que merecen ser mencionados con el fin de ayudar a delimitar con claridad el alcance del proyecto.
 
-\subsection*{A. Funcionalidades claves}
-\textbf{A1.} Como vimos, la herramienta contará con un conjunto de operaciones, las cuales realizan la extracción, examinación y presentación de los datos encontrados. Estas operaciones buscan representar:
-
-\begin{itemize}
-\item \textbf{Datos extraídos de dispositivos móviles} de carácter lógico y orientados a datos producidos por los usuarios de los dispositivos (esto es, no nos enfocaremos a examinar datos producidos, por ejemplo, por malware). De todas formas, la arquitectura será diseñada con el fin de facilitar la incorporación de otros dominios de datos.
-\item \textbf{Datos sobre el proceso de extracción}. Esto es, nos interesa conocer los siguientes datos: la relación entre los datos extraídos originales y los datos examinados, la información sobre los colaboradores y el ambiente en el cual éstos utilizaron la herramienta.
-\end{itemize}
-
-\textbf{A2.} El mecanismo de consulta de operaciones será bastante simple. Esto es, para los parámetros de tipo de dato y fuente de datos, se podrá ingresar un valor (o ninguno) para cada uno de ellos. Puede llegar a resultar práctico agregar más opciones a esta funcionalidad con el fin de facilitar su uso, pero consideramos que sería más adecuado hacerlo en una segunda iteración de la herramienta, por lo que lo dejamos fuera del alcance para el desarrollo del prototipo.
-
-\subsection*{B. Extensibilidad}
-\subsubsection*{1. Tipos de datos}
-El prototipo de la herramienta por defecto contará con un conjunto básico de tipos de datos correspondientes a los diversos objetos predefinidos por el lenguaje que veremos en la siguiente sección.
-
-\subsubsection*{2. Tipos de fuentes de datos}
-El prototipo de la herramienta deberá estar enfocado en la extracción de datos de aplicaciones. Para esto, contaremos con un tipo de fuente de datos llamado \emph{Application} que permitirá tomar como fuente de datos aquellos datos pertenecientes a una aplicación instalada en el dispositivo.
-
-De todas formas, el hecho de contar con la posibilidad de tener diversos tipos de fuentes de datos permite a la herramienta extender su soporte para extraer datos de otros tipos de fuentes. Por esto, vemos que como contrapartida a datos de aplicaciones, sería interesante desarrollar en una futura iteración de la herramienta la extracción de datos del sistema. Para esto, planteamos dos posibilidades que se podrían tomar:
+\subsection*{A. Funcionalidades claves} \label{FuncionalidadesClavesAlcance}
+Como vimos en el requerimiento \hyperref[reqA1]{A1}, la herramienta contará con un conjunto de operaciones las cuales realizan la extracción, examinación y presentación de los datos encontrados. A través de dichas operaciones, la herramienta manejará:
 
 \begin{itemize}
-\item \textbf{Logs del sistema}: Esto es, permitir la extracción de datos de cierto log del sistema. Se podrían extraer datos del sysdump ó logcat, especificando sección o nivel respectivamente. De este tipo de fuentes podríamos obtener datos como datos de geolocalización, direcciones IP, URLs, etc.
-\item \textbf{Datos del sistema}: Esta permitiría un acceso a datos del sistema de forma más general incluso, permitiendo extraer datos más cercanos al sistema operativo. De este tipo de fuentes entonces podríamos extraer datos de procesos, conexiones de red, particiones de disco, usuarios, información de hardware, etc.
+\item \textbf{Datos extraídos de dispositivos móviles} de carácter lógico y orientados a aquellos producidos por los usuarios de los mismos (esto es, no nos enfocaremos en examinar datos producidos por malware, por ejemplo). De todas formas, la arquitectura de la herramienta será diseñada de manera de facilitar la incorporación de otros dominios de datos.
+\item \textbf{Datos sobre el proceso de extracción}. En primer lugar, será de interés conocer la relación entre los datos que fueron originalmente extraídos del dispositivo y la información examinada (esto es, dada una pieza de información examinada deseamos conocer de qué fuente, por ejemplo de qué archivo, se extrajo dicha información). En segundo lugar, será de interés contar con información sobre quién, cuándo, cómo y dónde se utilizó la herramienta para extraer los datos. Para esto, buscaremos incluir información sobre los colaboradores, fecha y hora de la extracción y datos del ambiente utilizado.
 \end{itemize}
 
-\subsubsection*{3. Operaciones}
-El prototipo contará con una serie de operaciones por defecto, seguramente sean desarrolladas como parte del caso de estudio a realizarse.
+En cuanto al mecanismo de consulta de operaciones descrito en \hyperref[reqA2]{A2}, el prototipo de la herramienta contará con capacidades básicas de filtrado. Seguramente pueda ser útil contar con opciones más avanzadas de filtrado (como expresiones lógicas) con el fin de facilitar el uso de la herramienta, pero consideramos que esto sería más adecuado hacerlo en una segunda iteración.
 
-\subsection*{C. Acceso de datos}
-Vimos que la idea es poder abstraer la forma utilizada para acceder a los datos con el fin de poder interoperar con múltiples tipos de dispositivos e incluso con emuladores.
+\subsection*{B. Extensibilidad} \label{ExtensibilidadAlcance}
+\subsubsection*{Tipos de fuentes de datos}
+El prototipo de la herramienta estará enfocado en la extracción de datos de aplicaciones. Para esto, contaremos con un tipo de fuente de datos que llamaremos \emph{Application} y el cual permitirá tomar como fuente de datos aquellos datos pertenecientes a una aplicación instalada en el dispositivo.
 
-En este sentido, el protocolo ADB (Android Debug Bridge) y sus herramientas nos proveen la abstracción necesaria que precisamos para cumplir con el requerimiento \hyperref[reqC]{(Req. C)}. El mismo nos posibilita el intercambio de datos y ejecución de comandos de forma transparente tanto en dispositivos físicos como en emuladores.
+Cabe destacar que, de todas formas, será fundamental que la herramienta tenga un diseño extensible que le permita soportar otros tipos de fuentes de datos como establecimos en \hyperref[reqB]{(Req. B)}. Por esta razón, vemos que como contrapartida a datos de aplicaciones, sería interesante desarrollar (en una futura iteración de la herramienta) la extracción de datos del sistema operativo. Esta posibilidad se expresa en más detalle en la sección \ref{OtrosTiposDeExtractors}.
 
-A su vez, vemos que utilizando esta interfaz es posible luego extender la herramienta para soportar extracciones físicas, ya que a través de adb es posible ejecutar comandos para crear y transferir una imagen de la partición de datos del usuario. Este punto quedará por fuera del alcance.
+\subsubsection*{Tipos de datos}
+El prototipo de la herramienta por defecto contará con un conjunto básico de tipos de datos correspondientes a los diversos objetos predefinidos por el lenguaje.
 
-Para el ambiente de desarrollo del prototipo, utilizaremos el emulador por la flexibilidad, facilidad y control que nos brinda. En particular:
+A modo de ejemplo, veamos a continuación el estilo de tipos de datos que pretenderemos poder representar mediante el mismo, ya sea utilizando objetos predefinidos o extendiendo el lenguaje.
 
-\begin{itemize}
-\item Nos da la posibilidad de crear imágenes específicas del estado de un dispositivo.
-\item Evitamos preocuparnos por fallas o pérdida de datos de un dispositivo real.
-\item Al estar rooteado el emulador, contamos con acceso a todos los datos del mismo.
-\end{itemize}
-
-De todas formas, la herramienta será diseñada para soportar tanto dispositivos reales como virtuales (emuladores). El hecho de contar con una interfaz de acceso a los dispositivos como es adb y un emulador que emula el hardware de un dispositivo real (y no simulador) hace que esta transición, en teoría, no deba requerir esfuerzo adicional.
-
-\subsection*{D. Salida de datos}
-Debido al funcionamiento que comprende una operación, vemos que la herramienta contará con los siguientes tipos de salida de datos:
-
-\begin{itemize}
-\item \textbf{Datos extraídos}, para expresar los datos que fueron obtenidos del dispositivo en su forma original.
-\item \textbf{Datos examinados}, para expresar los datos encontrados a partir de los anteriores.
-\item \textbf{Datos del proceso de extracción}, para expresar información acerca de los colaboradores que obtuvieron los datos examinados, el ambiente que utilizaron y los archivos de los cuales fue obtenida la información de los mismos.
-\end{itemize}
-
-Dado que debemos expresar las salidas de la herramienta en un lenguaje estándar para que puedan ser consumidas fácilmente por terceros, debemos escoger un lenguaje para representar a los datos examinados y del proceso de extracción. En la siguiente sección veremos cómo escogimos un lenguaje de forma de cumplir con los requerimientos \hyperref[reqD1]{(Req. D1)} y \hyperref[reqD2]{(Req. D2)}.
-
-\section{Representación de los datos de salida}
-Acabamos de ver la necesidad que tenemos de contar con un lenguaje que nos permita representar los datos examinados y del proceso producidos por la herramienta.
-
-Para esto, entonces veamos los puntos que debe cumplir el lenguaje de representación que utilicemos:
-
-\begin{enumerate}[topsep=0pt, parsep=0pt, partopsep=0pt]
-\item Debe ser estándar, de forma de que resulte fácil consumir los datos producidos \hyperref[reqD1]{(Req. D1)}.
-\item Debe ser extensible, de forma que podamos representar con el mismo nuevos tipos de datos \hyperref[reqD2]{(Req. D2)}.
-\item Debe ser capaz de representar datos sobre el proceso de extracción (en particular, aquellos vistos en la sección de alcance del \hyperref[reqA1]{Req. A1}).
-\end{enumerate}
-
-Ahora veamos el estilo de tipos de datos que pretendemos que el lenguaje nos permita representar:
-\newline
-
-\textbf{Datos de aplicaciones}
+Para el dominio de \emph{datos de aplicaciones}, desearíamos poder representar:
 \begin{itemize}
 \item Mensajes de texto (SMS, MMS)
 \item Mensajes de chat (Hangouts, WhatsApp, Facebook)
-\item Mensajes de correo (Default email app, GMail)
-\item Contactos (Agenda, Facebook, GMail)
+\item Mensajes de correo (Android default email app, GMail)
+\item Contactos (Android default agenda app, Facebook, GMail)
 \item Registro de llamadas
 \item Eventos de calendario (Google Calendar)
 \item Archivos (Locales, GDrive, Dropbox)
 \item Información de ubicación (GPS, geo-fencing)
-\item Historial de navegación
+\item Historial de navegación (Chrome, Firefox)
 \end{itemize}
 
-\textbf{Datos del sistema}
+Para el dominio de \emph{datos del sistema}, desearíamos poder representar:
 \begin{itemize}
 \item Datos de telefonía (ICCID, IMEI, MEID)
 \item Información de red (Dirección MAC de Wi Fi, Bluetooth)
@@ -385,19 +329,33 @@ Ahora veamos el estilo de tipos de datos que pretendemos que el lenguaje nos per
 \item Conexiones activas
 \end{itemize}
 
-En el primer grupo vemos ejemplos de tipos de datos que podemos obtener de fuentes de datos del tipo de Application como con los que nos enfocaremos. En el segundo, vemos ejemplos de datos relevantes al sistema, que si bien no los consideraremos directamente, es deseable que el lenguaje pueda representarlos para que luego sea posible extender la herramienta y soportar el uso de los mismos.
+En el primer grupo vemos ejemplos de tipos de datos que podemos obtener de fuentes de datos del tipo de \emph{Application} como con los que nos enfocaremos. En el segundo, vemos ejemplos de datos relevantes al sistema, que si bien no los consideraremos directamente, ya mencionamos que es importante que el lenguaje pueda representarlos para que luego sea posible extender la herramienta y soportar su uso.
 
-\subsection{CybOX como lenguaje escogido}
-Para representar los datos examinados y del proceso elegimos un lenguaje desarrollado originalmente por MITRE llamado CybOX, el cual fue brevemente descrito en el \autoref{chap:EstadoDelArte}. El mismo tiene la capacidad de representar eventos o propiedades con estado que puedan ser observadas en el dominio cibernético. Además, el mismo pretende ser utilizado por un amplio espectro de casos de uso a lo largo de diversas áreas de seguridad informática, entre ellas digital forensics.
+\subsubsection*{Operaciones}
+El prototipo de la herramienta contará con un conjunto de operaciones por defecto, las cuales serán desarrolladas como parte del caso de estudio.
 
-En el \autoref{app:GuiaExtension} describimos los aspectos interesantes del lenguaje en detalle y vemos como el mismo se alinea a nuestros objetivos.
+\subsection*{C. Acceso de datos}
+Como vimos, este requerimiento busca abstraer la forma utilizada por la herramienta para acceder a los datos con el fin de poder interoperar con múltiples tipos de dispositivos (incluso con emuladores).
 
-Ahora veamos cómo CybOX cumple con los tres puntos que vimos anteriormente:
+En este sentido, el protocolo ADB (Android Debug Bridge) y sus herramientas nos proveen la abstracción necesaria que precisamos para cumplir con el requerimiento \hyperref[reqC]{(Req. C)}. El mismo nos posibilita el intercambio de datos y ejecución de comandos de forma transparente, tanto en dispositivos físicos como en emuladores.
 
-\begin{enumerate}
-\item CybOX es un lenguaje basado en XML y que goza de una amplia adopción por parte de la comunidad informática forense. Al momento de escribir este documento, el lenguaje se encuentra en transición para ser adoptado formalmente por la organización de estándares OASIS \cite{stixtrans}.
-\item CybOX permite representar información sobre diversos tipos de datos mediante lo que denomina como objetos. El mismo cuenta con un conjunto de objetos pre-definidos que abarca buena parte de los mencionados anteriormente en esta sección. Además, cuenta con dos mecanismos para definir otros objetos nuevos (custom objects). En la sección de Extensibilidad en Diseño profundizaremos sobre cómo es posible hacer esto.
-\item CybOX permite representar una diversidad de información sobre datos del proceso. En particular, es posible representar de dónde fue extraída la información de un objeto utilizando propiedades de relación. También soporta especificar información sobre los colaboradores que realizaron la obtención de los datos e información acerca del ambiente que utilizaron.
-\end{enumerate}
+Para el ambiente de desarrollo del prototipo, utilizaremos un emulador Android por la flexibilidad, facilidad y control que esto nos brinda. En particular:
 
-De esta forma, vemos que el lenguaje resulta apropiado a las necesidades de representación que presenta la herramienta. Además, como veremos en la sección de implementación el mismo cuenta con una serie de herramientas \cite{cyboxpry} que facilitan tanto su producción como consumición, lo cual nos beneficia a nosotros y a quienes deseen utilizar los datos producidos por la herramienta.
+\begin{itemize}
+\item Nos da la posibilidad de crear imágenes específicas del estado de un dispositivo.
+\item Evitamos preocuparnos por fallas o pérdida de datos de un dispositivo real.
+\item Podemos contar con acceso root al dispositivo de manera muy sencilla, lo cual nos permitirá acceder a todos los datos del mismo.
+\end{itemize}
+
+De todas formas, la herramienta será diseñada para soportar tanto dispositivos reales como virtuales (emuladores). El hecho de contar con una interfaz de acceso a los dispositivos como es \emph{adb} y un emulador que imita al hardware de un dispositivo real hace que esta transición, en teoría, no deba requerir esfuerzo adicional.
+
+\subsection*{D. Salida de datos}
+Debido al funcionamiento que comprende una operación, vemos que la herramienta deberá contar con los siguientes tipos de salida de datos:
+
+\begin{itemize}
+\item \textbf{Datos extraídos}, para expresar los datos que fueron obtenidos del dispositivo en su forma original.
+\item \textbf{Datos examinados}, para expresar los datos encontrados a partir de los anteriores.
+\item \textbf{Datos del proceso de extracción}, para expresar información acerca de los colaboradores que obtuvieron los datos examinados, el ambiente que utilizaron y los archivos de los cuales fue obtenida la información de los mismos.
+\end{itemize}
+
+De manera de cumplir con los requerimientos [Req. D1] y [Req. D2], utilizaremos el lenguaje CybOX para representar a las salidas de datos examinados y del proceso. El lenguaje ya fue analizado extensamente en la sección \ref{estadoDelArte:CybOX} en donde vimos cómo el mismo cumple con los requerimientos mencionados (esto es, es estándar y extensible). Además, vimos como el lenguaje posibilita la representación de los tipos de datos mencionados en los puntos \hyperref[FuncionalidadesClavesAlcance]{A} y \hyperref[ExtensibilidadAlcance]{B} de esta sección de Definición del Alcance.
