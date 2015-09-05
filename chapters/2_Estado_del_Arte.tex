@@ -90,7 +90,7 @@ En la siguiente figura se puede ver los distintos tipos de métodos de extracci�
 \begin{figure}[H]
     \begin{center}
         \includegraphics[width=\textwidth]{figures/extraction_methods_types}
-        \caption{Tipos de métodos de extracción}
+        \caption{Tipos de métodos de extracción \cite{extractionMethodsPyramid}}
     \end{center}
 \end{figure}
 
@@ -271,7 +271,7 @@ La plataforma Android cuenta con una arquitectura dividida en cuatro capas \cite
 \begin{figure}[t]
     \begin{center}
         \includegraphics[scale=0.6]{figures/android_architecture}
-        \caption{Arquitectura de la plataforma Android}
+        \caption{Arquitectura de la plataforma Android \cite{androidSoftwareStack}}
         \label{arquitecturaDeAndroid}
     \end{center}
 \end{figure}
@@ -293,7 +293,7 @@ Entre los datos que se pueden encontrar en este log se destacan cuentas sincroni
 Las distintas formas de almacenamiento que pueden ser utilizadas por las aplicaciones son las siguientes \cite{androidStrg}:
 
 \begin{itemize}
-\item \textbf{SharedPreferences}: Los SharedPreferences son archivos con formato XML, en los cuales el desarrollador de la aplicación puede almacenar un listado de parejas clave- valor de tipos de datos primitivos (booleans, floats, ints, longs y strings). Suelen ser utilizados para almacenar configuraciones de la aplicación, incluyendo los cambios de configuración realizados por el usuario. Estos datos son mantenidos a través de las sesiones del usuario, incluso cuando se cierra la aplicación. 
+\item \textbf{SharedPreferences}: Los SharedPreferences son archivos con formato XML, en los cuales el desarrollador de la aplicación puede almacenar un listado de parejas clave-valor de tipos de datos primitivos (booleans, floats, ints, longs y strings). Suelen ser utilizados para almacenar configuraciones de la aplicación, incluyendo los cambios de configuración realizados por el usuario. Estos datos son mantenidos a través de las sesiones del usuario, incluso cuando se cierra la aplicación. 
 \item \textbf{SQLite databases}: Este tipo de bases de datos es el más utilizado por la comunidad Android, debido a que su código es Open Source, compacto y toda la base de datos se encuentra en un único archivo. 
 \item \textbf{Otros tipos de archivos}: Es posible que las aplicaciones almacenen otros tipos de archivos (por ejemplo video, audio, texto, etc). Estos archivos pueden almacenarse o bien en memoria interna en un directorio que es privado para la aplicación, o bien en memoria externa (esto es, la SD-Card) en un directorio que es accesible por las demás aplicaciones.
 \end{itemize}
@@ -336,7 +336,7 @@ Sin embargo, a pesar de que existen estos riesgos, el rooting es el proceso que 
 \subsection{Alternativas a rooting}
 \label{alternativasRooting}
 
-La primera alternativa es utilizar el comando \emph{adb backup}. El mismo no requiere que se haya hecho el rooting del dispositivo, pero sí requiere que el mismo tenga activada la opción de ADB Debugging, la cual se cambia dentro sus configuraciones. Con este comando es posible realizar un respaldo de los datos internos de las aplicaciones o de la tarjeta SD del dispositivo, y también se puede indicar que se extraiga el apk de las mismas.
+La primera alternativa es utilizar el comando \texttt{adb backup}, el cual no requiere acceso root al dispositivo pero sí que el mismo tenga activada la opción \enquote*{USB Debugging} en su menú de configuración. De esta forma, este comando nos permite realizar un respaldo de los datos internos de las aplicaciones o de la tarjeta SD del dispositivo, y también se puede indicar que se extraiga el apk de las mismas.
 
 Para completar el respaldo con éxito, se requiere intervención por parte del usuario del dispositivo móvil. Al momento de ejecutar el comando desde la consola de la PC, en la pantalla del dispositivo se muestra un diálogo, donde se solicita confirmación.
 
