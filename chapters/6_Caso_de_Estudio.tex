@@ -345,7 +345,7 @@ Veamos para la representación en XML para un objeto \emph{Contact} de Facebook:
 </cybox:Observable>
 \end{xml}
 
-\subsection{Inspectors de WhatsApp}
+\subsection{Inspector de WhatsApp}
 La primera diferencia que podemos percibir con Facebook, es que WhatsApp no almacena información acerca de los emails ni fecha de cumpleaños de los contactos.
 
 En segunda instancia, hay una pequeña diferencia en cuanto a la imagen de perfil. A diferencia de Facebook en el cual la base de datos contiene una referencia a una URL, WhatsApp almacena un identificador que hace referencia a un archivo local. Para esto, en el campo \emph{profile\_picture} utilizamos la ruta al archivo en el dispositivo prefijando el scheme \emph{file://}.
@@ -414,7 +414,7 @@ Comenzamos ejecutando el script \texttt{load\_data\_sets} utilizando el \emph{da
 \newline
 
 \begin{bash}
-$ ./load_data_sets.py --ds HTC_Evo_3D
+$ ./load_data_sets.py HTC_Evo_3D
 Installing 'com.facebook.katana-1.apk' into the device...
 Installing 'com.whatsapp-1.apk' into the device...
 Pushing 'com.whatsapp' data into the device...
